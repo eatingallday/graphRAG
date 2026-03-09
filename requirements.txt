@@ -1,0 +1,4 @@
+langgraph>=1.0.0
+neo4j>=5.0.0
+neo4j-graphrag>=1.0.0
+openai>=1.0.0
