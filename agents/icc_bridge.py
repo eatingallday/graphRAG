@@ -189,38 +189,74 @@ def _handle_static_field_icc(s, static_writes, static_reads, cross_paths):
             print(f"[icc_bridge] STATIC_FIELD CrossPath: {cp_id}")
 
 
-def _handle_broadcast_icc(s, send_bcs, reg_rcvs, cross_paths):
-    """Pattern B: dynamic broadcast channel (BroadcastTaintAndLeak1)."""
+def _handle_broadcast_icc(s, send_bcs, reg_rcvs, action_to_components, cross_paths):
+    """Pattern B: dynamic broadcast channel — two-phase matching."""
     for (sender_sig, sender_cls, sender_strs) in send_bcs:
-        sender_set = {x for x in sender_strs if len(x) > 5}
-        for (reg_sig, reg_cls, rcv_classes, reg_strs) in reg_rcvs:
-            overlap = sender_set & {x for x in reg_strs if len(x) > 5}
-            if not overlap:
+        manifest_matched = False
+
+        # 阶段 1：Manifest intent-filter 精确匹配（置信度 0.85）
+        for action_str in sender_strs:
+            if action_str not in action_to_components:
                 continue
-            action = max(overlap, key=len)
-            for rcv_cls in rcv_classes:
-                java_rcv = rcv_cls.replace("/", ".")
-                onreceive_sig = (
-                    f"<{java_rcv}: void onReceive"
-                    f"(android.content.Context,android.content.Intent)>"
-                )
-                cp_id = f"broadcast_{abs(hash(sender_sig + action)) % 0xFFFFFF:x}"
+            manifest_matched = True
+            for comp in action_to_components[action_str]:
+                onreceive_sig = (f"<{comp['fullname']}: void onReceive"
+                                 f"(android.content.Context,android.content.Intent)>")
+                cp_id = f"broadcast_mf_{abs(hash(sender_sig + action_str)) % 0xFFFFFF:x}"
                 s.run("""
                     MERGE (cp:CrossPath {id:$cpid})
-                    SET cp.channel_type='DYNAMIC_BROADCAST', cp.broadcast_action=$action,
-                        cp.layer='B', cp.confidence=0.75, cp.attack_vector=$av
+                    SET cp.channel_type='DYNAMIC_BROADCAST',
+                        cp.broadcast_action=$action,
+                        cp.match_method='manifest_intent_filter',
+                        cp.layer='B', cp.confidence=0.85,
+                        cp.attack_vector=$av
                     WITH cp
                     MATCH (sm:Method {sig:$ssig}) MERGE (sm)-[:BROADCAST_SENDS]->(cp)
                     WITH cp
                     MATCH (rm:Method {sig:$rsig}) MERGE (cp)-[:BROADCAST_RECEIVED_BY]->(rm)
-                """, cpid=cp_id, action=action,
-                     av=f"sendBroadcast action='{action}' → {rcv_cls.split('/')[-1]}.onReceive()",
+                """, cpid=cp_id, action=action_str,
+                     av=f"sendBroadcast '{action_str}' → {comp['name']}.onReceive()",
                      ssig=sender_sig, rsig=onreceive_sig)
                 cross_paths.append({
                     "id": cp_id, "channel_type": "DYNAMIC_BROADCAST",
-                    "action": action, "confidence": 0.75,
+                    "action": action_str, "confidence": 0.85,
+                    "match_method": "manifest_intent_filter",
                 })
-                print(f"[icc_bridge] DYNAMIC_BROADCAST CrossPath: {cp_id} action={action}")
+                print(f"[icc_bridge] DYNAMIC_BROADCAST (manifest) CrossPath: {cp_id} action={action_str}")
+
+        # 阶段 2：Smali const-string 交集后备（置信度 0.65）——仅在 manifest 无匹配时触发
+        if not manifest_matched:
+            sender_set = {x for x in sender_strs if len(x) > 5}
+            for (reg_sig, reg_cls, rcv_classes, reg_strs) in reg_rcvs:
+                overlap = sender_set & {x for x in reg_strs if len(x) > 5}
+                if not overlap:
+                    continue
+                action = max(overlap, key=len)
+                for rcv_cls in rcv_classes:
+                    java_rcv = rcv_cls.replace("/", ".")
+                    onreceive_sig = (f"<{java_rcv}: void onReceive"
+                                     f"(android.content.Context,android.content.Intent)>")
+                    cp_id = f"broadcast_{abs(hash(sender_sig + action)) % 0xFFFFFF:x}"
+                    s.run("""
+                        MERGE (cp:CrossPath {id:$cpid})
+                        SET cp.channel_type='DYNAMIC_BROADCAST',
+                            cp.broadcast_action=$action,
+                            cp.match_method='smali_string_overlap',
+                            cp.layer='B', cp.confidence=0.65,
+                            cp.attack_vector=$av
+                        WITH cp
+                        MATCH (sm:Method {sig:$ssig}) MERGE (sm)-[:BROADCAST_SENDS]->(cp)
+                        WITH cp
+                        MATCH (rm:Method {sig:$rsig}) MERGE (cp)-[:BROADCAST_RECEIVED_BY]->(rm)
+                    """, cpid=cp_id, action=action,
+                         av=f"sendBroadcast '{action}' → {rcv_cls.split('/')[-1]}.onReceive()",
+                         ssig=sender_sig, rsig=onreceive_sig)
+                    cross_paths.append({
+                        "id": cp_id, "channel_type": "DYNAMIC_BROADCAST",
+                        "action": action, "confidence": 0.65,
+                        "match_method": "smali_string_overlap",
+                    })
+                    print(f"[icc_bridge] DYNAMIC_BROADCAST (smali) CrossPath: {cp_id} action={action}")
 
 
 def _handle_set_result_icc(s, set_results, cross_paths):
@@ -245,6 +281,34 @@ def _handle_set_result_icc(s, set_results, cross_paths):
             "id": cp_id, "channel_type": "SET_RESULT", "confidence": conf,
         })
         print(f"[icc_bridge] SET_RESULT CrossPath: {cp_id} (conf={conf:.2f})")
+
+
+def _handle_implicit_intent_icc(s, start_acts, action_to_components, cross_paths):
+    """处理 target_cls 为空的隐式 Intent（const-string action 匹配 manifest）。"""
+    for (caller_sig, caller_cls, target_cls, extra_keys) in start_acts:
+        if target_cls:
+            continue  # 显式 Intent 由 _handle_start_activity_icc 处理
+        for key_str in extra_keys:
+            if key_str not in action_to_components:
+                continue
+            for comp in action_to_components[key_str]:
+                cp_id = f"implicit_intent_{abs(hash(caller_sig + key_str)) % 0xFFFFFF:x}"
+                s.run("""
+                    MERGE (cp:CrossPath {id:$cpid})
+                    SET cp.channel_type='IMPLICIT_INTENT',
+                        cp.action=$action, cp.target_component=$target,
+                        cp.layer='B', cp.confidence=0.75, cp.attack_vector=$av
+                    WITH cp
+                    MATCH (m:Method {sig:$sig}) MERGE (m)-[:INTENT_SENDS_TO]->(cp)
+                """, cpid=cp_id, action=key_str,
+                     target=comp["fullname"],
+                     av=f"隐式 Intent action='{key_str}' → {comp['name']}",
+                     sig=caller_sig)
+                cross_paths.append({
+                    "id": cp_id, "channel_type": "IMPLICIT_INTENT",
+                    "action": key_str, "confidence": 0.75,
+                })
+                print(f"[icc_bridge] IMPLICIT_INTENT: {cp_id} action={key_str}")
 
 
 def _handle_start_activity_icc(s, start_acts, cross_paths):
@@ -279,6 +343,22 @@ def run_icc_bridge(state: AnalysisState) -> dict:
 
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     cross_paths = []
+
+    # 从 Neo4j 读 manifest 声明的 intent-filter，构建 action→组件 索引
+    with driver.session() as s:
+        comp_rows = s.run("""
+            MATCH (c:Component)
+            WHERE c.intent_filter_actions IS NOT NULL AND size(c.intent_filter_actions) > 0
+            RETURN c.name AS name, c.fullname AS fullname,
+                   c.type AS type, c.intent_filter_actions AS actions
+        """).data()
+
+    action_to_components: dict[str, list] = {}
+    for row in comp_rows:
+        for action in (row["actions"] or []):
+            action_to_components.setdefault(action, []).append(row)
+
+    print(f"[icc_bridge] intent-filter 索引: {len(action_to_components)} 个 action")
 
     try:
         with driver.session() as s:
@@ -342,9 +422,10 @@ def run_icc_bridge(state: AnalysisState) -> dict:
 
         with driver.session() as s:
             _handle_static_field_icc(s, icc_data["static_writes"], icc_data["static_reads"], cross_paths)
-            _handle_broadcast_icc(s, icc_data["send_bcs"], icc_data["reg_rcvs"], cross_paths)
+            _handle_broadcast_icc(s, icc_data["send_bcs"], icc_data["reg_rcvs"], action_to_components, cross_paths)
             _handle_set_result_icc(s, icc_data["set_results"], cross_paths)
             _handle_start_activity_icc(s, icc_data["start_acts"], cross_paths)
+            _handle_implicit_intent_icc(s, icc_data["start_acts"], action_to_components, cross_paths)
 
     finally:
         driver.close()

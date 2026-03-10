@@ -37,24 +37,16 @@ _AUTOFILL_MED = {
 
 # ── Layout discovery ───────────────────────────────────────────────────────────
 
-def _find_layout_files() -> list[str]:
-    """Search apktool and jadx output dirs for layout XML files."""
-    candidates = [
-        os.path.join(ANALYSIS_DIR, "smali", "res", "layout"),
-        os.path.join(ANALYSIS_DIR, "java", "resources", "res", "layout"),
-        os.path.join(ANALYSIS_DIR, "res", "layout"),
+def _find_layout_files(analysis_dir: str) -> list[str]:
+    """Find layout XML files under {analysis_dir}/apktool/res/layout/."""
+    layout_dir = os.path.join(analysis_dir, "apktool", "res", "layout")
+    if not os.path.isdir(layout_dir):
+        return []
+    return [
+        os.path.join(layout_dir, fname)
+        for fname in os.listdir(layout_dir)
+        if fname.endswith(".xml") and not any(fname.startswith(p) for p in _SKIP_PREFIXES)
     ]
-    found = []
-    for layout_dir in candidates:
-        if not os.path.isdir(layout_dir):
-            continue
-        for fname in os.listdir(layout_dir):
-            if not fname.endswith(".xml"):
-                continue
-            if any(fname.startswith(p) for p in _SKIP_PREFIXES):
-                continue
-            found.append(os.path.join(layout_dir, fname))
-    return found
 
 
 # ── XML parser ────────────────────────────────────────────────────────────────
@@ -140,7 +132,8 @@ def _load_prompt(name: str) -> str:
 def run_ui_semantic_agent(state: AnalysisState) -> dict:
     print("[ui_semantic] Starting UI semantic analysis ...")
 
-    layout_files = _find_layout_files()
+    analysis_dir = state.get("analysis_dir") or ANALYSIS_DIR
+    layout_files = _find_layout_files(analysis_dir)
     print(f"[ui_semantic] Found {len(layout_files)} layout file(s): "
           + ", ".join(os.path.basename(f) for f in layout_files))
 

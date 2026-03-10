@@ -7,6 +7,7 @@ from typing import TypedDict, Optional
 class AnalysisState(TypedDict):
     # ── Input ────────────────────────────────────────────────────────────────
     apk_name:     str
+    analysis_dir: Optional[str]  # APK 产物目录路径，供 ui_semantic_agent 等读取文件系统的 agent 使用
     manifest_xml: str
     app_smali:    dict   # {class_name: smali_content}
     app_java:     dict   # {class_name: java_content} (may be empty)

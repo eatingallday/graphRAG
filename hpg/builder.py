@@ -186,6 +186,21 @@ def _parse_manifest(manifest_path: str) -> dict:
             }
             comp["path_permissions"].append(pp_data)
             path_permissions.append(pp_data)
+
+        intent_filter_actions    = []
+        intent_filter_categories = []
+        for intent_filter in elem.findall("intent-filter"):
+            for action_elem in intent_filter.findall("action"):
+                action_name = action_elem.get(f"{{{ANDROID_NS}}}name", "")
+                if action_name:
+                    intent_filter_actions.append(action_name)
+            for cat_elem in intent_filter.findall("category"):
+                cat_name = cat_elem.get(f"{{{ANDROID_NS}}}name", "")
+                if cat_name:
+                    intent_filter_categories.append(cat_name)
+
+        comp["intent_filter_actions"]    = intent_filter_actions
+        comp["intent_filter_categories"] = intent_filter_categories
         components.append(comp)
 
     if app is not None:
@@ -252,10 +267,14 @@ def _write_hpg(driver, manifest_data: dict, smali_map: dict):
                 SET c.fullname=$full, c.type=$type,
                     c.exported=$exp, c.authority=$auth,
                     c.root_path_protected=$rpp,
+                    c.intent_filter_actions=$actions,
+                    c.intent_filter_categories=$categories,
                     c.analysis_confidence=0.0, c.vuln_description=""
             """, name=short, full=comp["fullname"], type=comp["type"],
                  exp=comp["exported"], auth=comp["authority"],
-                 rpp=root_protected)
+                 rpp=root_protected,
+                 actions=comp["intent_filter_actions"],
+                 categories=comp["intent_filter_categories"])
 
             # PathPermission nodes + edges
             for pp in comp["path_permissions"]:
@@ -325,20 +344,25 @@ def _write_hpg(driver, manifest_data: dict, smali_map: dict):
 
 # ── Public entry point ────────────────────────────────────────────────────────
 
-def build_hpg(manifest_path: str | None = None, smali_map: dict | None = None):
+def build_hpg(analysis_dir: str | None = None,
+              manifest_path: str | None = None,
+              smali_map: dict | None = None):
     """
     Build the initial HPG from manifest + smali.
-    If smali_map is None, loads from ANALYSIS_DIR automatically.
+    If smali_map is None, loads from analysis_dir automatically.
     """
     from utils.file_loader import load_apk_artifacts
 
+    if analysis_dir is None:
+        analysis_dir = ANALYSIS_DIR
+
     if manifest_path is None:
-        manifest_path = os.path.join(ANALYSIS_DIR, "smali", "AndroidManifest.xml")
+        manifest_path = os.path.join(analysis_dir, "apktool", "AndroidManifest.xml")
 
     manifest_data = _parse_manifest(manifest_path)
 
     if smali_map is None:
-        _, smali_map, _ = load_apk_artifacts(ANALYSIS_DIR)
+        _, smali_map, _ = load_apk_artifacts(analysis_dir)
 
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     try:

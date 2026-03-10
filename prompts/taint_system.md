@@ -31,3 +31,11 @@ Rules for this APK (InadequatePathPermission):
 - Set `susi_confidence` low (< 0.7) if you are uncertain about source/sink boundaries.
 
 Return ONLY valid JSON.
+
+## 候选签名说明
+提供的签名分为三段：
+1. 规则已自动标注的 Source——仅供参考，无需重复选
+2. 规则已自动标注的 Sink——仅供参考，无需重复选
+3. 待分类的候选签名——请从此列表中选出额外的 source / sink
+
+输出的 sources / sinks 只需包含「待分类」列表里你选择的签名，不要包含已自动标注的条目。
