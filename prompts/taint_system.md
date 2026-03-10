@@ -39,3 +39,10 @@ Return ONLY valid JSON.
 3. 待分类的候选签名——请从此列表中选出额外的 source / sink
 
 输出的 sources / sinks 只需包含「待分类」列表里你选择的签名，不要包含已自动标注的条目。
+
+## UI 敏感度信号
+
+当 HPG 中存在 UIView 节点时，你应重点关注读取高敏感度 UI 控件的方法。
+如果一个方法通过 findViewById 获取了 sensitivity_label=HIGH 的控件并调用了 getText()，
+该方法很可能是一个 app-specific source（用户输入的密码、身份证号等）。
+请使用 query_ui_views 工具查询 UI 控件及其关联的 reader 方法。

@@ -17,6 +17,7 @@ from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, ANALYSIS_DIR, PROMPTS_
 from utils.llm_client import llm_call
 from neo4j import GraphDatabase
 from state import AnalysisState
+from hpg.builder import build_rid_mapping, _iter_method_bodies, _CALL_RE
 
 ANDROID_NS = "http://schemas.android.com/apk/res/android"
 
@@ -127,6 +128,58 @@ def _load_prompt(name: str) -> str:
         return f.read()
 
 
+# ── Method → UIView linking ──────────────────────────────────────────────────
+
+_CONST_HEX_RE = re.compile(r"const(?:/high16)? ([vp]\d+), (0x[0-9a-fA-F]+)")
+_FIND_VIEW_RE = re.compile(r"invoke-virtual \{([^}]+)\},\s*\S+->findViewById\(I\)")
+
+
+def _link_methods_to_ui(session, smali_map: dict) -> int:
+    """Create READS_UI edges from Methods to UIViews via findViewById tracing.
+
+    Scans each method body for:
+      const vX, 0x7f...   (resource ID load)
+      invoke-virtual {pY, vX}, .../findViewById(I)
+    Then resolves the hex ID to a view_id string via R$id.smali mapping.
+    """
+    rid_map = build_rid_mapping(smali_map)
+    if not rid_map:
+        return 0
+
+    edge_count = 0
+    for smali_key, smali_text in smali_map.items():
+        # Skip R$ classes, BuildConfig, etc.
+        if "R$" in smali_key or smali_key.endswith("/BuildConfig"):
+            continue
+
+        for method_sig, body in _iter_method_bodies(smali_text, smali_key):
+            # Collect all const hex values in this method body
+            hex_consts: dict[str, int] = {}  # register → hex value
+            for m in _CONST_HEX_RE.finditer(body):
+                reg = m.group(1)
+                try:
+                    hex_consts[reg] = int(m.group(2), 16)
+                except ValueError:
+                    continue
+
+            # Find findViewById calls and resolve the register
+            for m in _FIND_VIEW_RE.finditer(body):
+                regs = [r.strip() for r in m.group(1).split(",")]
+                if len(regs) < 2:
+                    continue
+                id_reg = regs[-1]  # last register is the int arg
+                hex_val = hex_consts.get(id_reg)
+                if hex_val and hex_val in rid_map:
+                    view_id = rid_map[hex_val]
+                    session.run("""
+                        MATCH (m:Method {sig:$sig}), (uv:UIView {view_id:$vid})
+                        MERGE (m)-[:READS_UI]->(uv)
+                    """, sig=method_sig, vid=view_id)
+                    edge_count += 1
+
+    return edge_count
+
+
 # ── Main node function ────────────────────────────────────────────────────────
 
 def run_ui_semantic_agent(state: AnalysisState) -> dict:
@@ -181,6 +234,7 @@ def run_ui_semantic_agent(state: AnalysisState) -> dict:
         all_views.extend(raw_views)
 
     # Write UIView nodes to Neo4j
+    app_smali = state.get("app_smali") or {}
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     try:
         with driver.session() as s:
@@ -198,7 +252,19 @@ def run_ui_semantic_agent(state: AnalysisState) -> dict:
                      label=v["sensitivity_label"], score=v["sensitivity_score"],
                      isrc=v["inference_source"], reason=v["reason"],
                      signals=v["key_signals"])
-        print(f"[ui_semantic] Wrote {len(all_views)} UIView nodes to Neo4j.")
+            print(f"[ui_semantic] Wrote {len(all_views)} UIView nodes to Neo4j.")
+
+            # ── Progressive graph enrichment: link Methods → UIView ──────
+            ui_edge_count = _link_methods_to_ui(s, app_smali)
+            print(f"[ui_semantic] Created {ui_edge_count} READS_UI edges.")
+
+            # ── Link Component → UIView via CONTAINS chain ───────────────
+            comp_ui_count = s.run("""
+                MATCH (c:Component)-[:CONTAINS]->(m:Method)-[:READS_UI]->(uv:UIView)
+                MERGE (c)-[:HAS_UI]->(uv)
+                RETURN count(*) AS cnt
+            """).single()["cnt"]
+            print(f"[ui_semantic] Created {comp_ui_count} HAS_UI edges.")
     finally:
         driver.close()
 

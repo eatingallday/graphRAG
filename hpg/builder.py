@@ -98,6 +98,30 @@ def _extract_string_consts(smali_text: str) -> list[str]:
     return _CONST_STR_RE.findall(smali_text)
 
 
+# ── R.id mapping ─────────────────────────────────────────────────────────────
+
+_RID_FIELD_RE = re.compile(
+    r"\.field public static final (\w+):I = (0x[0-9a-fA-F]+)"
+)
+
+
+def build_rid_mapping(smali_map: dict) -> dict[int, str]:
+    """Parse R$id.smali to build {hex_resource_id: view_id_name} mapping.
+
+    This allows us to resolve `const vX, 0x7f...` → human-readable view ID
+    when tracing findViewById calls in method bodies.
+    """
+    rid_map: dict[int, str] = {}
+    for key, text in smali_map.items():
+        if not key.endswith("R$id"):
+            continue
+        for m in _RID_FIELD_RE.finditer(text):
+            field_name = m.group(1)
+            hex_val = int(m.group(2), 16)
+            rid_map[hex_val] = field_name
+    return rid_map
+
+
 def _extract_calls(smali_text: str) -> list[tuple[str, str, str, str]]:
     """Return list of (callee_class, callee_method, params, ret) tuples."""
     return [

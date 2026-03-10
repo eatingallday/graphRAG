@@ -142,6 +142,81 @@ def extract_framework_api_calls(smali_map: dict) -> set[str]:
     return framework_calls
 
 
+# ── UI-Inferred source boost ─────────────────────────────────────────────────
+
+def _boost_from_ui_sensitivity(session, smali_map: dict) -> list[str]:
+    """Mark methods that read HIGH-sensitivity UI views as sources.
+
+    Queries READS_UI edges in Neo4j. If the method also calls getText()
+    (i.e., actually reads user input from the view), mark it as a source
+    with confidence=0.90 and inference_source='UI_Inferred'.
+
+    Returns list of newly boosted source sigs.
+    """
+    rows = session.run("""
+        MATCH (m:Method)-[:READS_UI]->(uv:UIView)
+        WHERE uv.sensitivity_label IN ['HIGH', 'MEDIUM']
+          AND m.taint_role <> 'source'
+        RETURN m.sig AS sig, m.name AS name, m.class AS cls,
+               uv.sensitivity_label AS ui_sens, uv.view_id AS vid
+    """).data()
+
+    if not rows:
+        return []
+
+    boosted = []
+    for row in rows:
+        sig, cls_name = row["sig"], row["cls"]
+        # Verify the method actually reads the view content (getText, etc.)
+        # by checking its Smali body for getText/toString calls
+        smali_key = cls_name.replace(".", "/")
+        smali_text = smali_map.get(smali_key, "")
+        if not smali_text:
+            # Try suffix match
+            for k in smali_map:
+                if k.endswith(smali_key.split("/")[-1]):
+                    smali_text = smali_map[k]
+                    break
+
+        has_get_text = bool(re.search(r"invoke-virtual .+getText\(", smali_text))
+        if not has_get_text:
+            continue
+
+        confidence = 0.90 if row["ui_sens"] == "HIGH" else 0.75
+        session.run("""
+            MATCH (m:Method {sig:$sig})
+            SET m.taint_role='source', m.confidence=$conf,
+                m.inference_source='UI_Inferred'
+        """, sig=sig, conf=confidence)
+        boosted.append(sig)
+
+    return boosted
+
+
+def _query_ui_context(driver) -> str:
+    """Build a UI sensitivity context string for the LLM first message."""
+    with driver.session() as s:
+        rows = s.run("""
+            MATCH (uv:UIView)
+            WHERE uv.sensitivity_label IN ['HIGH', 'MEDIUM']
+            OPTIONAL MATCH (m:Method)-[:READS_UI]->(uv)
+            RETURN uv.view_id AS vid, uv.sensitivity_label AS label,
+                   uv.hint_text AS hint, uv.input_type AS itype,
+                   m.sig AS reader
+        """).data()
+
+    if not rows:
+        return ""
+
+    lines = ["## UI 敏感度上下文",
+             "以下 UI 控件被标记为高/中敏感度，读取这些控件数据的方法很可能是 source："]
+    for r in rows:
+        reader = r["reader"] or "未关联"
+        lines.append(f"- {r['vid']} ({r['label']}): hint={r['hint']!r}, "
+                     f"inputType={r['itype']!r}, reader={reader}")
+    return "\n".join(lines)
+
+
 def _write_susi_xml(sources: list[str], sinks: list[str], path: str):
     lines = ["%SOURCES"]
     for src in sources:
@@ -178,7 +253,10 @@ TAINT_SYSTEM = """你是一名 Android 污点分析专家。任务是找出 APK 
 5. mark_sink — 标记为污点汇，写入 Neo4j
    {"tool": "mark_sink", "args": {"sig": "<de.example.Foo: void bar()>", "reason": "发送短信"}}
 
-6. finish — 完成分析，输出汇总
+6. query_ui_views — 查询高/中敏感度 UI 控件及其关联方法
+   {"tool": "query_ui_views", "args": {}}
+
+7. finish — 完成分析，输出汇总
    {"tool": "finish", "args": {
      "sources": ["<de.example.Foo: ...>"],
      "sinks": ["<de.example.Bar: ...>"],
@@ -187,6 +265,7 @@ TAINT_SYSTEM = """你是一名 Android 污点分析专家。任务是找出 APK 
    }}
 
 注意：finish 的 sources/sinks 只包含你新发现的，不要重复规则已标注的条目。
+如果存在 UI 敏感度上下文，优先检查读取高敏感度 UI 控件的方法。
 每轮严格输出一个 JSON 对象，不要输出其他文字。"""
 
 
@@ -232,6 +311,12 @@ def run_taint_agent(state: AnalysisState) -> dict:
                     m.inference_source='Rule_Based',
                     m.name=$name, m.class=$cls
             """, sig=sig, name=name, cls=cls)
+
+        # Step 2b: UI-Inferred source boost
+        ui_sources = _boost_from_ui_sensitivity(s, smali_map)
+        if ui_sources:
+            auto_sources = auto_sources + ui_sources
+            print(f"[taint_agent] UI_Inferred: {len(ui_sources)} additional sources")
 
     # Step 3：工具闭包
     llm_added_sources: list[str] = []
@@ -311,16 +396,37 @@ def run_taint_agent(state: AnalysisState) -> dict:
         except Exception as e:
             return f"[写入错误] {e}"
 
+    def query_ui_views() -> str:
+        """查询所有 HIGH/MEDIUM 敏感度的 UI 控件及其关联方法。"""
+        try:
+            with driver.session() as s:
+                rows = s.run("""
+                    MATCH (uv:UIView)
+                    WHERE uv.sensitivity_label IN ['HIGH', 'MEDIUM']
+                    OPTIONAL MATCH (m:Method)-[:READS_UI]->(uv)
+                    RETURN uv.view_id AS vid, uv.sensitivity_label AS label,
+                           uv.hint_text AS hint, uv.input_type AS itype,
+                           m.sig AS reader
+                """).data()
+            return str(rows) if rows else "（无高/中敏感度 UI 控件）"
+        except Exception as e:
+            return f"[错误] {e}"
+
     tool_executors = {
-        "search_smali":   search_smali,
+        "search_smali":    search_smali,
         "get_method_body": get_method_body,
-        "query_neo4j":    query_neo4j,
-        "mark_source":    mark_source,
-        "mark_sink":      mark_sink,
+        "query_neo4j":     query_neo4j,
+        "mark_source":     mark_source,
+        "mark_sink":       mark_sink,
+        "query_ui_views":  query_ui_views,
     }
 
     # Step 4：LLM ReAct 循环
     auto_set = set(auto_sources) | set(auto_sinks)
+
+    # Inject UI sensitivity context if available
+    ui_context = _query_ui_context(driver)
+
     first_user_msg = (
         f"分析目标：{state['apk_name']}\n"
         f"已知暴露的 ContentProvider：{providers}\n\n"
@@ -328,7 +434,9 @@ def run_taint_agent(state: AnalysisState) -> dict:
         + ("\n".join(auto_sources) or "（无）")
         + "\n\n【规则已自动标注为 Sink（无需重复选）】：\n"
         + ("\n".join(auto_sinks) or "（无）")
+        + (f"\n\n{ui_context}" if ui_context else "")
         + "\n\n请使用工具自主探索 app 代码，补充额外的 source 和 sink。"
+          "如果存在 UI 敏感度上下文，可使用 query_ui_views 工具获取更多信息。"
     )
 
     result = run_agent_loop(
