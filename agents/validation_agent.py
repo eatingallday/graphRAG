@@ -1,147 +1,100 @@
 """
-Node 4: Path Validation Agent — GraphRAG core (Layer C).
+Node 7: Validation Agent (Budget-Aware ReAct, max_loops=5)
 
-Uses Text2CypherRetriever to issue natural language queries against the HPG,
-then synthesizes results into a final exploitability verdict.
+LLM 自主发起 Cypher 查询，从图数据库收集证据，
+证据充足后调用 finish 给出最终可利用性裁定。
 
-This is the primary GraphRAG contribution of the paper:
-  Natural Language → Cypher → Neo4j → Structured Evidence → LLM Verdict
+工具集：
+  - query_neo4j(cypher)
+  - finish(exploitable, final_verdict, severity, attack_scenario, evidence_chain, cwe)
 """
 import os
 import sys
-import httpx
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import (
-    NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD,
-    QWEN_MODEL, QWEN_BASE_URL, QWEN_API_KEY, PROMPTS_DIR
-)
-from hpg.schema import HPG_SCHEMA
-from utils.llm_client import llm_call
 from neo4j import GraphDatabase
-from neo4j_graphrag.llm import OpenAILLM
-from neo4j_graphrag.retrievers import Text2CypherRetriever
 from state import AnalysisState
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from utils.agent_loop import run_agent_loop
 
+VALIDATION_SYSTEM = """你是一名 Android 安全分析专家，负责对 APK 漏洞进行最终裁定。
 
-def _load_prompt(name: str) -> str:
-    path = os.path.join(PROMPTS_DIR, name)
-    with open(path, encoding="utf-8") as f:
-        return f.read()
+图数据库（Neo4j）中包含所有分析阶段的结果：
+- Component：组件信息、exported 状态、路径权限、漏洞描述
+- Method：方法签名、taint_role（source/sink）、inference_source、confidence
+- IntraPath：FlowDroid 发现的组件内污点路径
+- CrossPath：跨组件攻击路径
+- PathPermission：路径权限配置
 
+可用工具（每轮只能调用一个）：
 
-# Few-shot examples for Text2Cypher — must be list[str] in Q/A format
-_EXAMPLES = [
-    (
-        "Question: 哪些 ContentProvider 没有保护根路径\n"
-        "Answer: MATCH (c:Component {type:'provider', exported:true}) "
-        "WHERE c.root_path_protected = false RETURN c.name, c.authority, c.vuln_description"
-    ),
-    (
-        "Question: query() 方法是否访问包含 SSN 的敏感污点路径\n"
-        "Answer: MATCH (m:Method {name:'query'})-[:HAS_INTRA_PATH]->(ip:IntraPath) "
-        "RETURN m.sig, ip.source, ip.sink, ip.confidence"
-    ),
-    (
-        "Question: 是否存在从 ContentProvider 到敏感数据的跨组件路径\n"
-        "Answer: MATCH (ip:IntraPath)-[:ESCALATED_TO]->(cp:CrossPath) "
-        "RETURN cp.entry_component, cp.attack_vector, cp.confidence"
-    ),
-    (
-        "Question: 已知路径权限配置是什么\n"
-        "Answer: MATCH (c:Component)-[:HAS_PATH_PERMISSION]->(pp:PathPermission) "
-        "RETURN c.name, pp.pathPrefix, pp.readPermission"
-    ),
-]
+1. query_neo4j — 执行 Cypher 查询获取证据
+   {"tool": "query_neo4j", "args": {"cypher": "MATCH (c:Component {exported:true}) RETURN c.name, c.type"}}
 
-# Validation queries to issue
-VALIDATION_QUERIES = [
-    "该 ContentProvider 的根路径是否可被外部无权限应用访问？",
-    "query() 方法是否存在污点路径指向 SSN 或其他敏感数据？",
-    "现有的 path-permission 配置能否防止根路径被绕过？",
-    "是否存在完整的跨组件攻击路径（CrossPath）？",
-]
+   常用查询：
+   - 暴露组件：MATCH (c:Component {exported:true}) RETURN c
+   - source/sink：MATCH (m:Method) WHERE m.taint_role IN ['source','sink'] RETURN m.sig, m.taint_role, m.confidence
+   - 跨组件路径：MATCH (cp:CrossPath) RETURN cp.channel_type, cp.attack_vector, cp.confidence
+   - 污点路径：MATCH (m:Method)-[:HAS_INTRA_PATH]->(ip:IntraPath) RETURN m.sig, ip.source, ip.sink
+
+2. finish — 证据充足，输出最终裁定
+   {"tool": "finish", "args": {
+     "exploitable": true,
+     "final_verdict": "详细裁定说明（中文）",
+     "severity": "HIGH",
+     "attack_scenario": "攻击场景描述",
+     "evidence_chain": ["证据1", "证据2"],
+     "cwe": "CWE-926"
+   }}
+   severity 取值：CRITICAL / HIGH / MEDIUM / LOW / NONE
+
+每轮严格输出一个 JSON 对象，不要输出其他文字。
+收集到足够证据后立即调用 finish，不要无谓地重复查询。"""
 
 
 def run_validation_agent(state: AnalysisState) -> dict:
-    print("[validation_agent] Starting GraphRAG path validation (Layer C) ...")
+    print("[validation_agent] Starting GraphRAG path validation (Budget-Aware, max_loops=5) ...")
 
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
-    # Initialize Text2CypherRetriever with Qwen
-    # socksio must be installed for SOCKS proxy support: pip install "httpx[socks]"
-    llm = OpenAILLM(
-        model_name=QWEN_MODEL,
-        base_url=QWEN_BASE_URL,
-        api_key=QWEN_API_KEY,
-    )
-
-    retriever = Text2CypherRetriever(
-        driver=driver,
-        llm=llm,
-        neo4j_schema=HPG_SCHEMA,
-        examples=_EXAMPLES,
-    )
-
-    # Direct fallback queries for high-importance checks (Text2Cypher may generate wrong Cypher)
-    _DIRECT_QUERIES: dict[str, str] = {
-        "query() 方法是否存在污点路径指向 SSN 或其他敏感数据？": (
-            "MATCH (m:Method {name:'query'})-[:ACCESSES]->(sc:StringConst) "
-            "WHERE sc.sensitivity IN ['HIGH', 'MEDIUM'] "
-            "RETURN m.name, m.sig, sc.value, sc.sensitivity"
-        ),
-    }
-
-    cypher_results = []
-    for query in VALIDATION_QUERIES:
-        print(f"[validation_agent] Query: {query}")
-        # Try Text2Cypher first; fall back to direct query if result is empty
+    def query_neo4j(cypher: str) -> str:
         try:
-            result = retriever.search(query_text=query)
-            answer = [str(item) for item in (result.items or [])]
-            print(f"[validation_agent] Text2Cypher answer ({len(answer)} items)")
+            with driver.session() as s:
+                rows = s.run(cypher).data()
+            return str(rows) if rows else "（无结果）"
         except Exception as e:
-            print(f"[validation_agent] Text2Cypher query failed: {e}")
-            answer = []
+            return f"[Cypher 错误] {e}"
 
-        # Fallback: use direct Cypher if we got no answer and have one defined
-        if not answer and query in _DIRECT_QUERIES:
-            print(f"[validation_agent] Using direct Cypher fallback for: {query}")
-            try:
-                with driver.session() as s:
-                    rows = s.run(_DIRECT_QUERIES[query]).data()
-                    answer = [str(r) for r in rows]
-                print(f"[validation_agent] Direct query answer ({len(answer)} items)")
-            except Exception as e:
-                print(f"[validation_agent] Direct query also failed: {e}")
-                answer = [f"ERROR: {e}"]
+    tool_executors = {"query_neo4j": query_neo4j}
 
-        print(f"[validation_agent] Final answer: {answer}")
-        cypher_results.append({"query": query, "answer": answer})
+    first_user_msg = (
+        f"请对 APK「{state['apk_name']}」进行最终安全裁定。\n"
+        "图数据库中已包含所有分析阶段的结果。\n"
+        "请自主查询需要的数据，收集足够证据后调用 finish 给出结论。"
+    )
+
+    result = run_agent_loop(
+        agent_name    = "validation_agent",
+        system_prompt = VALIDATION_SYSTEM,
+        first_user_msg= first_user_msg,
+        tool_executors= tool_executors,
+        max_loops     = 5,
+    )
 
     driver.close()
 
-    # ── Synthesize verdict with LLM ───────────────────────────────────────
-    system = _load_prompt("validation_system.md")
-    user = (
-        f"GraphRAG 查询结果：\n"
-        + "\n".join(
-            f"Q: {r['query']}\nA: {r['answer']}" for r in cypher_results
-        )
-        + "\n\n请综合以上证据，给出最终安全结论（JSON）。"
-    )
-
-    verdict = llm_call(system, user, json_mode=True)
-    print(f"[validation_agent] Final verdict: exploitable={verdict.get('exploitable')}")
+    print(f"[validation_agent] exploitable={result.get('exploitable')}, "
+          f"conclude_reason={result.get('conclude_reason')}, loops={result.get('loops_used')}")
 
     return {
         "validation_result": {
-            "cypher_queries": cypher_results,
-            "final_verdict":  verdict.get("final_verdict", ""),
-            "exploitable":    verdict.get("exploitable", False),
-            "severity":       verdict.get("severity", "UNKNOWN"),
-            "attack_scenario":verdict.get("attack_scenario", ""),
-            "evidence_chain": verdict.get("evidence_chain", []),
-            "cwe":            verdict.get("cwe", ""),
+            "exploitable":     result.get("exploitable", False),
+            "final_verdict":   result.get("final_verdict", ""),
+            "severity":        result.get("severity", "UNKNOWN"),
+            "attack_scenario": result.get("attack_scenario", ""),
+            "evidence_chain":  result.get("evidence_chain", []),
+            "cwe":             result.get("cwe", ""),
+            "conclude_reason": result.get("conclude_reason"),
+            "loops_used":      result.get("loops_used"),
         }
     }

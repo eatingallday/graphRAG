@@ -51,3 +51,27 @@ def llm_call(system: str, user: str, json_mode: bool = True) -> dict | str:
 def llm_call_raw(system: str, user: str) -> str:
     """Return raw text without JSON parsing."""
     return llm_call(system, user, json_mode=False)
+
+
+def llm_tool_call(
+    messages: list[dict],
+    tools: list[dict],
+    tool_choice: str | dict | None = None,
+):
+    """
+    支持工具调用的 LLM 请求。返回原始 message 对象（含 tool_calls）。
+    不做 JSON 解析，由 agent_loop 负责处理。
+
+    tool_choice=None 时不传该参数（让服务端使用默认行为）。
+    强制收尾时传 {"type":"function","function":{"name":"finish"}}。
+    """
+    client = _get_client()
+    kwargs: dict = {
+        "model":    QWEN_MODEL,
+        "messages": messages,
+        "tools":    tools,
+    }
+    if tool_choice is not None:
+        kwargs["tool_choice"] = tool_choice
+    response = client.chat.completions.create(**kwargs)
+    return response.choices[0].message

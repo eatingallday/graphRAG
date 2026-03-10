@@ -1,77 +1,36 @@
 """
-Node 2: Taint Agent
-- Reads Manifest Agent result from Neo4j (exported providers)
-- Extracts candidate method signatures from Smali (multiple-choice approach)
-- Rule-based pre-classification of framework API sources/sinks (P0 fix)
-- Calls Qwen to select additional sources/sinks from the candidate list
-- Writes SuSi XML to output/SourcesAndSinks.txt
-- Updates Method.taint_role in Neo4j
+Node 2: Taint Agent (Budget-Aware ReAct, max_loops=5)
+
+流程：
+  1. 规则预分类（框架 API 黑名单，Rule_Based，置信度 0.95）→ 直接写 Neo4j
+  2. Budget-Aware ReAct 循环：LLM 用工具自主探索，补充额外 source/sink
+  3. 合并两层结果，写 SuSi XML
 """
 import os
 import re
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, PROMPTS_DIR, OUTPUT_DIR
-from utils.llm_client import llm_call
 from neo4j import GraphDatabase
 from state import AnalysisState
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OUTPUT_DIR
+from utils.agent_loop import run_agent_loop
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
+# ── Smali type helpers ────────────────────────────────────────────────────────
+
 _CLASS_RE  = re.compile(r"\.class .+? ([\w/$]+);")
-_METHOD_RE = re.compile(r"\.method (?:public |private |protected |static |final |abstract |bridge |synthetic )*(\w+)\(([^)]*)\)([\w/[\];$]+)")
-_CALL_RE   = re.compile(
+_METHOD_RE = re.compile(
+    r"\.method (?:public |private |protected |static |final |abstract |bridge |synthetic )*"
+    r"(\w+)\(([^)]*)\)([\w/[\];$]+)"
+)
+_CALL_RE = re.compile(
     r"invoke-\w+ \{[^}]*\}, ([\w/$]+);->(\w+)\(([^)]*)\)([\w/\[\];]+)"
 )
-
 _SMALI_TO_JAVA = {
     "V": "void", "Z": "boolean", "B": "byte", "C": "char",
-    "S": "short", "I": "int", "J": "long", "F": "float", "D": "double",
-}
-
-# 高置信度框架 Source（DroidBench 实测覆盖）
-_FRAMEWORK_SOURCES = {
-    "<android.telephony.TelephonyManager: java.lang.String getDeviceId()>",
-    "<android.telephony.TelephonyManager: java.lang.String getSubscriberId()>",
-    "<android.telephony.TelephonyManager: java.lang.String getLine1Number()>",
-    "<android.telephony.TelephonyManager: java.lang.String getSimSerialNumber()>",
-    "<android.location.Location: double getLatitude()>",
-    "<android.location.Location: double getLongitude()>",
-    "<android.app.Activity: android.content.Intent getIntent()>",
-    "<android.content.Intent: java.lang.String getStringExtra(java.lang.String)>",
-    "<android.content.Intent: android.os.Bundle getExtras()>",
-    "<android.os.Bundle: java.lang.String getString(java.lang.String)>",
-    "<android.accounts.AccountManager: android.accounts.Account[] getAccounts()>",
-    "<android.content.SharedPreferences: java.lang.String getString(java.lang.String,java.lang.String)>",
-    "<android.database.Cursor: java.lang.String getString(int)>",
-    "<android.content.ContentResolver: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
-}
-
-# 高置信度框架 Sink（DroidBench 实测覆盖）
-_FRAMEWORK_SINKS = {
-    "<android.util.Log: int d(java.lang.String,java.lang.String)>",
-    "<android.util.Log: int e(java.lang.String,java.lang.String)>",
-    "<android.util.Log: int i(java.lang.String,java.lang.String)>",
-    "<android.util.Log: int v(java.lang.String,java.lang.String)>",
-    "<android.util.Log: int w(java.lang.String,java.lang.String)>",
-    "<android.telephony.SmsManager: void sendTextMessage(java.lang.String,java.lang.String,java.lang.String,android.app.PendingIntent,android.app.PendingIntent)>",
-    # IntentSink1: getDeviceId → putExtra → setResult
-    "<android.app.Activity: void setResult(int,android.content.Intent)>",
-    "<android.content.Intent: android.content.Intent putExtra(java.lang.String,java.lang.String)>",
-    "<java.io.FileOutputStream: void write(byte[])>",
-    "<java.io.FileOutputStream: void write(byte[],int,int)>",
-    "<java.io.PrintWriter: void println(java.lang.String)>",
-    "<java.net.HttpURLConnection: java.io.OutputStream getOutputStream()>",
-    "<android.content.Context: void sendBroadcast(android.content.Intent)>",
-    "<android.content.ClipboardManager: void setPrimaryClip(android.content.ClipData)>",
-}
-
-# 通用噪声类，过滤掉（调用太普遍，无分析价值）
-_SKIP_FRAMEWORK_CLASSES = {
-    "java.lang.Object", "java.lang.String", "java.lang.StringBuilder",
-    "java.lang.Integer", "java.lang.Boolean", "java.lang.Long",
-    "java.lang.Float", "java.lang.Double", "java.lang.Math", "java.lang.System",
+    "S": "short", "I": "int",  "J": "long", "F": "float", "D": "double",
 }
 
 
@@ -117,53 +76,69 @@ def _smali_params(params: str) -> str:
     return ",".join(parts)
 
 
-def extract_method_sigs_from_smali(smali_map: dict) -> list[str]:
-    """Extract Soot-format method signatures from app Smali files."""
-    sigs = []
-    for smali_key, smali_text in smali_map.items():
-        cls_match = _CLASS_RE.search(smali_text)
-        if not cls_match:
-            continue
-        cls_name = cls_match.group(1)
-        # Strip leading 'L' from Smali class descriptor (e.g. Ledu/ksu → edu/ksu)
-        if cls_name.startswith("L"):
-            cls_name = cls_name[1:]
-        java_cls = cls_name.replace("/", ".")
-        for m in _METHOD_RE.finditer(smali_text):
-            name, params, ret = m.groups()
-            java_ret    = _smali_type(ret.strip())
-            java_params = _smali_params(params)
-            sig = f"<{java_cls}: {java_ret} {name}({java_params})>"
-            sigs.append(sig)
-    return sigs
+# ── 框架 API 黑名单（Rule_Based 预分类）─────────────────────────────────────
+
+_FRAMEWORK_SOURCES = {
+    "<android.telephony.TelephonyManager: java.lang.String getDeviceId()>",
+    "<android.telephony.TelephonyManager: java.lang.String getSubscriberId()>",
+    "<android.telephony.TelephonyManager: java.lang.String getLine1Number()>",
+    "<android.telephony.TelephonyManager: java.lang.String getSimSerialNumber()>",
+    "<android.location.Location: double getLatitude()>",
+    "<android.location.Location: double getLongitude()>",
+    "<android.app.Activity: android.content.Intent getIntent()>",
+    "<android.content.Intent: java.lang.String getStringExtra(java.lang.String)>",
+    "<android.content.Intent: android.os.Bundle getExtras()>",
+    "<android.os.Bundle: java.lang.String getString(java.lang.String)>",
+    "<android.accounts.AccountManager: android.accounts.Account[] getAccounts()>",
+    "<android.content.SharedPreferences: java.lang.String getString(java.lang.String,java.lang.String)>",
+    "<android.database.Cursor: java.lang.String getString(int)>",
+    "<android.content.ContentResolver: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
+}
+
+_FRAMEWORK_SINKS = {
+    "<android.util.Log: int d(java.lang.String,java.lang.String)>",
+    "<android.util.Log: int e(java.lang.String,java.lang.String)>",
+    "<android.util.Log: int i(java.lang.String,java.lang.String)>",
+    "<android.util.Log: int v(java.lang.String,java.lang.String)>",
+    "<android.util.Log: int w(java.lang.String,java.lang.String)>",
+    "<android.telephony.SmsManager: void sendTextMessage(java.lang.String,java.lang.String,java.lang.String,android.app.PendingIntent,android.app.PendingIntent)>",
+    "<android.app.Activity: void setResult(int,android.content.Intent)>",
+    "<android.content.Intent: android.content.Intent putExtra(java.lang.String,java.lang.String)>",
+    "<java.io.FileOutputStream: void write(byte[])>",
+    "<java.io.FileOutputStream: void write(byte[],int,int)>",
+    "<java.io.PrintWriter: void println(java.lang.String)>",
+    "<java.net.HttpURLConnection: java.io.OutputStream getOutputStream()>",
+    "<android.content.Context: void sendBroadcast(android.content.Intent)>",
+    "<android.content.ClipboardManager: void setPrimaryClip(android.content.ClipData)>",
+}
+
+_SKIP_FRAMEWORK_CLASSES = {
+    "java.lang.Object", "java.lang.String", "java.lang.StringBuilder",
+    "java.lang.Integer", "java.lang.Boolean", "java.lang.Long",
+    "java.lang.Float", "java.lang.Double", "java.lang.Math", "java.lang.System",
+}
 
 
 def extract_framework_api_calls(smali_map: dict) -> set[str]:
-    """
-    扫描全部 Smali 的 invoke-* 指令，提取 app 实际调用的框架/库 API 签名。
-    排除 app 自身类（依据 smali_map key 前缀）和通用噪声类。
-    """
-    # 收集 app 自身包前缀（取前两段，如 de.ecspride、edu.ksu）
     app_prefixes = set()
     for key in smali_map:
         parts = key.replace("/", ".").split(".")
         if len(parts) >= 2:
             app_prefixes.add(".".join(parts[:2]))
-
     framework_calls: set[str] = set()
     for smali_text in smali_map.values():
         for m in _CALL_RE.finditer(smali_text):
-            callee_cls    = m.group(1).replace("/", ".")
-            callee_name   = m.group(2)
-            callee_params = m.group(3)
-            callee_ret    = m.group(4)
-            if any(callee_cls.startswith(p) for p in app_prefixes):
+            cls    = m.group(1).replace("/", ".")
+            name   = m.group(2)
+            params = m.group(3)
+            ret    = m.group(4)
+            if any(cls.startswith(p) for p in app_prefixes):
                 continue
-            if callee_cls in _SKIP_FRAMEWORK_CLASSES:
+            if cls in _SKIP_FRAMEWORK_CLASSES:
                 continue
-            sig = (f"<{callee_cls}: {_smali_type(callee_ret)} "
-                   f"{callee_name}({_smali_params(callee_params)})>")
-            framework_calls.add(sig)
+            framework_calls.add(
+                f"<{cls}: {_smali_type(ret)} {name}({_smali_params(params)})>"
+            )
     return framework_calls
 
 
@@ -180,90 +155,204 @@ def _write_susi_xml(sources: list[str], sinks: list[str], path: str):
     print(f"[taint_agent] SuSi XML written to {path}")
 
 
-def _load_prompt(name: str) -> str:
-    path = os.path.join(PROMPTS_DIR, name)
-    with open(path, encoding="utf-8") as f:
-        return f.read()
+# ── System prompt ─────────────────────────────────────────────────────────────
 
+TAINT_SYSTEM = """你是一名 Android 污点分析专家。任务是找出 APK 中额外的污点 Source 和 Sink。
+
+规则引擎已自动标注了高置信度的框架 API，你只需补充 app 自身代码中的额外 source/sink。
+
+可用工具（每轮只能调用一个）：
+
+1. search_smali — 用正则搜索所有 Smali 文件
+   {"tool": "search_smali", "args": {"pattern": "getDeviceId", "context_lines": 2}}
+
+2. get_method_body — 获取指定方法的完整 Smali 代码
+   {"tool": "get_method_body", "args": {"class_path": "de/ecspride/MainActivity", "method_name": "onCreate"}}
+
+3. query_neo4j — 查询图数据库
+   {"tool": "query_neo4j", "args": {"cypher": "MATCH (m:Method {taint_role:'source'}) RETURN m.sig"}}
+
+4. mark_source — 标记为污点源，写入 Neo4j
+   {"tool": "mark_source", "args": {"sig": "<de.example.Foo: void bar()>", "reason": "读取设备ID"}}
+
+5. mark_sink — 标记为污点汇，写入 Neo4j
+   {"tool": "mark_sink", "args": {"sig": "<de.example.Foo: void bar()>", "reason": "发送短信"}}
+
+6. finish — 完成分析，输出汇总
+   {"tool": "finish", "args": {
+     "sources": ["<de.example.Foo: ...>"],
+     "sinks": ["<de.example.Bar: ...>"],
+     "susi_confidence": 0.85,
+     "reasoning": "简要说明"
+   }}
+
+注意：finish 的 sources/sinks 只包含你新发现的，不要重复规则已标注的条目。
+每轮严格输出一个 JSON 对象，不要输出其他文字。"""
+
+
+# ── Main node function ────────────────────────────────────────────────────────
 
 def run_taint_agent(state: AnalysisState) -> dict:
-    print("[taint_agent] Starting taint source/sink inference ...")
+    print("[taint_agent] Starting taint analysis (Budget-Aware, max_loops=5) ...")
 
+    smali_map = state["app_smali"]
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
-    try:
-        with driver.session() as s:
-            providers = s.run(
-                "MATCH (c:Component {type:'provider', exported:true}) "
-                "RETURN c.name AS name, c.authority AS auth, "
-                "c.root_path_protected AS rpp, c.vuln_description AS vuln"
-            ).data()
-    finally:
-        driver.close()
 
-    print(f"[taint_agent] Exported providers from Neo4j: {providers}")
+    # Step 1：读已知暴露 provider
+    with driver.session() as s:
+        providers = s.run(
+            "MATCH (c:Component {type:'provider', exported:true}) "
+            "RETURN c.name AS name, c.authority AS auth, "
+            "c.root_path_protected AS rpp, c.vuln_description AS vuln"
+        ).data()
+    print(f"[taint_agent] Exported providers: {providers}")
 
-    app_sigs        = extract_method_sigs_from_smali(state["app_smali"])
-    framework_calls = extract_framework_api_calls(state["app_smali"])
-
-    # 规则预分类（取交集）
-    auto_sources = sorted(framework_calls & _FRAMEWORK_SOURCES)
-    auto_sinks   = sorted(framework_calls & _FRAMEWORK_SINKS)
-    # LLM 候选集 = app 方法 + 黑名单未覆盖的框架调用
-    llm_candidates = app_sigs + sorted(framework_calls - _FRAMEWORK_SOURCES - _FRAMEWORK_SINKS)
-
+    # Step 2：规则预分类
+    framework_calls = extract_framework_api_calls(smali_map)
+    auto_sources    = sorted(framework_calls & _FRAMEWORK_SOURCES)
+    auto_sinks      = sorted(framework_calls & _FRAMEWORK_SINKS)
     print(f"[taint_agent] Rule_Based: {len(auto_sources)} sources, {len(auto_sinks)} sinks")
-    print(f"[taint_agent] LLM candidates: {len(llm_candidates)}")
 
-    # 规则预分类结果写 Neo4j（MERGE 保证框架 API 即使不在 HPG 里也能建节点）
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
-    try:
-        with driver.session() as s:
-            for sig in auto_sources:
-                cls  = sig.lstrip("<").split(":")[0]
-                name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
+    with driver.session() as s:
+        for sig in auto_sources:
+            cls  = sig.lstrip("<").split(":")[0]
+            name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
+            s.run("""
+                MERGE (m:Method {sig:$sig})
+                SET m.taint_role='source', m.confidence=0.95,
+                    m.inference_source='Rule_Based',
+                    m.name=$name, m.class=$cls
+            """, sig=sig, name=name, cls=cls)
+        for sig in auto_sinks:
+            cls  = sig.lstrip("<").split(":")[0]
+            name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
+            s.run("""
+                MERGE (m:Method {sig:$sig})
+                SET m.taint_role='sink', m.confidence=0.95,
+                    m.inference_source='Rule_Based',
+                    m.name=$name, m.class=$cls
+            """, sig=sig, name=name, cls=cls)
+
+    # Step 3：工具闭包
+    llm_added_sources: list[str] = []
+    llm_added_sinks:   list[str] = []
+
+    def search_smali(pattern: str, context_lines: int = 2) -> str:
+        results = []
+        try:
+            regex = re.compile(pattern)
+        except re.error as e:
+            return f"[正则错误] {e}"
+        for cls_path, text in smali_map.items():
+            lines = text.splitlines()
+            for i, line in enumerate(lines):
+                if regex.search(line):
+                    start   = max(0, i - context_lines)
+                    end     = min(len(lines), i + context_lines + 1)
+                    snippet = "\n".join(f"  {lines[j]}" for j in range(start, end))
+                    results.append(f"[{cls_path}:{i+1}]\n{snippet}")
+                    if len(results) >= 20:
+                        results.append("... (已截断，最多 20 处匹配)")
+                        return "\n\n".join(results)
+        return "\n\n".join(results) if results else "（无匹配）"
+
+    def get_method_body(class_path: str, method_name: str) -> str:
+        normalized = class_path.replace(".", "/")
+        text = smali_map.get(normalized, "")
+        if not text:
+            for k in smali_map:
+                if k.endswith(normalized) or k.split("/")[-1] == normalized.split("/")[-1]:
+                    text = smali_map[k]
+                    break
+        if not text:
+            return f"（未找到类 {class_path!r}）"
+        blocks = re.split(r"(?=\.method )", text)
+        for block in blocks:
+            if not block.startswith(".method "):
+                continue
+            if f" {method_name}(" in block or f" {method_name}\n" in block:
+                end = block.find(".end method")
+                return block[:end + len(".end method")] if end != -1 else block[:2000]
+        return f"（未找到方法 {method_name!r} 在类 {class_path!r} 中）"
+
+    def query_neo4j(cypher: str) -> str:
+        try:
+            with driver.session() as s:
+                rows = s.run(cypher).data()
+            return str(rows) if rows else "（无结果）"
+        except Exception as e:
+            return f"[Cypher 错误] {e}"
+
+    def mark_source(sig: str, reason: str) -> str:
+        try:
+            with driver.session() as s:
                 s.run("""
-                    MERGE (m:Method {sig:$sig})
-                    SET m.taint_role='source', m.confidence=0.95,
-                        m.inference_source='Rule_Based',
-                        m.name=$name, m.class=$cls
-                """, sig=sig, name=name, cls=cls)
-            for sig in auto_sinks:
-                cls  = sig.lstrip("<").split(":")[0]
-                name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
+                    MATCH (m:Method {sig:$sig})
+                    SET m.taint_role='source', m.confidence=0.8,
+                        m.inference_source='LLM_Inferred'
+                """, sig=sig)
+            if sig not in llm_added_sources:
+                llm_added_sources.append(sig)
+            return f"已标记 source: {sig}"
+        except Exception as e:
+            return f"[写入错误] {e}"
+
+    def mark_sink(sig: str, reason: str) -> str:
+        try:
+            with driver.session() as s:
                 s.run("""
-                    MERGE (m:Method {sig:$sig})
-                    SET m.taint_role='sink', m.confidence=0.95,
-                        m.inference_source='Rule_Based',
-                        m.name=$name, m.class=$cls
-                """, sig=sig, name=name, cls=cls)
-    finally:
-        driver.close()
+                    MATCH (m:Method {sig:$sig})
+                    SET m.taint_role='sink', m.confidence=0.8,
+                        m.inference_source='LLM_Inferred'
+                """, sig=sig)
+            if sig not in llm_added_sinks:
+                llm_added_sinks.append(sig)
+            return f"已标记 sink: {sig}"
+        except Exception as e:
+            return f"[写入错误] {e}"
 
-    # 构造区分两类候选集的 LLM prompt
-    provider_key = next(
-        (k for k in state["app_smali"] if "provider" in k.lower() or "Provider" in k), ""
-    )
-    provider_smali = state["app_smali"].get(provider_key, "")
+    tool_executors = {
+        "search_smali":   search_smali,
+        "get_method_body": get_method_body,
+        "query_neo4j":    query_neo4j,
+        "mark_source":    mark_source,
+        "mark_sink":      mark_sink,
+    }
 
-    system = _load_prompt("taint_system.md")
-    user = (
-        f"已知暴露的 ContentProvider（来自 Neo4j）：{providers}\n\n"
-        f"【规则已自动标注为 Source】（无需重复选）：\n"
+    # Step 4：LLM ReAct 循环
+    auto_set = set(auto_sources) | set(auto_sinks)
+    first_user_msg = (
+        f"分析目标：{state['apk_name']}\n"
+        f"已知暴露的 ContentProvider：{providers}\n\n"
+        f"【规则已自动标注为 Source（无需重复选）】：\n"
         + ("\n".join(auto_sources) or "（无）")
-        + f"\n\n【规则已自动标注为 Sink】（无需重复选）：\n"
+        + "\n\n【规则已自动标注为 Sink（无需重复选）】：\n"
         + ("\n".join(auto_sinks) or "（无）")
-        + f"\n\n【待分类的候选签名】（请从此列表中选额外的 source 和 sink）：\n"
-        + "\n".join(llm_candidates)
-        + f"\n\n当前分析目标的 Smali 代码：\n{provider_smali}"
+        + "\n\n请使用工具自主探索 app 代码，补充额外的 source 和 sink。"
     )
 
-    result = llm_call(system, user, json_mode=True)
-    print(f"[taint_agent] LLM result: sources={result.get('sources')}, sinks={result.get('sinks')}")
+    result = run_agent_loop(
+        agent_name    = "taint_agent",
+        system_prompt = TAINT_SYSTEM,
+        first_user_msg= first_user_msg,
+        tool_executors= tool_executors,
+        max_loops     = 5,
+    )
 
-    # 合并：去重后写 SuSi XML
-    auto_set    = set(auto_sources) | set(auto_sinks)
-    all_sources = auto_sources + [s for s in result.get("sources", []) if s not in auto_set]
-    all_sinks   = auto_sinks   + [s for s in result.get("sinks",   []) if s not in auto_set]
+    driver.close()
+
+    # Step 5：合并两层结果，写 SuSi XML
+    llm_sources = [s for s in result.get("sources", []) if s not in auto_set]
+    llm_sinks   = [s for s in result.get("sinks",   []) if s not in auto_set]
+    for s in llm_added_sources:
+        if s not in auto_set and s not in llm_sources:
+            llm_sources.append(s)
+    for s in llm_added_sinks:
+        if s not in auto_set and s not in llm_sinks:
+            llm_sinks.append(s)
+
+    all_sources = auto_sources + llm_sources
+    all_sinks   = auto_sinks   + llm_sinks
     result["sources"] = all_sources
     result["sinks"]   = all_sinks
 
@@ -271,21 +360,6 @@ def run_taint_agent(state: AnalysisState) -> dict:
     _write_susi_xml(all_sources, all_sinks, susi_path)
     result["susi_path"] = susi_path
 
-    # LLM 新增部分写 Neo4j（inference_source='LLM_Inferred'）
-    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
-    try:
-        with driver.session() as s:
-            for sig in all_sources:
-                if sig not in auto_set:
-                    s.run("MATCH (m:Method {sig:$sig}) "
-                          "SET m.taint_role='source', m.confidence=0.8,"
-                          "    m.inference_source='LLM_Inferred'", sig=sig)
-            for sig in all_sinks:
-                if sig not in auto_set:
-                    s.run("MATCH (m:Method {sig:$sig}) "
-                          "SET m.taint_role='sink', m.confidence=0.8,"
-                          "    m.inference_source='LLM_Inferred'", sig=sig)
-    finally:
-        driver.close()
-
+    print(f"[taint_agent] Done. sources={len(all_sources)}, sinks={len(all_sinks)}, "
+          f"conclude_reason={result.get('conclude_reason')}, loops={result.get('loops_used')}")
     return {"taint_result": result}

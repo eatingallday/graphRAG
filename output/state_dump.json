@@ -1,76 +1,41 @@
 {
-  "apk_name": "InadequatePathPermission-InformationExposure-Lean-benign",
-  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"edu.ksu.cs.benign\">\n    <permission android:name=\"edu.ksu.cs.benign.permission.internalRead\" android:protectionLevel=\"dangerous\"/>\n    <application android:allowBackup=\"false\" android:debuggable=\"true\" android:icon=\"@mipmap/ic_launcher\" android:label=\"@string/app_name\" android:supportsRtl=\"true\" android:theme=\"@style/AppTheme\">\n        <activity android:name=\"edu.ksu.cs.benign.MainActivity\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <provider android:authorities=\"edu.ksu.cs.benign.userdetails\" android:enabled=\"true\" android:exported=\"true\" android:name=\"edu.ksu.cs.benign.provider.UserDetailsContentProvider\">\n            <path-permission android:pathPrefix=\"/user\" android:readPermission=\"edu.ksu.cs.benign.permission.internalRead\"/>\n        </provider>\n        <activity android:name=\"edu.ksu.cs.benign.UserDetailsActivity\">\n            <intent-filter>\n                <action android:name=\"edu.ksu.cs.benign.expose.userDetails\"/>\n                <category android:name=\"android.intent.category.DEFAULT\"/>\n            </intent-filter>\n        </activity>\n    </application>\n</manifest>",
+  "apk_name": "ActivityCommunication1",
+  "analysis_dir": "/Users/layang/Desktop/codes/claude-codes/DroidBench/analysis/ActivityCommunication1",
+  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"de.ecspride\">\n    <uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>\n    <uses-permission android:name=\"android.permission.SEND_SMS\"/>\n    <application android:allowBackup=\"true\" android:debuggable=\"true\" android:icon=\"@drawable/ic_launcher\" android:label=\"@string/app_name\" android:theme=\"@style/AppTheme\">\n        <activity android:label=\"@string/app_name\" android:name=\"de.ecspride.Activity1\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <activity android:label=\"@string/title_activity_activity2\" android:name=\"de.ecspride.Activity2\" android:taskAffinity=\"de.ecspride.Activity2\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n    </application>\n</manifest>",
   "app_smali": {
-    "edu/ksu/cs/benign/MainActivity": "<smali>",
-    "edu/ksu/cs/benign/MainActivity$1": "<smali>",
-    "edu/ksu/cs/benign/MainActivity$2": "<smali>",
-    "edu/ksu/cs/benign/UserDetailsActivity": "<smali>",
-    "edu/ksu/cs/benign/provider/UserDetailsContentProvider": "<smali>"
+    "de/ecspride/Activity2": "<smali>",
+    "de/ecspride/BuildConfig": "<smali>",
+    "de/ecspride/Activity1": "<smali>",
+    "de/ecspride/R$menu": "<smali>",
+    "de/ecspride/R": "<smali>",
+    "de/ecspride/R$id": "<smali>",
+    "de/ecspride/R$drawable": "<smali>",
+    "de/ecspride/R$layout": "<smali>",
+    "de/ecspride/R$attr": "<smali>",
+    "de/ecspride/R$style": "<smali>",
+    "de/ecspride/R$string": "<smali>"
   },
-  "app_java": {
-    "sources/edu/ksu/cs/benign/MainActivity": "<java>",
-    "sources/edu/ksu/cs/benign/UserDetailsActivity": "<java>",
-    "sources/edu/ksu/cs/benign/R": "<java>",
-    "sources/edu/ksu/cs/benign/provider/UserDetailsContentProvider": "<java>"
-  },
+  "app_java": {},
   "manifest_result": {
-    "exported_providers": [
-      "edu.ksu.cs.benign.provider.UserDetailsContentProvider"
-    ],
-    "attack_surface": "ContentProvider 和 Activity 均被导出，可通过外部应用直接访问。",
+    "exported_providers": [],
+    "vulnerability": "未发现exported为true的组件或ContentProvider，无明显权限配置漏洞",
     "root_path_protected": false,
-    "vulnerability": "ContentProvider 'edu.ksu.cs.benign.provider.UserDetailsContentProvider' 被导出且仅通过 path-permission 限制路径前缀 '/user'，但未保护根路径（如 /、/other 等）。攻击者可通过访问非 '/user' 前缀的路径绕过 readPermission 限制，导致任意数据读取。此外，自定义权限 'edu.ksu.cs.benign.permission.internalRead' 的 protectionLevel 为 'dangerous'，任何应用均可请求并可能获得该权限，无法有效限制访问。",
-    "confidence": 0.95,
-    "notes": "建议将 provider 的 exported 设为 false，或使用更严格的 permission 配置（如 signature 级别权限），并确保 path-permission 覆盖所有敏感路径。同时，debuggable 为 true 存在调试风险，应仅用于开发阶段。"
+    "confidence": 0.8,
+    "conclude_reason": "early_finish",
+    "loops_used": 3
   },
   "taint_result": {
     "sources": [
-      "edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)"
+      "<de.ecspride.Activity2: void onCreate(Landroid/os/Bundle;)>"
     ],
-    "sinks": [
-      "edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)",
-      "edu.ksu.cs.benign.provider.UserDetailsContentProvider: int delete(android.net.Uri,java.lang.String,java.lang.String[])",
-      "edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.net.Uri insert(android.net.Uri,android.content.ContentValues)",
-      "edu.ksu.cs.benign.provider.UserDetailsContentProvider: int update(android.net.Uri,android.content.ContentValues,java.lang.String,java.lang.String[])"
-    ],
+    "sinks": [],
     "susi_confidence": 0.85,
-    "needs_semantic_analysis": true,
-    "reasoning": "The 'query' method is the primary entry point receiving the URI (source). It reads sensitive data from CSV files (e.g., SSN, address) via BufferedReader and returns it through MatrixCursor.addRow(), making the 'query' method also a sink. Although 'delete', 'insert', and 'update' are not implemented (return 0 or null), they are still potential sinks if overridden or exploited in future versions. The logic inside 'query' uses a packed-switch on URI match (paths like /user/school, /user/address, /user/ssn), indicating complex branching based on path — hence semantic analysis is needed to fully trace taint flow. The vulnerability report confirms inadequate path permissions, allowing attackers to access sensitive data via crafted URIs, reinforcing 'query' as both source and sink.",
+    "reasoning": "在 Activity2 的 onCreate 方法中调用了 TelephonyManager.getDeviceId()，该方法返回设备唯一标识，属于敏感数据源，已标记为 source。未发现明显的 sink 操作。",
+    "conclude_reason": "early_finish",
+    "loops_used": 5,
     "susi_path": "/Users/layang/Desktop/codes/claude-codes/analysis-pipeline/output/SourcesAndSinks.txt"
   },
-  "semantic_result": {
-    "semantic_findings": "该 ContentProvider 根据不同的 URI 路径暴露三类用户数据：通过 '/user/school' 返回用户姓名和大学信息，通过 '/user/address' 返回用户 ID 和城市地址，通过 '/user/ssn' 返回用户 ID 和社保号（SSN）。数据来源于应用私有目录下的 CSV 文件，查询时使用 selectionArgs 进行 ID 匹配过滤。无显式权限声明或运行时权限检查，存在敏感数据泄露风险。",
-    "revised_paths": [
-      {
-        "id": "path_to_ssn",
-        "confirmed": true,
-        "confidence": 0.95,
-        "reason": "URI '/user/ssn' (code 3) 会读取 /mockdata/ssn/Table1.csv，构建包含 'ID' 和 'SSN' 列的 MatrixCursor，且通过 selectionArgs[0] 与 CSV 第一列匹配实现按 ID 查询"
-      },
-      {
-        "id": "path_to_address",
-        "confirmed": true,
-        "confidence": 0.95,
-        "reason": "URI '/user/address' (code 2) 会读取 /mockdata/address/Table1.csv，返回 'ID' 和 'City' 两列，同样通过 selectionArgs[0] 匹配第一列实现过滤"
-      },
-      {
-        "id": "path_to_school",
-        "confirmed": true,
-        "confidence": 0.95,
-        "reason": "URI '/user/school' (code 1) 对应读取 /mockdata/User.csv，返回 'FirstNm', 'LastNm', 'University' 三列，通过 selectionArgs[0] 匹配 CSV 第一列（ID）来筛选数据"
-      }
-    ],
-    "confidence_updated": true,
-    "updated_susi_sources": [
-      "Ledu/ksu/cs/benign/provider/UserDetailsContentProvider;->query(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor; -> $FileInputStream(new File(getContext().getFilesDir(), \"/mockdata/ssn/Table1.csv\"))"
-    ],
-    "updated_susi_sinks": [
-      "Ledu/ksu/cs/benign/provider/UserDetailsContentProvider;->query(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor; -> $MatrixCursor.addRow(SSN)",
-      "Ledu/ksu/cs/benign/provider/UserDetailsContentProvider;->query(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor; -> $MatrixCursor.addRow(City)",
-      "Ledu/ksu/cs/benign/provider/UserDetailsContentProvider;->query(Landroid/net/Uri;[Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;)Landroid/database/Cursor; -> $MatrixCursor.addRow(University)"
-    ]
-  },
+  "semantic_result": null,
   "flowdroid_result": {
     "intra_paths": [
       {
@@ -103,67 +68,35 @@
     ],
     "status": "no_results_synthetic"
   },
+  "ui_semantic_result": {
+    "total_views": 2,
+    "sensitive_views": [],
+    "status": "success"
+  },
   "icc_bridge_result": {
     "cross_paths": [
       {
-        "id": "cross_intra_synthetic_0",
-        "entry_component": "UserDetailsContentProvider",
-        "attack_vector": "ContentProvider 'UserDetailsContentProvider' is exported with no root path permission. Any app can query root URI without any permission, bypassing the /user path-permission restriction.",
-        "intra_path_id": "intra_synthetic_0",
-        "confidence": 0.95
-      },
-      {
-        "id": "cross_intra_synthetic_1",
-        "entry_component": "UserDetailsContentProvider",
-        "attack_vector": "ContentProvider 'UserDetailsContentProvider' is exported with no root path permission. Any app can query root URI without any permission, bypassing the /user path-permission restriction.",
-        "intra_path_id": "intra_synthetic_1",
-        "confidence": 0.95
+        "id": "static_field_de_ecspride_Activity1_data1",
+        "channel_type": "STATIC_FIELD",
+        "field": "de/ecspride/Activity1.data1",
+        "confidence": 0.8
       }
     ],
     "status": "success"
   },
   "validation_result": {
-    "cypher_queries": [
-      {
-        "query": "该 ContentProvider 的根路径是否可被外部无权限应用访问？",
-        "answer": [
-          "content='<Record c.name=\\'UserDetailsContentProvider\\' c.authority=\\'edu.ksu.cs.benign.userdetails\\' c.vuln_description=\"ContentProvider \\'edu.ksu.cs.benign.provider.UserDetailsContentProvider\\' 被导出且仅通过 path-permission 限制路径前缀 \\'/user\\'，但未保护根路径（如 /、/other 等）。攻击者可通过访问非 \\'/user\\' 前缀的路径绕过 readPermission 限制，导致任意数据读取。此外，自定义权限 \\'edu.ksu.cs.benign.permission.internalRead\\' 的 protectionLevel 为 \\'dangerous\\'，任何应用均可请求并可能获得该权限，无法有效限制访问。\">' metadata=None"
-        ]
-      },
-      {
-        "query": "query() 方法是否存在污点路径指向 SSN 或其他敏感数据？",
-        "answer": [
-          "content='<Record m.sig=\\'<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>\\' ip.source=\\'<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>\\' ip.sink=\\'<android.database.MatrixCursor: void addRow(java.lang.Iterable)>\\' cp.attack_vector=\"ContentProvider \\'UserDetailsContentProvider\\' is exported with no root path permission. Any app can query root URI without any permission, bypassing the /user path-permission restriction.\" ip.confidence=0.85 cp.confidence=0.95>' metadata=None",
-          "content='<Record m.sig=\\'<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>\\' ip.source=\\'<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>\\' ip.sink=\\'<java.io.BufferedReader: java.lang.String readLine()>\\' cp.attack_vector=\"ContentProvider \\'UserDetailsContentProvider\\' is exported with no root path permission. Any app can query root URI without any permission, bypassing the /user path-permission restriction.\" ip.confidence=0.8 cp.confidence=0.95>' metadata=None"
-        ]
-      },
-      {
-        "query": "现有的 path-permission 配置能否防止根路径被绕过？",
-        "answer": [
-          "content='<Record c.name=\\'UserDetailsContentProvider\\' c.authority=\\'edu.ksu.cs.benign.userdetails\\' pp.pathPrefix=\\'/user\\' pp.readPermission=\\'edu.ksu.cs.benign.permission.internalRead\\' c.vuln_description=\"ContentProvider \\'edu.ksu.cs.benign.provider.UserDetailsContentProvider\\' 被导出且仅通过 path-permission 限制路径前缀 \\'/user\\'，但未保护根路径（如 /、/other 等）。攻击者可通过访问非 \\'/user\\' 前缀的路径绕过 readPermission 限制，导致任意数据读取。此外，自定义权限 \\'edu.ksu.cs.benign.permission.internalRead\\' 的 protectionLevel 为 \\'dangerous\\'，任何应用均可请求并可能获得该权限，无法有效限制访问。\">' metadata=None"
-        ]
-      },
-      {
-        "query": "是否存在完整的跨组件攻击路径（CrossPath）？",
-        "answer": [
-          "content='<Record cp.entry_component=\\'UserDetailsContentProvider\\' cp.attack_vector=\"ContentProvider \\'UserDetailsContentProvider\\' is exported with no root path permission. Any app can query root URI without any permission, bypassing the /user path-permission restriction.\" cp.intra_path_id=\\'intra_synthetic_0\\' cp.confidence=0.95>' metadata=None",
-          "content='<Record cp.entry_component=\\'UserDetailsContentProvider\\' cp.attack_vector=\"ContentProvider \\'UserDetailsContentProvider\\' is exported with no root path permission. Any app can query root URI without any permission, bypassing the /user path-permission restriction.\" cp.intra_path_id=\\'intra_synthetic_1\\' cp.confidence=0.95>' metadata=None"
-        ]
-      }
-    ],
-    "final_verdict": "该 ContentProvider 存在严重的权限绕过漏洞（InadequatePathPermission），由于其被导出且未对根路径进行保护，任何外部应用均可通过访问根路径（如 /）绕过 path-permission 的限制，直接读取敏感数据。尽管存在针对 '/user' 路径前缀的 readPermission 配置，但该配置无法覆盖根路径或其他非 '/user' 前缀的路径。同时，自定义权限 'edu.ksu.cs.benign.permission.internalRead' 的 protectionLevel 为 'dangerous'，意味着任何应用都可请求并可能获得该权限，无法提供有效访问控制。污点分析显示 query() 方法会从文件中读取敏感信息（如 SSN）并通过 MatrixCursor 返回，构成完整的数据泄露路径。CrossPath 分析确认了该漏洞存在高置信度的跨组件攻击路径。因此，攻击者可通过构造对根 URI 的 ContentResolver 查询，无需任何权限即可获取用户敏感信息。",
-    "exploitable": true,
-    "severity": "HIGH",
-    "attack_scenario": "1. 攻击者应用构造一个指向 'edu.ksu.cs.benign.userdetails' authority 的 ContentResolver 查询，目标 URI 为根路径（如 content://edu.ksu.cs.benign.userdetails/）。\n2. 由于 ContentProvider 被导出且根路径未受 path-permission 保护，系统允许该查询无需任何权限。\n3. 查询触发 UserDetailsContentProvider 的 query() 方法执行。\n4. query() 方法内部读取包含 SSN 等敏感信息的本地文件（通过 BufferedReader.readLine()），并将数据填充至 MatrixCursor 返回。\n5. 攻击者应用接收返回的 Cursor，从中提取并泄露用户的敏感个人信息。",
+    "exploitable": false,
+    "final_verdict": "虽然存在通过静态字段 data1 从 Activity2 向 Activity1 传递数据的跨组件路径，且置信度较高（0.8），但两个 Activity 组件均未导出（exported=false），外部应用无法直接启动或交互，攻击面受限。同时未发现敏感数据源（source）或危险操作（sink），无证据表明该路径可被恶意利用。因此判定该 APK 不存在可利用的组件间通信漏洞。",
+    "severity": "LOW",
+    "attack_scenario": "无远程攻击向量，本地攻击需先启动非导出组件，实际利用困难",
     "evidence_chain": [
-      "ContentProvider 'UserDetailsContentProvider' 被导出且 root_path_protected=false",
-      "path-permission 仅保护路径前缀 '/user'，不保护根路径 '/'",
-      "query() 方法通过 BufferedReader 读取 SSN 等敏感数据",
-      "敏感数据通过 MatrixCursor.addRecord 返回，可被调用方接收",
-      "自定义权限 'edu.ksu.cs.benign.permission.internalRead' 为 dangerous 级别，无法有效限制访问",
-      "CrossPath 分析确认存在高置信度攻击路径（confidence=0.95）"
+      "Activity1 和 Activity2 均未导出",
+      "跨组件路径通过静态字段 data1 传递数据",
+      "无敏感 source 或 sink 方法识别"
     ],
-    "cwe": "CWE-926"
+    "cwe": "CWE-926",
+    "conclude_reason": "early_finish",
+    "loops_used": 5
   },
   "final_report": null
 }
