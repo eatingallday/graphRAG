@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from neo4j import GraphDatabase
 from state import AnalysisState
-from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, load_graph_description
 from utils.agent_loop import run_agent_loop
 
 ANDROID_NS = "http://schemas.android.com/apk/res/android"
@@ -109,7 +109,7 @@ def run_manifest_agent(state: AnalysisState) -> dict:
 
     result = run_agent_loop(
         agent_name    = "manifest_agent",
-        system_prompt = MANIFEST_SYSTEM,
+        system_prompt = MANIFEST_SYSTEM + "\n\n" + load_graph_description(),
         first_user_msg= first_user_msg,
         tool_executors= tool_executors,
         max_loops     = 3,
@@ -118,9 +118,14 @@ def run_manifest_agent(state: AnalysisState) -> dict:
     driver.close()
 
     # ── 把 finish 结果写回 Neo4j ──────────────────────────────────────────
+    vuln_text = result.get("vulnerability", "")
+    rpp       = result.get("root_path_protected", False)
+    conf      = result.get("confidence", 0.0)
+
     driver2 = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     try:
         with driver2.session() as s:
+            # 1. ContentProvider-specific: exported_providers list
             for provider_name in result.get("exported_providers", []):
                 short = provider_name.split(".")[-1]
                 s.run(
@@ -128,12 +133,22 @@ def run_manifest_agent(state: AnalysisState) -> dict:
                     "SET c.vuln_description=$vuln, "
                     "    c.root_path_protected=$rpp, "
                     "    c.analysis_confidence=$conf",
-                    name=short,
-                    vuln=result.get("vulnerability", ""),
-                    rpp=result.get("root_path_protected", False),
-                    conf=result.get("confidence", 0.0),
+                    name=short, vuln=vuln_text, rpp=rpp, conf=conf,
                 )
-                print(f"[manifest_agent] Updated Neo4j for: {short}")
+                print(f"[manifest_agent] Updated Neo4j for provider: {short}")
+
+            # 2. General: write vuln_description to ALL exported components
+            #    (covers Service, Activity, Receiver not in exported_providers).
+            #    Only write if vuln_text is non-empty to avoid overwriting
+            #    existing descriptions with empty strings.
+            if vuln_text:
+                s.run(
+                    "MATCH (c:Component {exported:true}) "
+                    "WHERE (c.vuln_description IS NULL OR c.vuln_description = '') "
+                    "SET c.vuln_description=$vuln, c.analysis_confidence=$conf",
+                    vuln=vuln_text, conf=conf,
+                )
+                print("[manifest_agent] Wrote vuln_description to all exported components")
     finally:
         driver2.close()
 

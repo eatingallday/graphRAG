@@ -2,7 +2,8 @@
 LangGraph StateGraph definition.
 
 Full pipeline:
-  manifest_agent → taint_agent → [semantic_agent?] → flowdroid_node
+  manifest_agent → ui_semantic_agent → sast_prior_node → taint_agent
+  → [semantic_agent?] → flowdroid_node
   → icc_bridge_node → validation_agent → report_generator → END
 """
 import os
@@ -13,6 +14,7 @@ from langgraph.graph import StateGraph, END
 from state import AnalysisState
 from agents.manifest_agent     import run_manifest_agent
 from agents.ui_semantic_agent  import run_ui_semantic_agent
+from agents.sast_prior_node    import run_sast_prior_node
 from agents.taint_agent        import run_taint_agent
 from agents.semantic_agent     import run_semantic_agent
 from agents.flowdroid_node     import run_flowdroid
@@ -20,12 +22,47 @@ from agents.icc_bridge         import run_icc_bridge
 from agents.validation_agent   import run_validation_agent
 from config import OUTPUT_DIR
 from utils.report_generator  import generate_report
+from utils.debug_logger import summarize_state, trace_event
 
 
 def run_report_generator(state: AnalysisState) -> dict:
     """LangGraph wrapper for the report generator."""
     report = generate_report(dict(state), OUTPUT_DIR)
     return {"final_report": report}
+
+
+def _trace_node(node_name: str, node_fn):
+    """Wrap graph node with detailed input/output state tracing."""
+
+    def _wrapped(state: AnalysisState):
+        trace_event(
+            "node_start",
+            {"node": node_name, "state_in": summarize_state(dict(state))},
+            agent=node_name,
+        )
+        try:
+            patch = node_fn(state)
+        except Exception as exc:
+            trace_event(
+                "node_error",
+                {"node": node_name, "error": repr(exc)},
+                agent=node_name,
+            )
+            raise
+        patch_dict = patch if isinstance(patch, dict) else {"_raw_return": patch}
+        trace_event(
+            "node_end",
+            {
+                "node": node_name,
+                "patch_keys": list(patch_dict.keys()),
+                "patch_summary": summarize_state(patch_dict),
+            },
+            agent=node_name,
+        )
+        return patch
+
+    _wrapped.__name__ = f"traced_{node_name}"
+    return _wrapped
 
 
 def _should_run_semantic(state: AnalysisState) -> str:
@@ -44,18 +81,20 @@ def _should_run_semantic(state: AnalysisState) -> str:
 def build_graph() -> StateGraph:
     workflow = StateGraph(AnalysisState)
 
-    workflow.add_node("manifest_agent",    run_manifest_agent)
-    workflow.add_node("ui_semantic_agent", run_ui_semantic_agent)
-    workflow.add_node("taint_agent",       run_taint_agent)
-    workflow.add_node("semantic_agent",    run_semantic_agent)
-    workflow.add_node("flowdroid_node",    run_flowdroid)
-    workflow.add_node("icc_bridge_node",   run_icc_bridge)
-    workflow.add_node("validation_agent",  run_validation_agent)
-    workflow.add_node("report_generator",  run_report_generator)
+    workflow.add_node("manifest_agent",    _trace_node("manifest_agent", run_manifest_agent))
+    workflow.add_node("ui_semantic_agent", _trace_node("ui_semantic_agent", run_ui_semantic_agent))
+    workflow.add_node("sast_prior_node",   _trace_node("sast_prior_node", run_sast_prior_node))
+    workflow.add_node("taint_agent",       _trace_node("taint_agent", run_taint_agent))
+    workflow.add_node("semantic_agent",    _trace_node("semantic_agent", run_semantic_agent))
+    workflow.add_node("flowdroid_node",    _trace_node("flowdroid_node", run_flowdroid))
+    workflow.add_node("icc_bridge_node",   _trace_node("icc_bridge_node", run_icc_bridge))
+    workflow.add_node("validation_agent",  _trace_node("validation_agent", run_validation_agent))
+    workflow.add_node("report_generator",  _trace_node("report_generator", run_report_generator))
 
     workflow.set_entry_point("manifest_agent")
     workflow.add_edge("manifest_agent",    "ui_semantic_agent")
-    workflow.add_edge("ui_semantic_agent", "taint_agent")
+    workflow.add_edge("ui_semantic_agent", "sast_prior_node")
+    workflow.add_edge("sast_prior_node",   "taint_agent")
 
     workflow.add_conditional_edges(
         "taint_agent",

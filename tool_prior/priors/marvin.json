@@ -1,0 +1,2178 @@
+{
+  "tool_name": "marvin",
+  "tool_version": "",
+  "repo_url": "local snapshot at `/home/layang/tools/Marvin-static-Analyzer-master` (the checkout has no `.git` metadata, so the upstream URL cannot be verified from the local copy alone)",
+  "implementation_languages": [
+    "Python 2.7 for the main toolchain",
+    "plus a bundled Java SAAF engine",
+    "XML rule/config files"
+  ],
+  "last_maintained": "not recoverable from this snapshot; source headers indicate most Python analyzers were authored in 2015-2016, and the README labels the project as version `0.1`",
+  "maintenance_status": "stale",
+  "input_formats": [
+    "apk",
+    "jar",
+    "smali",
+    "source"
+  ],
+  "intermediate_representations": [
+    "dalvik",
+    "manifest_xml",
+    "smali"
+  ],
+  "requires_decompilation": false,
+  "decompilation_tools": [],
+  "capabilities": [
+    {
+      "capability_id": "marvin_application_debuggable",
+      "category": "APPLICATION_DEBUGGABLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_application_backup",
+      "category": "APPLICATION_BACKUP",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_unprotected_exported_activity",
+      "category": "UNPROTECTED_EXPORTED_ACTIVITY",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_unprotected_exported_provider",
+      "category": "UNPROTECTED_EXPORTED_PROVIDER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_unprotected_exported_receiver",
+      "category": "UNPROTECTED_EXPORTED_RECEIVER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_unprotected_exported_service",
+      "category": "UNPROTECTED_EXPORTED_SERVICE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_non_signature_protected_exported_activity",
+      "category": "NON_SIGNATURE_PROTECTED_EXPORTED_ACTIVITY",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_non_signature_protected_exported_provider",
+      "category": "NON_SIGNATURE_PROTECTED_EXPORTED_PROVIDER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_non_signature_protected_exported_receiver",
+      "category": "NON_SIGNATURE_PROTECTED_EXPORTED_RECEIVER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_non_signature_protected_exported_service",
+      "category": "NON_SIGNATURE_PROTECTED_EXPORTED_SERVICE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 4 - provider: 7 - receiver: 4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_provider_path_traversal",
+      "category": "PROVIDER_PATH_TRAVERSAL",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-22"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "8"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_fragment_injection",
+      "category": "FRAGMENT_INJECTION",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-470"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "4"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_activity_hijacking",
+      "category": "ACTIVITY_HIJACKING",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 7 - broadcast receiver: 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_broadcastreceiver_hijacking",
+      "category": "BROADCASTRECEIVER_HIJACKING",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 7 - broadcast receiver: 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_service_hijacking",
+      "category": "SERVICE_HIJACKING",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "- activity: 2 - service: 7 - broadcast receiver: 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_unprotected_dynamically_registered_receiver",
+      "category": "UNPROTECTED_DYNAMICALLY_REGISTERED_RECEIVER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "call_path"
+      ],
+      "severity_values": [
+        "2"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_webview_file_scheme",
+      "category": "WEBVIEW_FILE_SCHEME",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name",
+        "component_name"
+      ],
+      "severity_values": [
+        "6"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_surreptitious_sharing",
+      "category": "SURREPTITIOUS_SHARING",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_redis",
+      "category": "REDIS",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app",
+        "library"
+      ],
+      "evidence_types": [
+        "library_info"
+      ],
+      "severity_values": [
+        "10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_bolts",
+      "category": "BOLTS",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "7"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_vungle",
+      "category": "VUNGLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-494"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app",
+        "library"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "8"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_cve_3500_errorurl",
+      "category": "PHONEGAP_CVE_3500_ERRORURL",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_cve_3500_remote",
+      "category": "PHONEGAP_CVE_3500_REMOTE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_cve_3500_url",
+      "category": "PHONEGAP_CVE_3500_URL",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_cve_3501",
+      "category": "PHONEGAP_CVE_3501",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_debug_logging",
+      "category": "PHONEGAP_DEBUG_LOGGING",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_js_injection",
+      "category": "PHONEGAP_JS_INJECTION",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_no_whitelist",
+      "category": "PHONEGAP_NO_WHITELIST",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_whitelist_bypass_regex",
+      "category": "PHONEGAP_WHITELIST_BYPASS_REGEX",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_phonegap_cordova",
+      "category": "PhoneGap / Cordova",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532",
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "- PHONEGAP_WHITELIST_BYPASS_REGEX: 4 - PHONEGAP_DEBUG_LOGGING: 5 - PHONEGAP_NO_WHITELIST: 5 - PHONEGAP_JS_INJECTION: 8 - PHONEGAP_CVE_3500_URL: 8 - PHONEGAP_CVE_3500_ERRORURL: 8 - PHONEGAP_CVE_3501: 8 - PHONEGAP_CVE_3500_REMOTE: 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_ssl_certificate_validation_bypass",
+      "category": "SSL certificate validation bypass",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "all 9"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_ssl_allowall_hostnameverifier",
+      "category": "SSL_ALLOWALL_HOSTNAMEVERIFIER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "all 9"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_ssl_custom_hostnameverifier",
+      "category": "SSL_CUSTOM_HOSTNAMEVERIFIER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "all 9"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_ssl_custom_trustmanager",
+      "category": "SSL_CUSTOM_TRUSTMANAGER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "all 9"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_ssl_insecure_socket_factory",
+      "category": "SSL_INSECURE_SOCKET_FACTORY",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "all 9"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_ssl_webview_error",
+      "category": "SSL_WEBVIEW_ERROR",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "all 9"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_javascriptinterface",
+      "category": "JAVASCRIPTINTERFACE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "backward_def_use_slice",
+          "depth": "inter_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "class_name"
+      ],
+      "severity_values": [
+        "7"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_webview_saved_password",
+      "category": "WEBVIEW_SAVED_PASSWORD",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "8"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_sticky_broadcast_intent",
+      "category": "STICKY_BROADCAST_INTENT",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_autocomplete_password_input",
+      "category": "AUTOCOMPLETE_PASSWORD_INPUT",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-524"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "8"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_insecure_storage_world_readable_writeable",
+      "category": "INSECURE_STORAGE_WORLD_READABLE/WRITEABLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_insecure_pathclassloader",
+      "category": "INSECURE_PATHCLASSLOADER",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-494",
+        "CWE-829"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_insecure_runtime_exec_command",
+      "category": "INSECURE_RUNTIME_EXEC_COMMAND",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-78"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_cryptography",
+      "category": "CRYPTOGRAPHY",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-259",
+        "CWE-321",
+        "CWE-327",
+        "CWE-328",
+        "CWE-329",
+        "CWE-335",
+        "CWE-760",
+        "CWE-798",
+        "CWE-916"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "backward_def_use_slice",
+          "depth": "inter_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "class_name",
+        "constant_value"
+      ],
+      "severity_values": [
+        "all subtypes collapse to Marvin severity 7 because they share the same final vulnerability code CRYPTOGRAPHY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_baas_aws",
+      "category": "BAAS_AWS",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "all 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_baas_azure",
+      "category": "BAAS_AZURE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "all 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_baas_cloudmine",
+      "category": "BAAS_CLOUDMINE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "all 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_baas_parse",
+      "category": "BAAS_PARSE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "all 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "marvin_hardcoded_baas_credentials",
+      "category": "hardcoded BaaS credentials",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "all 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "json",
+    "xml"
+  ],
+  "severity_scheme": [],
+  "has_confidence_score": true,
+  "has_numeric_risk_score": true,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Strong coverage of Android-specific manifest exposure issues: exported components, fragment injection, dynamic receivers, browsable/WebView interactions, and surreptitious sharing.",
+    "Strong coverage of common SSL anti-patterns using concrete Dalvik instruction checks and method signature matching.",
+    "Useful constant-oriented slicing through SAAF for crypto misuse, hardcoded secrets, runtime exec sources, JavaScript interfaces, and BaaS API keys.",
+    "Hybrid architecture lets Marvin combine multiple evidence types: manifest metadata, Dalvik bytecode, library fingerprints, config XML, and smali backtracking.",
+    "Final findings often retain at least class/method provenance, and some families keep extra evidence such as secret values or manifest entries."
+  ],
+  "overall_limitations": [
+    "No general taint analysis across arbitrary sources and sinks. SAAF is used for constant backtracking on preselected sink parameters, not full source-to-sink data flow.",
+    "No SQL injection, path traversal beyond the specific provider rule, deserialization, auth/session, business-logic, or generic filesystem/network misuse coverage.",
+    "SAAF heuristic analysis is explicitly disabled in Marvin's shipped `saaf.conf`, so SAAF's broader quick-check system is not part of real Marvin coverage.",
+    "Multiple findings are coarse app/library fingerprints rather than exploitability checks: `REDIS`, `BOLTS`, `VUNGLE`, and several PhoneGap cases.",
+    "Several analyzers are intra-method or shallow by construction and can miss helper-method indirection or more complex control flow.",
+    "Final Marvin output discards some high-value SAAF evidence (`value`, `fuzzy-level`, `path`), even though the intermediate XML contains it.",
+    "The severity model is fixed and uncalibrated; many families use the same severity for meaningfully different subtypes.",
+    "The README is partially stale relative to the real code. Examples:",
+    "`PHONEGAP_WHITELIST_BYPASS_WILDCARD` appears in documentation but is not emitted in code.",
+    "provider naming differs between `PATH_TRAVERSAL_PROVIDER` in docs and `PROVIDER_PATH_TRAVERSAL` in code.",
+    "Concrete implementation issues observed during review:",
+    "`WebViewFileSchemeAnalyzer.py` uses `encodedMethod.class_name` inside the reporting loop instead of the current loop variable `enc_method.class_name`. That can associate activity reachability with the wrong method/class and distort results.",
+    "`AutoCompletePasswordInput.validate()` uses a chain of `or` comparisons on password bitmasks that appears logically over-broad. As written, most constant input types will satisfy the condition, which likely inflates false positives.",
+    "`PhoneGapAnalyzer.py` and `VungleAdsAnalyzer.py` compare version strings lexicographically, not semantically. This can misclassify newer multi-digit versions.",
+    "`DynamicReceiverAnalyzer.py` maps both the no-permission and permission-overload cases to the same final vulnerability code, so the output cannot distinguish truly unprotected registrations from weakly protected ones.",
+    "`ComponentsAnalyzer.py` only recognizes non-signature custom permissions when the permission is defined inside the same manifest, so it can miss risky imported/custom permission schemes.",
+    "Taint relevance: `Medium`",
+    "Reason: Marvin is not a full taint analyzer, but SAAF backtracking does capture limited def-use relationships for selected sinks, and some native rules reason about intent/data URI reachability. The output is useful as partial taint evidence, but not as a complete source-to-sink flow oracle."
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.519644+00:00",
+  "extraction_source": "codex_report"
+}

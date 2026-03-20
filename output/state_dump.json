@@ -1,102 +1,221 @@
 {
-  "apk_name": "ActivityCommunication1",
-  "analysis_dir": "/Users/layang/Desktop/codes/claude-codes/DroidBench/analysis/ActivityCommunication1",
-  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"de.ecspride\">\n    <uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>\n    <uses-permission android:name=\"android.permission.SEND_SMS\"/>\n    <application android:allowBackup=\"true\" android:debuggable=\"true\" android:icon=\"@drawable/ic_launcher\" android:label=\"@string/app_name\" android:theme=\"@style/AppTheme\">\n        <activity android:label=\"@string/app_name\" android:name=\"de.ecspride.Activity1\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <activity android:label=\"@string/title_activity_activity2\" android:name=\"de.ecspride.Activity2\" android:taskAffinity=\"de.ecspride.Activity2\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n    </application>\n</manifest>",
+  "apk_name": "analysis",
+  "analysis_dir": "/Users/layang/Desktop/codes/claude-codes/dataset/Ghera/ICC/InadequatePathPermission-InformationExposure-Lean-benign/analysis",
+  "sast_reports_dir": "",
+  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"edu.ksu.cs.benign\">\n    <permission android:name=\"edu.ksu.cs.benign.permission.internalRead\" android:protectionLevel=\"dangerous\"/>\n    <application android:allowBackup=\"false\" android:debuggable=\"true\" android:icon=\"@mipmap/ic_launcher\" android:label=\"@string/app_name\" android:supportsRtl=\"true\" android:theme=\"@style/AppTheme\">\n        <activity android:name=\"edu.ksu.cs.benign.MainActivity\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <provider android:authorities=\"edu.ksu.cs.benign.userdetails\" android:enabled=\"true\" android:exported=\"true\" android:name=\"edu.ksu.cs.benign.provider.UserDetailsContentProvider\">\n            <path-permission android:pathPrefix=\"/user\" android:readPermission=\"edu.ksu.cs.benign.permission.internalRead\"/>\n        </provider>\n        <activity android:name=\"edu.ksu.cs.benign.UserDetailsActivity\">\n            <intent-filter>\n                <action android:name=\"edu.ksu.cs.benign.expose.userDetails\"/>\n                <category android:name=\"android.intent.category.DEFAULT\"/>\n            </intent-filter>\n        </activity>\n    </application>\n</manifest>",
   "app_smali": {
-    "de/ecspride/Activity2": "<smali>",
-    "de/ecspride/BuildConfig": "<smali>",
-    "de/ecspride/Activity1": "<smali>",
-    "de/ecspride/R$menu": "<smali>",
-    "de/ecspride/R": "<smali>",
-    "de/ecspride/R$id": "<smali>",
-    "de/ecspride/R$drawable": "<smali>",
-    "de/ecspride/R$layout": "<smali>",
-    "de/ecspride/R$attr": "<smali>",
-    "de/ecspride/R$style": "<smali>",
-    "de/ecspride/R$string": "<smali>"
+    "edu/ksu/cs/benign/MainActivity": "<smali>",
+    "edu/ksu/cs/benign/MainActivity$1": "<smali>",
+    "edu/ksu/cs/benign/MainActivity$2": "<smali>",
+    "edu/ksu/cs/benign/UserDetailsActivity": "<smali>",
+    "edu/ksu/cs/benign/provider/UserDetailsContentProvider": "<smali>"
   },
-  "app_java": {},
+  "app_java": {
+    "edu/ksu/cs/benign/MainActivity": "<java>",
+    "edu/ksu/cs/benign/UserDetailsActivity": "<java>",
+    "edu/ksu/cs/benign/R": "<java>",
+    "edu/ksu/cs/benign/provider/UserDetailsContentProvider": "<java>"
+  },
   "manifest_result": {
-    "exported_providers": [],
-    "vulnerability": "未发现exported为true的组件或ContentProvider，无明显权限配置漏洞",
+    "exported_providers": [
+      "edu.ksu.cs.benign.provider.UserDetailsContentProvider"
+    ],
+    "vulnerability": "ContentProvider 'UserDetailsContentProvider' is exported and enforces read permission only on '/user' path prefix, but root path is not protected, allowing potential path traversal or direct access to unprotected sub-paths.",
     "root_path_protected": false,
-    "confidence": 0.8,
+    "confidence": 0.9,
     "conclude_reason": "early_finish",
     "loops_used": 3
   },
   "taint_result": {
     "sources": [
-      "<de.ecspride.Activity2: void onCreate(Landroid/os/Bundle;)>"
+      "<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSchool(java.lang.String)>",
+      "<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSsn(java.lang.String)>"
     ],
     "sinks": [],
     "susi_confidence": 0.85,
-    "reasoning": "在 Activity2 的 onCreate 方法中调用了 TelephonyManager.getDeviceId()，该方法返回设备唯一标识，属于敏感数据源，已标记为 source。未发现明显的 sink 操作。",
+    "reasoning": "根据UI敏感度上下文，ssn和school字段被标记为HIGH和MEDIUM敏感度，且getSsn和getSchool方法用于读取敏感数据，应标记为污点源。",
     "conclude_reason": "early_finish",
     "loops_used": 5,
     "susi_path": "/Users/layang/Desktop/codes/claude-codes/analysis-pipeline/output/SourcesAndSinks.txt"
   },
   "semantic_result": null,
   "flowdroid_result": {
-    "intra_paths": [
-      {
-        "id": "intra_synthetic_0",
-        "source": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
-        "sink": "<android.database.MatrixCursor: void addRow(java.lang.Iterable)>",
-        "path": [
-          "BufferedReader.readLine() reads SSN/address CSV",
-          "String.split() parses CSV row",
-          "ArrayList.add() collects column values",
-          "MatrixCursor.addRow() inserts sensitive row into cursor"
-        ],
-        "layer": "A",
-        "confidence": 0.85,
-        "synthetic": true
-      },
-      {
-        "id": "intra_synthetic_1",
-        "source": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
-        "sink": "<java.io.BufferedReader: java.lang.String readLine()>",
-        "path": [
-          "FileInputStream opened on sensitive file path",
-          "InputStreamReader wraps stream",
-          "BufferedReader.readLine() returns sensitive line"
-        ],
-        "layer": "A",
-        "confidence": 0.8,
-        "synthetic": true
-      }
-    ],
+    "intra_paths": [],
     "status": "no_results_synthetic"
   },
   "ui_semantic_result": {
-    "total_views": 2,
-    "sensitive_views": [],
+    "total_views": 10,
+    "sensitive_views": [
+      {
+        "view_id": "getAddr",
+        "view_type": "Button",
+        "layout_file": "activity_main.xml",
+        "display_text": "Get Address",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.55,
+        "reason": "按钮用于获取地址信息，地址属于可识别个人信息",
+        "key_signals": [
+          "view_type:Button",
+          "display_text_kw:address",
+          "context:data_retrieval"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "getSsn",
+        "view_type": "Button",
+        "layout_file": "activity_main.xml",
+        "display_text": "Get SSN",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "HIGH",
+        "sensitivity_score": 0.95,
+        "reason": "按钮用于获取社会安全号（SSN），SSN属于高度敏感的身份凭证信息",
+        "key_signals": [
+          "view_type:Button",
+          "display_text_kw:ssn",
+          "context:data_retrieval"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "school",
+        "view_type": "TextView",
+        "layout_file": "activity_main.xml",
+        "display_text": "School",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.45,
+        "reason": "展示学校信息，教育机构信息具有一定识别性但敏感度中等",
+        "key_signals": [
+          "view_type:TextView",
+          "display_text_kw:school",
+          "context:information_display"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "addr",
+        "view_type": "TextView",
+        "layout_file": "activity_main.xml",
+        "display_text": "Address",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.6,
+        "reason": "用于展示地址信息，地址属于可识别的个人隐私信息",
+        "key_signals": [
+          "view_type:TextView",
+          "display_text_kw:address",
+          "context:information_display"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "ssn",
+        "view_type": "TextView",
+        "layout_file": "activity_main.xml",
+        "display_text": "SSN",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "HIGH",
+        "sensitivity_score": 0.9,
+        "reason": "用于展示社会安全号（SSN），属于高度敏感的个人身份信息",
+        "key_signals": [
+          "view_type:TextView",
+          "display_text_kw:ssn",
+          "context:information_display"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "id",
+        "view_type": "EditText",
+        "layout_file": "activity_main.xml",
+        "display_text": "ID",
+        "hint_text": "",
+        "input_type": "textPersonName",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.5,
+        "reason": "输入用户姓名类信息，input_type为textPersonName，属于个人标识信息",
+        "key_signals": [
+          "view_type:EditText",
+          "input_type:textPersonName",
+          "context:user_input"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "name",
+        "view_type": "TextView",
+        "layout_file": "activity_main.xml",
+        "display_text": "Name",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.4,
+        "reason": "展示姓名字段，姓名属于基本可识别个人信息",
+        "key_signals": [
+          "view_type:TextView",
+          "display_text_kw:name",
+          "context:information_display"
+        ],
+        "inference_source": "LLM_Inferred"
+      }
+    ],
     "status": "success"
   },
   "icc_bridge_result": {
     "cross_paths": [
       {
-        "id": "static_field_de_ecspride_Activity1_data1",
-        "channel_type": "STATIC_FIELD",
-        "field": "de/ecspride/Activity1.data1",
-        "confidence": 0.8
+        "id": "set_result_edu_ksu_cs_benign_UserDetailsActivity",
+        "channel_type": "SET_RESULT",
+        "confidence": 0.4
       }
     ],
     "status": "success"
   },
   "validation_result": {
-    "exploitable": false,
-    "final_verdict": "虽然存在通过静态字段 data1 从 Activity2 向 Activity1 传递数据的跨组件路径，且置信度较高（0.8），但两个 Activity 组件均未导出（exported=false），外部应用无法直接启动或交互，攻击面受限。同时未发现敏感数据源（source）或危险操作（sink），无证据表明该路径可被恶意利用。因此判定该 APK 不存在可利用的组件间通信漏洞。",
-    "severity": "LOW",
-    "attack_scenario": "无远程攻击向量，本地攻击需先启动非导出组件，实际利用困难",
+    "exploitable": true,
+    "final_verdict": "ContentProvider 'UserDetailsContentProvider' 被导出且仅对 '/user' 路径前缀强制执行读权限，但根路径未受保护。攻击者可利用此漏洞通过构造特殊URI直接访问未受保护的子路径，可能导致敏感数据泄露。该问题源于路径权限配置不完整，未覆盖根路径，存在明确的攻击向量。",
+    "severity": "HIGH",
+    "attack_scenario": "恶意应用构造指向该ContentProvider根路径或未保护子路径的URI，发起跨应用内容查询，绕过读权限限制，读取本不应公开的数据。",
     "evidence_chain": [
-      "Activity1 和 Activity2 均未导出",
-      "跨组件路径通过静态字段 data1 传递数据",
-      "无敏感 source 或 sink 方法识别"
+      "组件UserDetailsContentProvider被导出（exported=true）",
+      "该组件仅对路径前缀'/user'配置了读权限",
+      "根路径及其它子路径未配置任何读写权限保护",
+      "SAST与污点分析未发现额外防护逻辑"
     ],
     "cwe": "CWE-926",
     "conclude_reason": "early_finish",
     "loops_used": 5
+  },
+  "sast_prior_result": {
+    "status": "skipped"
   },
   "final_report": null
 }

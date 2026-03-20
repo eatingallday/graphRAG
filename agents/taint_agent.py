@@ -13,8 +13,9 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from neo4j import GraphDatabase
 from state import AnalysisState
-from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OUTPUT_DIR
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OUTPUT_DIR, load_graph_description
 from utils.agent_loop import run_agent_loop
+from utils.debug_logger import log_file_output, trace_event
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -228,6 +229,7 @@ def _write_susi_xml(sources: list[str], sinks: list[str], path: str):
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines) + "\n")
     print(f"[taint_agent] SuSi XML written to {path}")
+    log_file_output(path, label="susi_sources_sinks", agent="taint_agent")
 
 
 # ── System prompt ─────────────────────────────────────────────────────────────
@@ -285,12 +287,22 @@ def run_taint_agent(state: AnalysisState) -> dict:
             "c.root_path_protected AS rpp, c.vuln_description AS vuln"
         ).data()
     print(f"[taint_agent] Exported providers: {providers}")
+    trace_event(
+        "taint_context",
+        {"providers": providers, "apk_name": state.get("apk_name", "")},
+        agent="taint_agent",
+    )
 
     # Step 2：规则预分类
     framework_calls = extract_framework_api_calls(smali_map)
     auto_sources    = sorted(framework_calls & _FRAMEWORK_SOURCES)
     auto_sinks      = sorted(framework_calls & _FRAMEWORK_SINKS)
     print(f"[taint_agent] Rule_Based: {len(auto_sources)} sources, {len(auto_sinks)} sinks")
+    trace_event(
+        "taint_rule_based",
+        {"auto_sources": auto_sources, "auto_sinks": auto_sinks},
+        agent="taint_agent",
+    )
 
     with driver.session() as s:
         for sig in auto_sources:
@@ -317,6 +329,9 @@ def run_taint_agent(state: AnalysisState) -> dict:
         if ui_sources:
             auto_sources = auto_sources + ui_sources
             print(f"[taint_agent] UI_Inferred: {len(ui_sources)} additional sources")
+
+    # Step 2c: Read SAST prior hints (no source/sink auto-injection here)
+    sast_result = state.get("sast_prior_result") or {}
 
     # Step 3：工具闭包
     llm_added_sources: list[str] = []
@@ -370,12 +385,15 @@ def run_taint_agent(state: AnalysisState) -> dict:
 
     def mark_source(sig: str, reason: str) -> str:
         try:
+            cls  = sig.lstrip("<").split(":")[0]
+            name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
             with driver.session() as s:
                 s.run("""
-                    MATCH (m:Method {sig:$sig})
+                    MERGE (m:Method {sig:$sig})
                     SET m.taint_role='source', m.confidence=0.8,
-                        m.inference_source='LLM_Inferred'
-                """, sig=sig)
+                        m.inference_source='LLM_Inferred',
+                        m.name=$name, m.class=$cls
+                """, sig=sig, name=name, cls=cls)
             if sig not in llm_added_sources:
                 llm_added_sources.append(sig)
             return f"已标记 source: {sig}"
@@ -384,12 +402,15 @@ def run_taint_agent(state: AnalysisState) -> dict:
 
     def mark_sink(sig: str, reason: str) -> str:
         try:
+            cls  = sig.lstrip("<").split(":")[0]
+            name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
             with driver.session() as s:
                 s.run("""
-                    MATCH (m:Method {sig:$sig})
+                    MERGE (m:Method {sig:$sig})
                     SET m.taint_role='sink', m.confidence=0.8,
-                        m.inference_source='LLM_Inferred'
-                """, sig=sig)
+                        m.inference_source='LLM_Inferred',
+                        m.name=$name, m.class=$cls
+                """, sig=sig, name=name, cls=cls)
             if sig not in llm_added_sinks:
                 llm_added_sinks.append(sig)
             return f"已标记 sink: {sig}"
@@ -427,6 +448,35 @@ def run_taint_agent(state: AnalysisState) -> dict:
     # Inject UI sensitivity context if available
     ui_context = _query_ui_context(driver)
 
+    # SAST hints summary for LLM context
+    sast_hints_text = ""
+    if sast_result.get("status") == "success":
+        method_hints = sast_result.get("method_hints", [])
+        component_hints = sast_result.get("component_hints", [])
+        sections = []
+        if method_hints:
+            lines = [
+                "## SAST 污点提示（已写入图，可用 query_neo4j 查询）",
+                "以下方法被 SAST 工具标记为潜在污点相关，请验证后再决定是否标记：",
+            ]
+            for hint in method_hints[:10]:
+                lines.append(
+                    f"- `{hint['sig']}` -> {hint['hint_type']} "
+                    f"(score={hint['score']:.2f}, tool={hint['tool']})"
+                )
+            sections.append("\n".join(lines))
+        if component_hints:
+            lines = [
+                "## SAST 组件搜索提示",
+                "以下组件/方法被 SAST 工具标记，请优先检查：",
+            ]
+            for hint in component_hints[:10]:
+                lines.append(
+                    f"- {hint['target']} (score={hint['fused_score']:.2f}): {hint['hint_text']}"
+                )
+            sections.append("\n".join(lines))
+        sast_hints_text = "\n\n".join(sections)
+
     first_user_msg = (
         f"分析目标：{state['apk_name']}\n"
         f"已知暴露的 ContentProvider：{providers}\n\n"
@@ -435,13 +485,14 @@ def run_taint_agent(state: AnalysisState) -> dict:
         + "\n\n【规则已自动标注为 Sink（无需重复选）】：\n"
         + ("\n".join(auto_sinks) or "（无）")
         + (f"\n\n{ui_context}" if ui_context else "")
+        + (f"\n\n{sast_hints_text}" if sast_hints_text else "")
         + "\n\n请使用工具自主探索 app 代码，补充额外的 source 和 sink。"
           "如果存在 UI 敏感度上下文，可使用 query_ui_views 工具获取更多信息。"
     )
 
     result = run_agent_loop(
         agent_name    = "taint_agent",
-        system_prompt = TAINT_SYSTEM,
+        system_prompt = TAINT_SYSTEM + "\n\n" + load_graph_description(),
         first_user_msg= first_user_msg,
         tool_executors= tool_executors,
         max_loops     = 5,
@@ -467,6 +518,46 @@ def run_taint_agent(state: AnalysisState) -> dict:
     susi_path = os.path.join(OUTPUT_DIR, "SourcesAndSinks.txt")
     _write_susi_xml(all_sources, all_sinks, susi_path)
     result["susi_path"] = susi_path
+
+    # Write-back: ensure every source/sink sig has taint_role set in Neo4j.
+    # Rule_Based sigs were already MERGE'd above; LLM-found sigs from `finish`
+    # args or failed `mark_source`/`mark_sink` (MATCH on non-existent nodes)
+    # are NOT in Neo4j yet. Use MERGE so framework API nodes get created too.
+    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    with driver.session() as s:
+        for sig in all_sources:
+            try:
+                cls  = sig.lstrip("<").split(":")[0]
+                name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
+                s.run(
+                    "MERGE (m:Method {sig:$sig}) "
+                    "SET m.taint_role='source', m.name=$name, m.class=$cls",
+                    sig=sig, name=name, cls=cls,
+                )
+            except Exception:
+                pass
+        for sig in all_sinks:
+            try:
+                cls  = sig.lstrip("<").split(":")[0]
+                name = sig.split(": ")[1].split("(")[0].split(" ")[-1]
+                s.run(
+                    "MERGE (m:Method {sig:$sig}) "
+                    "SET m.taint_role='sink', m.name=$name, m.class=$cls",
+                    sig=sig, name=name, cls=cls,
+                )
+            except Exception:
+                pass
+    driver.close()
+
+    trace_event(
+        "taint_final",
+        {
+            "all_sources": all_sources,
+            "all_sinks": all_sinks,
+            "susi_path": susi_path,
+        },
+        agent="taint_agent",
+    )
 
     print(f"[taint_agent] Done. sources={len(all_sources)}, sinks={len(all_sinks)}, "
           f"conclude_reason={result.get('conclude_reason')}, loops={result.get('loops_used')}")

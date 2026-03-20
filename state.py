@@ -8,6 +8,7 @@ class AnalysisState(TypedDict):
     # ── Input ────────────────────────────────────────────────────────────────
     apk_name:     str
     analysis_dir: Optional[str]  # APK 产物目录路径，供 ui_semantic_agent 等读取文件系统的 agent 使用
+    sast_reports_dir: Optional[str]
     manifest_xml: str
     app_smali:    dict   # {class_name: smali_content}
     app_java:     dict   # {class_name: java_content} (may be empty)
@@ -35,6 +36,10 @@ class AnalysisState(TypedDict):
 
     validation_result:  Optional[dict]
     # keys: cypher_queries, final_verdict, exploitable, evidence_chain
+
+    sast_prior_result: Optional[dict]
+    # keys: status, tools_loaded, stats, method_hints, component_hints,
+    #        fused_findings_summary
 
     # ── Output ────────────────────────────────────────────────────────────────
     final_report: Optional[str]

@@ -1,0 +1,1938 @@
+{
+  "tool_name": "ausera",
+  "tool_version": "",
+  "repo_url": "https://github.com/tjusenchen/AUSERA",
+  "implementation_languages": [
+    "The local snapshot analyzed here is primarily Java 8 with Soot-based analysis. GitHub API metadata checked on 2026-03-13 reports the repository primary language as Python",
+    "which likely reflects newer wrapper or auxiliary code rather than this local core engine snapshot."
+  ],
+  "last_maintained": "GitHub API `pushed_at = 2024-10-29T05:51:44Z`",
+  "maintenance_status": "active",
+  "input_formats": [
+    "apk",
+    "smali"
+  ],
+  "intermediate_representations": [
+    "jimple",
+    "manifest_xml",
+    "smali"
+  ],
+  "requires_decompilation": true,
+  "decompilation_tools": [],
+  "capabilities": [
+    {
+      "capability_id": "ausera_potential_icc_data_leakage",
+      "category": "Potential ICC data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "class_name",
+        "component_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_allow_backup_issue",
+      "category": "Allow backup issue",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_allow_debug_issue",
+      "category": "Allow debug issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_package_hardcoded_issue",
+      "category": "Package hardcoded issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-321"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_invalid_certificates_expire_sha1",
+      "category": "Invalid certificates (expire, sha1)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "certificate_info"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_text_file_app_package_data_leakage",
+      "category": "Text file (app package) data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200",
+        "CWE-312"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sharedpreference_data_leakage",
+      "category": "SharedPreference data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-312"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "external_taint_ingest",
+          "depth": "external_result_ingest",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_logging_data_leakage",
+      "category": "Logging data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "external_taint_ingest",
+          "depth": "external_result_ingest",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sd_card_internal_data_leakage",
+      "category": "SD card/Internal data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-312"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "external_taint_ingest",
+          "depth": "external_result_ingest",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sms_data_leakage",
+      "category": "SMS data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-201"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "external_taint_ingest",
+          "depth": "external_result_ingest",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sql_data_leakage",
+      "category": "SQL data leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-312"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "external_taint_ingest",
+          "depth": "external_result_ingest",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_preference_mode_world_readable",
+      "category": "Preference MODE_WORLD_READABLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_preference_mode_world_writable",
+      "category": "Preference MODE_WORLD_WRITABLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_mode_world_readable",
+      "category": "MODE_WORLD_READABLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_mode_world_writable",
+      "category": "MODE_WORLD_WRITABLE",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_webview_password_leakage",
+      "category": "WebView password leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_webview_javascript_execution",
+      "category": "WebView JavaScript execution",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_webview_local_file_access",
+      "category": "WebView local file access",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_webview_setpluginstate",
+      "category": "WebView setPluginState",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_mitm_attacks",
+      "category": "MITM attacks",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_des_encryption_issue",
+      "category": "DES encryption issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_base64_encryption_issue",
+      "category": "Base64 encryption issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_blowfish_encryption_issue",
+      "category": "Blowfish encryption issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_aes_encryption_issue",
+      "category": "AES encryption issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "constant_value"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_rsa_encryption_issue",
+      "category": "RSA encryption issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "app",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "constant_value"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_insecure_securerandom_setseed",
+      "category": "Insecure SecureRandom (setSeed)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-330"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_insecure_hash_function_md5_sha1",
+      "category": "Insecure hash function (md5/sha1)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-328"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "constant_value"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sql_injection_issue",
+      "category": "SQL injection issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-89"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_insecure_socket_issue",
+      "category": "Insecure socket issue",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_fragment_injection_issue",
+      "category": "Fragment injection issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-470"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_using_http_issue",
+      "category": "Using http issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_using_temp_file_issue",
+      "category": "Using temp file issue",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-377"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sensitive_functionality_loadlibrary",
+      "category": "Sensitive functionality (loadLibrary)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sensitive_functionality_dexclassloader",
+      "category": "Sensitive functionality (DexClassLoader)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_sensitive_functionality_getruntime_exec",
+      "category": "Sensitive functionality (getRuntime.exec)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_contentprovider_openfile",
+      "category": "ContentProvider openFile",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-22"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_empty_pending_intent",
+      "category": "Empty Pending Intent",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "ausera_screenshot_harvest",
+      "category": "Screenshot harvest",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "Implemented-but-disabled capabilities"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "json",
+    "txt"
+  ],
+  "severity_scheme": [
+    "high",
+    "low",
+    "medium"
+  ],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": false,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Effective on explicit misconfigurations and API misuse patterns",
+    "Covers manifest, package assets, WebView, TLS, crypto, storage, and several Android-specific misuse cases in one pipeline",
+    "UI-label enrichment is useful: it maps taint flows back to widget ids, `TextView` text, and `EditText` hints, which is valuable for banking-style input-field semantics",
+    "Uses Soot on APK directly rather than needing source code"
+  ],
+  "overall_limitations": [
+    "The local rules are mostly heuristic string/API matches, not deep semantic analysis",
+    "No per-line locations in findings",
+    "Many findings only resolve to class or method granularity",
+    "Custom rule support is poor",
+    "Third-party library filtering is crude",
+    "The main pipeline does not actually invoke FlowDroid or IccTA in this snapshot; it only consumes files if they already exist",
+    "Several rules are brittle and likely produce false positives or false negatives",
+    "Likely false positives or logic issues:",
+    "`RSA encryption issue` is emitted even when the app does not use RSA at all",
+    "`Screenshot harvest` is a negative global check and can flag apps simply because no `FLAG_SECURE` usage is found anywhere",
+    "`Empty Pending Intent` only checks for `PendingIntent`, `0`, and absence of `FLAG_UPDATE_CURRENT`, which is too weak",
+    "WebView boolean checks appear to interpret Jimple `>(0)` as enabled, which is likely semantically fragile",
+    "`ContentProvider openFile` and `WebView setPluginState` appear to be swapped in implementation",
+    "Taint analysis relevance: Medium",
+    "This tool can enrich taint results and classify sink families",
+    "However, in this code snapshot, taint generation itself is external and not executed by default in the main path",
+    "Without external FlowDroid/IccTA outputs, the taint-related capability mostly disappears"
+  ],
+  "implementation_reliability": "medium",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.514035+00:00",
+  "extraction_source": "codex_report"
+}

@@ -1,0 +1,1478 @@
+{
+  "tool_name": "trueseeing",
+  "tool_version": "",
+  "repo_url": "https://github.com/alterakey/trueseeing",
+  "implementation_languages": [
+    "Python"
+  ],
+  "last_maintained": "local snapshot reports `__version__ = 2.2.7`; official GitHub repo was pushed on 2025-12-02 UTC; latest PyPI release was 2.2.8 on 2025-10-20 UTC.",
+  "maintenance_status": "active",
+  "input_formats": [
+    "apk",
+    "smali",
+    "source",
+    "xapk"
+  ],
+  "intermediate_representations": [
+    "dalvik",
+    "jimple",
+    "manifest_xml",
+    "smali",
+    "sqlite_index"
+  ],
+  "requires_decompilation": false,
+  "decompilation_tools": [],
+  "capabilities": [
+    {
+      "capability_id": "trueseeing_requested_permissions_observational",
+      "category": "Requested permissions (observational)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "observation",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "permission_name"
+      ],
+      "severity_values": [
+        "Info via embedded CVSS vector"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_exported_activity_private_action_activity",
+      "category": "Exported Activity / private-action activity",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "Info for plain export",
+        "Medium when private action names suggest accidental export"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_exported_broadcastreceiver_private_action_receiver",
+      "category": "Exported BroadcastReceiver / private action receiver",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "Info",
+        "Medium depending on subtype"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_exported_contentprovider_accidental_export",
+      "category": "Exported ContentProvider / accidental export",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "Info",
+        "Medium depending on subtype"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_auto_backup_enabled",
+      "category": "Auto Backup enabled",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_debuggable_app",
+      "category": "Debuggable app",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_cleartext_traffic_permitted",
+      "category": "Cleartext traffic permitted",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "network_security_config_parse",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_insecure_file_permission_mode_world",
+      "category": "Insecure file permission (`MODE_WORLD_*`)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature",
+        "constant_value"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_tls_interception_no_pinning_user_ca_trust",
+      "category": "TLS interception / no pinning / user CA trust",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "network_security_config_parse",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "app",
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Medium for insecure cases",
+        "Info for explicit pinning observation"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_tamperable_webview_surface",
+      "category": "Tamperable WebView surface",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "method_signature",
+        "domain_scope",
+        "score"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_insecure_javascript_interface_in_webview",
+      "category": "Insecure JavaScript interface in WebView",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749",
+        "CWE-94"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "High"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_insecure_mixed_content_mode",
+      "category": "Insecure mixed content mode",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Medium",
+        "Low depending on mode"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_weak_or_missing_content_security_policy_in_asset_loaded_webview",
+      "category": "Weak or missing Content Security Policy in asset-loaded WebView",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693",
+        "CWE-79"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature",
+        "call_path"
+      ],
+      "severity_values": [
+        "Low for insecure CSP",
+        "Info when CSP exists"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_potential_format_string_style_sink_content",
+      "category": "Potential format-string style sink content",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_logging_activity",
+      "category": "Logging activity",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_potential_client_side_xss_in_jquery_assets",
+      "category": "Potential client-side XSS in JQuery assets",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-79"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_file_write_possible_file_logging",
+      "category": "File write / possible file logging",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature"
+      ],
+      "severity_values": [
+        "Low for likely log file",
+        "Info for generic file write"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_device_fingerprinting_device_id_access",
+      "category": "Device fingerprinting / device ID access",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-359"
+      ],
+      "signal_polarity": "observation",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_sms_access_send_intercept",
+      "category": "SMS access / send / intercept",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-359"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_hardcoded_cryptographic_material_keys_certificates",
+      "category": "Hardcoded cryptographic material / keys / certificates",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-321"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "dex_string_scan",
+          "depth": "syntax_only",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "method_signature",
+        "constant_value"
+      ],
+      "severity_values": [
+        "Info for generic crypto constants",
+        "Low for public keys",
+        "certs",
+        "Medium for static keys",
+        "High for private keys"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_ecb_mode_cipher_usage",
+      "category": "ECB mode cipher usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_non_random_xor_cipher",
+      "category": "Non-random XOR cipher",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Medium"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_root_detection_mismatch_observational",
+      "category": "Root detection mismatch (observational)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "observation",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_sharedpreferences_access_observational",
+      "category": "SharedPreferences access (observational)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "observation",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_embedded_libraries_and_library_versions",
+      "category": "Embedded libraries and library versions",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "library_fingerprint",
+          "depth": "api_presence",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_lack_of_obfuscation_obfuscator_present",
+      "category": "Lack of obfuscation / obfuscator present",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Info for obfuscator present",
+        "Low for lack of obfuscation"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_url_like_strings_authenticated_urls_ipv4s_fqdns_path_components",
+      "category": "URL-like strings, authenticated URLs, IPv4s, FQDNs, path components",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "Info",
+        "except authenticated URLs are Low"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_native_methods_jni",
+      "category": "Native methods (JNI)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_native_architectures",
+      "category": "Native architectures",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app",
+        "library"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_reflection_and_classloader_use",
+      "category": "Reflection and classloader use",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "smali_invocation_pattern",
+          "depth": "api_presence",
+          "target_artifact": "smali",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature",
+        "constant_value"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_native_api_private_calls",
+      "category": "Native API/private calls",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "trueseeing_url_like_strings_in_native_code",
+      "category": "URL-like strings in native code",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "Info",
+        "Firm",
+        "Tentative confidence only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "html",
+    "json",
+    "txt"
+  ],
+  "severity_scheme": [
+    "info"
+  ],
+  "has_confidence_score": true,
+  "has_numeric_risk_score": true,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Strong at APK-level configuration problems that survive obfuscation: exported components, debuggable builds, backup flags, cleartext traffic, and many WebView settings.",
+    "Good at surfacing hardcoded crypto artifacts because it combines API-pattern matching with bounded constant backtracking and ASN.1 decoding.",
+    "Useful as a broad evidence extractor: URLs, libraries, reflection, JNI/native offsets, preference keys, and logging calls can all seed downstream reasoning.",
+    "Resource/asset coverage is better than many pure-code scanners: it scans manifest XML, resource XML, string resources, HTML assets, JS assets, and optional native disassembly."
+  ],
+  "overall_limitations": [
+    "Not a real taint analyzer. It traces constants and simple types backward; it does not model attacker-controlled data flowing from sources to sinks.",
+    "No SQL injection, command injection, path traversal, authorization logic, token leakage, deserialization, or general business-logic bug modeling.",
+    "No inter-component communication analysis and no implicit-intent reasoning.",
+    "README is partly stale: it claims exported Service detection, but this snapshot has no Android Service export detector.",
+    "Several detectors are visibly heuristic or brittle:",
+    "`security-tls-interception` treats modern non-debuggable apps as if Network Security Config implies pinning, which is too optimistic.",
+    "The same detector looks for `.//pins` under `<certificates>` and calls `pin.attrib(...)` like a function, so explicit NSC pin extraction appears broken.",
+    "`manifest-cleartext-permitted` compares `.lower` instead of `.lower()`, so the manifest-side `usesCleartextTraffic` branch is effectively wrong.",
+    "`manifest-manip-contentprovider` checks `//receiver[...]` when attempting provider private-action detection.",
+    "Granularity is usually method-or-file level only. Android rules almost never populate `aff1`/`aff2`, so there is no stable line/column location for most findings.",
+    "Some signatures are deliberately observational rather than vulnerability findings: open permissions, SharedPreferences access, root-detection style, reflection, libraries, URLs, JNI usage, native architectures.",
+    "Several signatures have high false-positive risk because they are pure heuristics with no sink/source validation, especially logging, format strings, jQuery `.html(`, URL-like strings, reflection, library versions, and file-write detections.",
+    "Taint relevance:",
+    "Low.",
+    "Explanation: the tool is mostly a sink/configuration matcher with limited constant recovery. Its output is still useful as taint-analysis prior knowledge (for example, WebView sinks, crypto API sites, logging sinks, SMS/device-ID accesses), but the tool itself does not perform source-to-sink taint reasoning."
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.526001+00:00",
+  "extraction_source": "codex_report"
+}

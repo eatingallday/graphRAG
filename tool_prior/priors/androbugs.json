@@ -1,0 +1,1531 @@
+{
+  "tool_name": "androbugs",
+  "tool_version": "",
+  "repo_url": "https://github.com/AndroBugs/AndroBugs_Framework",
+  "implementation_languages": [
+    "Python 2.7",
+    "with a modified in-repo copy of Androguard (`tools/modified/androguard`)"
+  ],
+  "last_maintained": "latest visible GitHub commit is on Nov 11, 2015; the GitHub repository is archived as of Mar 21, 2023",
+  "maintenance_status": "archived",
+  "input_formats": [
+    "apk",
+    "smali",
+    "source"
+  ],
+  "intermediate_representations": [
+    "dalvik",
+    "decompiled_java",
+    "manifest_xml",
+    "smali"
+  ],
+  "requires_decompilation": true,
+  "decompilation_tools": [],
+  "capabilities": [
+    {
+      "capability_id": "androbugs_cleartext_http_endpoints",
+      "category": "Cleartext HTTP endpoints",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "dex_string_scan",
+          "depth": "syntax_only",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "class_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "HACKER_BASE64_URL_DECODE",
+        "SSL_URLS_NOT_IN_HTTPS"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_webview_js_bridge_rce",
+      "category": "WebView JS bridge RCE",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "api_call_xref",
+          "depth": "api_presence",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "WEBVIEW_RCE"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_debuggable_application_build",
+      "category": "Debuggable application build",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "DEBUGGABLE"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_unnecessary_emulator_mock_location_permission",
+      "category": "Unnecessary emulator/mock-location permission",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_permission_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "permission_name"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "USE_PERMISSION_ACCESS_MOCK_LOCATION"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_weak_or_dangerous_app_privilege_declarations",
+      "category": "Weak or dangerous app privilege declarations",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-250"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_permission_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "permission_name"
+      ],
+      "severity_values": [
+        "Critical",
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "MASTER_KEY_SYSTEM_APP",
+        "SHARED_USER_ID",
+        "USE_PERMISSION_CRITICAL",
+        "USE_PERMISSION_SYSTEM_APP"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_missing_internet_permission_despite_network_code",
+      "category": "Missing `INTERNET` permission despite network code",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_permission_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "api_call_xref",
+          "depth": "api_presence",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "app",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path",
+        "permission_name"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "USE_PERMISSION_INTERNET"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_base64_obfuscated_strings_endpoints",
+      "category": "Base64-obfuscated strings / endpoints",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "HACKER_BASE64_STRING_DECODE"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_keystore_loaded_without_password_likely_ssl_pinning_keystore",
+      "category": "Keystore loaded without password / likely SSL pinning keystore",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "HACKER_KEYSTORE_NO_PWD",
+        "HACKER_KEYSTORE_SSL_PINNING",
+        "HACKER_KEYSTORE_SSL_PINNING2"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_non_bks_keystore_type",
+      "category": "Non-BKS keystore type",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "KEYSTORE_TYPE_CHECK"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_runtime_command_execution_root_request",
+      "category": "Runtime command execution / root request",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "dex_string_scan",
+          "depth": "syntax_only",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "api_call_xref",
+          "depth": "api_presence",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "COMMAND",
+        "COMMAND_MAYBE_SYSTEM",
+        "COMMAND_SU"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_insecure_hostname_verification",
+      "category": "Insecure hostname verification",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature",
+        "class_name",
+        "call_path",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "SSL_CN1",
+        "SSL_CN2"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_insecure_tls_components_or_default_scheme",
+      "category": "Insecure TLS components or default scheme",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295",
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "SSL_CN3",
+        "SSL_DEFAULT_SCHEME_NAME"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_webview_ssl_error_bypass",
+      "category": "WebView SSL error bypass",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "class_hierarchy_check",
+          "depth": "intra_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "method_signature"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "SSL_WEBVIEW"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_weak_blank_x509trustmanager",
+      "category": "Weak / blank `X509TrustManager`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "class_hierarchy_check",
+          "depth": "intra_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "method_signature",
+        "class_name",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Warning",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "SSL_X509"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_risky_webview_settings",
+      "category": "Risky WebView settings",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Warning",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "WEBVIEW_ALLOW_FILE_ACCESS",
+        "WEBVIEW_JS_ENABLED"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_pre_froyo_httpurlconnection_keep_alive_issue",
+      "category": "Pre-Froyo `HttpURLConnection` keep-alive issue",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "app",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "HTTPURLCONNECTION_BUG"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_incompatible_deprecated_sqlite_transaction_api",
+      "category": "Incompatible deprecated SQLite transaction API",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "app",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "DB_DEPRECATED_USE1"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_world_readable_world_writeable_app_storage",
+      "category": "World-readable / world-writeable app storage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-276",
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "MODE_WORLD_READABLE_OR_MODE_WORLD_WRITEABLE"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_dynamic_code_loading",
+      "category": "Dynamic code loading",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Warning",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "DYNAMIC_CODE_LOADING"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_external_storage_access",
+      "category": "External storage access",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Warning",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "EXTERNAL_STORAGE"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_fragment_injection_in_preferenceactivity",
+      "category": "Fragment injection in `PreferenceActivity`",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "class_hierarchy_check",
+          "depth": "intra_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "class_name"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "FRAGMENT_INJECTION"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_weak_custom_permission_protection",
+      "category": "Weak custom permission protection",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-284",
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "permission_name"
+      ],
+      "severity_values": [
+        "Critical",
+        "Warning",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "PERMISSION_DANGEROUS",
+        "PERMISSION_GROUP_EMPTY_VALUE",
+        "PERMISSION_NORMAL"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_exported_component_exposure_manifest_icc_misconfiguration",
+      "category": "Exported component exposure / manifest ICC misconfiguration",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "component"
+      ],
+      "evidence_types": [
+        "manifest_attribute"
+      ],
+      "severity_values": [
+        "Critical",
+        "Warning",
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "PERMISSION_EXPORTED",
+        "PERMISSION_EXPORTED_GOOGLE",
+        "PERMISSION_IMPLICIT_SERVICE",
+        "PERMISSION_INTENT_FILTER_MISCONFIG",
+        "PERMISSION_NO_PREFIX_EXPORTED",
+        "PERMISSION_PROVIDER_EXPLICIT_EXPORTED",
+        "PERMISSION_PROVIDER_IMPLICIT_EXPORTED"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_sqlite_journal_disclosure_exposure",
+      "category": "SQLite journal disclosure exposure",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "DB_SQLITE_JOURNAL"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_database_encryption_presence_db_key_usage_context",
+      "category": "Database encryption presence / DB key usage context",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "dex_string_scan",
+          "depth": "syntax_only",
+          "target_artifact": "dalvik",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "library_fingerprint",
+          "depth": "api_presence",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "app",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path",
+        "library_info"
+      ],
+      "severity_values": [
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "DB_SEE",
+        "DB_SQLCIPHER",
+        "HACKER_DB_KEY"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_sensitive_device_identifiers_sms_sending",
+      "category": "Sensitive device identifiers / SMS sending",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Warning",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "SENSITIVE_DEVICE_ID",
+        "SENSITIVE_SECURE_ANDROID_ID",
+        "SENSITIVE_SMS"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_apk_signature_file_structure_vulnerability",
+      "category": "APK signature/file-structure vulnerability",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "apk_file_inventory",
+          "depth": "api_presence",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Critical",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "MASTER_KEY"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_unsafe_file_deletion",
+      "category": "Unsafe file deletion",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-226",
+        "CWE-459"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path",
+        "call_path"
+      ],
+      "severity_values": [
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "FILE_DELETE"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "androbugs_backup_exposure",
+      "category": "Backup exposure",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Notice",
+        "Info"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`kind` / `finding_polarity`: AndroBugs mixes vulnerabilities, hardening signals, reverse-engineering hints, and compatibility notices in one severity scheme",
+        "`active`: some vectors exist in source but are disabled/commented out",
+        "`SSL_CN1`: interface-implementation scan + semantic method-body heuristic + caller tracing"
+      ],
+      "native_rule_ids": [
+        "ALLOW_BACKUP"
+      ],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "json",
+    "sarif",
+    "txt"
+  ],
+  "severity_scheme": [
+    "critical",
+    "info",
+    "notice",
+    "warning"
+  ],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": false,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Strong Android-manifest coverage: exported components, provider defaults, intent-filter misuse, dangerous custom permissions, backup, debuggable, `sharedUserId`",
+    "Strong heuristic coverage for classic Android SSL/WebView issues from the 2013-2015 era",
+    "Method-level evidence is usually preserved through xref paths and method signatures, which is useful for LLM-side grounding",
+    "Lightweight constant-argument backtrace improves precision beyond plain API presence checks",
+    "APK-level and string-table checks catch classes of issues missed by pure manifest-only tools, including Master Key, plain HTTP strings, Base64-obfuscated strings, and framework fingerprints",
+    "It also produces useful non-vulnerability context: anti-tamper checks, native library loading, SQLCipher use, framework packing"
+  ],
+  "overall_limitations": [
+    "No general source-to-sink taint analysis, no path-sensitive dataflow, no symbolic execution",
+    "Reflection, dynamically generated strings, encrypted strings beyond simple Base64, and native code behavior are mostly invisible",
+    "Many findings are presence-based heuristics, so false positives are plausible for `COMMAND`, `COMMAND_MAYBE_SYSTEM`, `EXTERNAL_STORAGE`, device ID access, and some SSL patterns",
+    "No precise source line numbers, AST, or code snippets; evidence is mostly class/method/call-path text",
+    "Several checks are version-specific and dated; the rule base is anchored in Android security issues prominent around 2013-2015",
+    "Certificate-signing check is disabled in commented-out code, so the repo contains dead capability definitions",
+    "Severity semantics are inconsistent because `Notice` often means \"interesting to a reverser\" rather than \"medium risk vulnerability\"",
+    "Taint relevance:",
+    "Low to Medium",
+    "Explanation: the tool uses Androguard's \"tainted package\" APIs primarily as xref/callsite indexes, not as end-to-end taint propagation between attacker-controlled sources and dangerous sinks. Its output is still useful for taint-guided reasoning because it identifies sinks, dangerous APIs, and exposed components, but it does not itself compute source-sink reachability."
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.509818+00:00",
+  "extraction_source": "codex_report"
+}

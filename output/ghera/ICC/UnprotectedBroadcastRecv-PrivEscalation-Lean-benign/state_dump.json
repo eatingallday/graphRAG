@@ -1,0 +1,677 @@
+{
+  "apk_name": "UnprotectedBroadcastRecv-PrivEscalation-Lean-benign",
+  "analysis_dir": "/Users/layang/Desktop/codes/claude-codes/Ghera/ICC/UnprotectedBroadcastRecv-PrivEscalation-Lean-benign/analysis",
+  "sast_reports_dir": "/Users/layang/Desktop/codes/claude-codes/Ghera/ICC/UnprotectedBroadcastRecv-PrivEscalation-Lean-benign/reports",
+  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"edu.ksu.cs.benign\">\n    <uses-permission android:name=\"android.permission.SEND_SMS\"/>\n    <uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>\n    <application android:allowBackup=\"false\" android:debuggable=\"true\" android:icon=\"@mipmap/ic_launcher\" android:label=\"@string/app_name\" android:supportsRtl=\"true\" android:theme=\"@style/AppTheme\">\n        <activity android:name=\"edu.ksu.cs.benign.MainActivity\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <receiver android:enabled=\"true\" android:exported=\"true\" android:name=\"edu.ksu.cs.benign.MyReceiver\">\n            <intent-filter>\n                <action android:name=\"edu.ksu.cs.benign.myrecv\"/>\n                <category android:name=\"android.intent.category.DEFAULT\"/>\n            </intent-filter>\n        </receiver>\n    </application>\n</manifest>",
+  "app_smali": {
+    "edu/ksu/cs/benign/MainActivity": "<smali>",
+    "edu/ksu/cs/benign/MyReceiver": "<smali>",
+    "edu/ksu/cs/benign/MainActivity$1": "<smali>"
+  },
+  "app_java": {
+    "edu/ksu/cs/benign/MyReceiver": "<java>",
+    "edu/ksu/cs/benign/MainActivity": "<java>",
+    "edu/ksu/cs/benign/R": "<java>"
+  },
+  "manifest_result": {
+    "exported_providers": [],
+    "vulnerability": "发现 exported=true 的 BroadcastReceiver 'edu.ksu.cs.benign.MyReceiver'，可接收外部应用发送的广播，存在拒绝服务或敏感信息泄露风险",
+    "root_path_protected": false,
+    "confidence": 0.9,
+    "conclude_reason": "early_finish",
+    "loops_used": 3
+  },
+  "taint_result": {
+    "sources": [
+      "<edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)>"
+    ],
+    "sinks": [
+      "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+    ],
+    "susi_confidence": 0.85,
+    "reasoning": "onClick 方法读取了 MEDIUM 敏感度的 phone 输入控件，构成污点源；onReceive 方法被多个 SAST 工具标记为潜在 sink，且涉及广播接收和敏感数据流，构成污点汇。",
+    "conclude_reason": "early_finish",
+    "loops_used": 5,
+    "susi_path": "/Users/layang/Desktop/codes/claude-codes/analysis-pipeline/output/SourcesAndSinks.txt"
+  },
+  "semantic_result": null,
+  "flowdroid_result": {
+    "intra_paths": [
+      {
+        "id": "intra_synthetic_0",
+        "source": "<edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)>",
+        "sink": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "path": [
+          "Synthetic: <edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)> → <edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+        ],
+        "layer": "A",
+        "confidence": 0.5,
+        "synthetic": true
+      }
+    ],
+    "status": "synthetic_fallback"
+  },
+  "ui_semantic_result": {
+    "total_views": 4,
+    "sensitive_views": [
+      {
+        "view_id": "phone",
+        "view_type": "EditText",
+        "layout_file": "activity_main.xml",
+        "display_text": "Phone",
+        "hint_text": "",
+        "input_type": "textPersonName",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.65,
+        "reason": "用于输入电话号码，属于可识别个人信息",
+        "key_signals": [
+          "view_id_kw:phone",
+          "display_text:Phone",
+          "input_type:textPersonName"
+        ],
+        "inference_source": "LLM_Inferred"
+      }
+    ],
+    "status": "success"
+  },
+  "icc_bridge_result": {
+    "cross_paths": [],
+    "status": "success"
+  },
+  "validation_result": {
+    "exploitable": true,
+    "final_verdict": "组件 MyReceiver 是一个导出的广播接收器（exported=true），可接收来自外部应用的广播消息，存在潜在的安全风险。尽管未发现明确的跨组件污点传播路径（IntraPath），但 SAST 分析显示其 onReceive 方法存在 'Empty Pending Intent' 问题（fused_score=0.59），可能导致权限提升或意外代码执行。该组件无权限保护，攻击者可利用此通道发送恶意广播，实现拒绝服务或敏感操作劫持。综合判断此漏洞可被利用，风险等级为高。",
+    "severity": "HIGH",
+    "attack_scenario": "攻击者构造恶意广播发送至 MyReceiver，利用其空 PendingIntent 处理逻辑，可能触发非预期行为或权限提升操作。",
+    "evidence_chain": [
+      "MyReceiver 组件 exported=true",
+      "SAST 发现 onReceive 方法存在 Empty Pending Intent 问题 (fused_score>0.5)"
+    ],
+    "cwe": "CWE-926",
+    "conclude_reason": "early_finish",
+    "loops_used": 5
+  },
+  "sast_prior_result": {
+    "status": "success",
+    "tools_loaded": [
+      "apkhunt",
+      "ausera",
+      "mobsf",
+      "androbugs",
+      "droidstatx",
+      "jaadas",
+      "marvin",
+      "qark",
+      "speck",
+      "super",
+      "trueseeing"
+    ],
+    "stats": {
+      "total_findings": 994,
+      "total_fused": 994,
+      "aligned": 13,
+      "candidate": 1,
+      "unmatched": 980,
+      "provenance_nodes": 994,
+      "enriched_nodes": 4,
+      "hints_written": 14
+    },
+    "method_hints": [
+      {
+        "sig": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "hint_type": "potential_sink",
+        "score": 0.008100000000000001,
+        "tool": "mobsf"
+      }
+    ],
+    "component_hints": [
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.725,
+        "cwes": [],
+        "hint_text": "SAST(jaadas) flagged for sensitive data flow"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.725,
+        "cwes": [],
+        "hint_text": "SAST(jaadas) flagged for sensitive data flow"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.5900000000000001,
+        "cwes": [],
+        "hint_text": "SAST(ausera) flagged for Empty Pending Intent"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.33999999999999997,
+        "cwes": [],
+        "hint_text": "SAST(androbugs) flagged for Codes for Sending SMS"
+      },
+      {
+        "target": "MyReceiver",
+        "node_type": "Component",
+        "fused_score": 0.33,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Exported receiver"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.31,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Privacy Concerns"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.27,
+        "cwes": [],
+        "hint_text": "SAST(jaadas) flagged for jaadas finding"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>",
+        "node_type": "Method",
+        "fused_score": 0.2668,
+        "cwes": [],
+        "hint_text": "SAST(marvin) flagged for Unprotected Exported Receiver"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)>",
+        "node_type": "Method",
+        "fused_score": 0.1,
+        "cwes": [],
+        "hint_text": "SAST(jaadas) flagged for implicit intent or receiver"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)>",
+        "node_type": "Method",
+        "fused_score": 0.098,
+        "cwes": [],
+        "hint_text": "SAST(marvin) flagged for Broadcastreceiver Hijacking"
+      },
+      {
+        "target": "MainActivity",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Exported activity"
+      },
+      {
+        "target": "MainActivity",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      },
+      {
+        "target": "MyReceiver",
+        "node_type": "Component",
+        "fused_score": 0.05,
+        "cwes": [],
+        "hint_text": "SAST(mobsf) flagged for <strong>Broadcast Receiver</strong> (edu.ksu.cs.benign.MyReceiver) is not Protected. <br>[android:exported=true]"
+      }
+    ],
+    "fused_findings_summary": [
+      {
+        "id": "jaadas_sensitive data flow_b098",
+        "tool": "jaadas",
+        "title": "sensitive data flow",
+        "score": 0.725,
+        "depth": "taint_analysis",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "jaadas_sensitive data flow_b098",
+        "tool": "jaadas",
+        "title": "sensitive data flow",
+        "score": 0.725,
+        "depth": "taint_analysis",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "ausera_empty_pending_intent_5114",
+        "tool": "ausera",
+        "title": "Empty Pending Intent",
+        "score": 0.59,
+        "depth": "inter_procedural",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "speck_rule_21_bb0a",
+        "tool": "speck",
+        "title": "Use telephony networking",
+        "score": 0.464,
+        "depth": "taint_analysis",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_manifest_debug_bc84",
+        "tool": "super",
+        "title": "Manifest Debug",
+        "score": 0.376,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_SENSITIVE_SMS_8627",
+        "tool": "androbugs",
+        "title": "Codes for Sending SMS",
+        "score": 0.34,
+        "depth": "unknown",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "speck_rule_18_18bf",
+        "tool": "speck",
+        "title": "Prefer explicit intents",
+        "score": 0.331,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "droidstatx_exportedreceivers_ce05",
+        "tool": "droidstatx",
+        "title": "Exported receiver",
+        "score": 0.33,
+        "depth": "no_capability_match",
+        "alignment": "aligned",
+        "node": "MyReceiver"
+      },
+      {
+        "id": "trueseeing_privacy-sms_7fd2",
+        "tool": "trueseeing",
+        "title": "Privacy Concerns",
+        "score": 0.31,
+        "depth": "no_capability_match",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "mobsf_app_is_debuggable_2ca7",
+        "tool": "mobsf",
+        "title": "Debug Enabled For App<br>[android:debuggable=true]",
+        "score": 0.298,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "trueseeing_manifest-debuggable_7e2b",
+        "tool": "trueseeing",
+        "title": "App Is Debuggable",
+        "score": 0.298,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_DEBUGGABLE_52b1",
+        "tool": "androbugs",
+        "title": "Android Debug Mode Checking",
+        "score": 0.292,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_4_0ce3",
+        "tool": "speck",
+        "title": "Use intents to defer permissions",
+        "score": 0.29,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_23_6f1e",
+        "tool": "speck",
+        "title": "Use broadcast receivers",
+        "score": 0.29,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_potential_icc_data_leakage_3a12",
+        "tool": "ausera",
+        "title": "Potential ICC data leakage",
+        "score": 0.288,
+        "depth": "inter_procedural",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_rsa_encryption_issue_1d2d",
+        "tool": "ausera",
+        "title": "RSA encryption issue",
+        "score": 0.288,
+        "depth": "inter_procedural",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_activity_c30d",
+        "tool": "super",
+        "title": "Exported activity",
+        "score": 0.288,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "droidstatx_debuggable_ca6b",
+        "tool": "droidstatx",
+        "title": "App debuggable enabled",
+        "score": 0.284,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "trueseeing_manifest-cleartext-permitted_9eeb",
+        "tool": "trueseeing",
+        "title": "Cleartext Traffic Is Permitted",
+        "score": 0.28,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_read_phone_state_permission_5f31",
+        "tool": "super",
+        "title": "Read phone state permission",
+        "score": 0.277,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_send_sms_permission_acf5",
+        "tool": "super",
+        "title": "Send SMS permission",
+        "score": 0.277,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_receiver_41cd",
+        "tool": "super",
+        "title": "Exported receiver",
+        "score": 0.274,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_sending_sms_mms_49e6",
+        "tool": "super",
+        "title": "Sending sms-mms",
+        "score": 0.274,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_application_signed_with_debug_certificate_6d9c",
+        "tool": "mobsf",
+        "title": "Application signed with debug certificate",
+        "score": 0.274,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "jaadas_application is debuggable_a26f",
+        "tool": "jaadas",
+        "title": "application is debuggable",
+        "score": 0.274,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_screenshot_harvest_106c",
+        "tool": "ausera",
+        "title": "Screenshot harvest",
+        "score": 0.272,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_PERMISSION_EXPORTED_3182",
+        "tool": "androbugs",
+        "title": "AndroidManifest Exported Components Checking",
+        "score": 0.271,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "jaadas_jaadas finding_3fe2",
+        "tool": "jaadas",
+        "title": "jaadas finding",
+        "score": 0.27,
+        "depth": "no_capability_match",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "marvin_UNPROTECTED_EXPORTED_RECEIVER_9bc1",
+        "tool": "marvin",
+        "title": "Unprotected Exported Receiver",
+        "score": 0.267,
+        "depth": "manifest_parse",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>"
+      },
+      {
+        "id": "mobsf_application_vulnerable_to_janus_vulnerability_7c25",
+        "tool": "mobsf",
+        "title": "Application vulnerable to Janus Vulnerability",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_certificate_algorithm_might_be_vulnerable_to_hash_collision_399b",
+        "tool": "mobsf",
+        "title": "Certificate algorithm might be vulnerable to hash collision",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_potientially_vulnerable_check_permission_function_called_dd12",
+        "tool": "qark",
+        "title": "Potientially vulnerable check permission function called",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      }
+    ]
+  },
+  "final_report": "# APK Security Analysis Report\n\n**APK**: UnprotectedBroadcastRecv-PrivEscalation-Lean-benign\n**Generated**: 2026-03-17 21:04:01\n**Final Verdict**: EXPLOITABLE\n\n---\n\n## 1. Manifest Analysis\n\n发现 exported=true 的 BroadcastReceiver 'edu.ksu.cs.benign.MyReceiver'，可接收外部应用发送的广播，存在拒绝服务或敏感信息泄露风险\n\n- **Root path protected**: False\n- **Attack surface**: N/A\n- **Confidence**: 0.90\n\n---\n\n## 2. Taint Analysis — SuSi Source/Sink Inference\n\n**Sources identified**: ['<edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)>']\n**Sinks identified**:  ['<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>']\n**SuSi confidence**: 0.85\n**Needs semantic analysis**: False\n\n---\n\n## 3. Semantic Analysis (if triggered)\n\n_Not triggered._\n\n---\n\n## 4. FlowDroid Layer A — Intra-Component Taint Paths\n\n- **intra_synthetic_0**: `<edu.ksu.cs.benign.MainActivity$1: void onClick(android.view.View)>` → `<edu.ksu.cs.benign.MyReceiver: void onReceive(android.content.Context,android.content.Intent)>`\n\n\n---\n\n## 5. ICC Bridge Layer B — Cross-Component Paths\n\n_No CrossPath data._\n\n\n---\n\n## 5.5 SAST Tool Prior Fusion\n\n**Tools loaded:** apkhunt, ausera, mobsf, androbugs, droidstatx, jaadas, marvin, qark, speck, super, trueseeing\n**Findings fused:** 994 (aligned=13, candidate=1, unmatched=980)\n**HPG nodes enriched:** 4\n**Hints written to graph:** 14 (method=1, component=13)\n\n\n---\n\n## 6. GraphRAG Path Validation (Text2Cypher)\n\n| Query | Neo4j Answer |\n|-------|-------------|\n| _No queries issued_ | -- |\n\n\n### Verdict\n\n组件 MyReceiver 是一个导出的广播接收器（exported=true），可接收来自外部应用的广播消息，存在潜在的安全风险。尽管未发现明确的跨组件污点传播路径（IntraPath），但 SAST 分析显示其 onReceive 方法存在 'Empty Pending Intent' 问题（fused_score=0.59），可能导致权限提升或意外代码执行。该组件无权限保护，攻击者可利用此通道发送恶意广播，实现拒绝服务或敏感操作劫持。综合判断此漏洞可被利用，风险等级为高。\n\n**Exploitable**: True\n\n---\n\n## 7. Evidence Chain\n\n```\nManifest Agent  -->  root_path_protected=false (Neo4j)\nTaint Agent     -->  SuSi XML generated (Layer A input)\nFlowDroid       -->  IntraPath: query()->MatrixCursor.addRow() (Neo4j)\nICC Bridge      -->  CrossPath: exported provider, no root permission (Neo4j)\nValidation Agent-->  Text2Cypher confirmed vulnerability (GraphRAG)\n```\n\n---\n\n*Generated by LangGraph + Neo4j GraphRAG pipeline (Qwen3-235)*\n"
+}

@@ -1,0 +1,844 @@
+{
+  "apk_name": "InadequatePathPermission-InformationExposure-Lean-benign",
+  "analysis_dir": "/Users/layang/Desktop/codes/claude-codes/Ghera/ICC/InadequatePathPermission-InformationExposure-Lean-benign/analysis",
+  "sast_reports_dir": "/Users/layang/Desktop/codes/claude-codes/Ghera/ICC/InadequatePathPermission-InformationExposure-Lean-benign/reports",
+  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"edu.ksu.cs.benign\">\n    <permission android:name=\"edu.ksu.cs.benign.permission.internalRead\" android:protectionLevel=\"dangerous\"/>\n    <application android:allowBackup=\"false\" android:debuggable=\"true\" android:icon=\"@mipmap/ic_launcher\" android:label=\"@string/app_name\" android:supportsRtl=\"true\" android:theme=\"@style/AppTheme\">\n        <activity android:name=\"edu.ksu.cs.benign.MainActivity\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <provider android:authorities=\"edu.ksu.cs.benign.userdetails\" android:enabled=\"true\" android:exported=\"true\" android:name=\"edu.ksu.cs.benign.provider.UserDetailsContentProvider\">\n            <path-permission android:pathPrefix=\"/user\" android:readPermission=\"edu.ksu.cs.benign.permission.internalRead\"/>\n        </provider>\n        <activity android:name=\"edu.ksu.cs.benign.UserDetailsActivity\">\n            <intent-filter>\n                <action android:name=\"edu.ksu.cs.benign.expose.userDetails\"/>\n                <category android:name=\"android.intent.category.DEFAULT\"/>\n            </intent-filter>\n        </activity>\n    </application>\n</manifest>",
+  "app_smali": {
+    "edu/ksu/cs/benign/MainActivity": "<smali>",
+    "edu/ksu/cs/benign/MainActivity$1": "<smali>",
+    "edu/ksu/cs/benign/MainActivity$2": "<smali>",
+    "edu/ksu/cs/benign/UserDetailsActivity": "<smali>",
+    "edu/ksu/cs/benign/provider/UserDetailsContentProvider": "<smali>"
+  },
+  "app_java": {
+    "edu/ksu/cs/benign/MainActivity": "<java>",
+    "edu/ksu/cs/benign/UserDetailsActivity": "<java>",
+    "edu/ksu/cs/benign/R": "<java>",
+    "edu/ksu/cs/benign/provider/UserDetailsContentProvider": "<java>"
+  },
+  "manifest_result": {
+    "exported_providers": [
+      "edu.ksu.cs.benign.provider.UserDetailsContentProvider"
+    ],
+    "vulnerability": "ContentProvider exported with path-level permission protection, but no permission defined for root path access,可能导致路径遍历或未授权访问",
+    "root_path_protected": false,
+    "confidence": 0.9,
+    "conclude_reason": "early_finish",
+    "loops_used": 3
+  },
+  "taint_result": {
+    "sources": [
+      "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>"
+    ],
+    "sinks": [],
+    "susi_confidence": 0.85,
+    "reasoning": "根据UI敏感度上下文，ssn和getSsn为HIGH敏感度控件，其读取方法应为污点源。SAST工具也提示getSSN方法为潜在sink，结合代码分析发现该方法构建了ContentProvider的Uri并可能触发数据查询，因此判定其为污点源。未发现额外的sink。",
+    "conclude_reason": "early_finish",
+    "loops_used": 5,
+    "susi_path": "/Users/layang/Desktop/codes/claude-codes/analysis-pipeline/output/SourcesAndSinks.txt"
+  },
+  "semantic_result": null,
+  "flowdroid_result": {
+    "intra_paths": [],
+    "status": "no_results_synthetic"
+  },
+  "ui_semantic_result": {
+    "total_views": 10,
+    "sensitive_views": [
+      {
+        "view_id": "getAddr",
+        "view_type": "Button",
+        "layout_file": "activity_main.xml",
+        "display_text": "Get Address",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.6,
+        "reason": "地址信息属于可识别个人身份的信息，按钮用于获取地址，存在数据暴露风险",
+        "key_signals": [
+          "view_type:Button",
+          "display_text_kw:address",
+          "context:personal_info_retrieval"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "getSsn",
+        "view_type": "Button",
+        "layout_file": "activity_main.xml",
+        "display_text": "Get SSN",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "HIGH",
+        "sensitivity_score": 0.95,
+        "reason": "SSN（社会安全号）是高度敏感的身份标识信息，按钮用于获取该数据，风险极高",
+        "key_signals": [
+          "view_type:Button",
+          "display_text_kw:ssn",
+          "context:sensitive_data_access"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "addr",
+        "view_type": "TextView",
+        "layout_file": "activity_main.xml",
+        "display_text": "Address",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.65,
+        "reason": "地址信息属于个人可识别信息，展示即构成一定隐私暴露",
+        "key_signals": [
+          "view_type:TextView",
+          "display_text_kw:address"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "ssn",
+        "view_type": "TextView",
+        "layout_file": "activity_main.xml",
+        "display_text": "SSN",
+        "hint_text": "",
+        "input_type": "",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "HIGH",
+        "sensitivity_score": 0.9,
+        "reason": "社会安全号（SSN）是关键敏感信息，用于身份认证，展示或泄露风险极高",
+        "key_signals": [
+          "view_type:TextView",
+          "display_text_kw:ssn",
+          "context:ssn_display"
+        ],
+        "inference_source": "LLM_Inferred"
+      },
+      {
+        "view_id": "id",
+        "view_type": "EditText",
+        "layout_file": "activity_main.xml",
+        "display_text": "ID",
+        "hint_text": "",
+        "input_type": "textPersonName",
+        "content_desc": "",
+        "autofill_hints": "",
+        "label_for": "",
+        "sensitivity_label": "MEDIUM",
+        "sensitivity_score": 0.55,
+        "reason": "ID输入框可能用于输入用户标识，结合上下文可能关联敏感信息，但类型为普通文本",
+        "key_signals": [
+          "view_type:EditText",
+          "input_type:textPersonName",
+          "view_id_kw:id"
+        ],
+        "inference_source": "LLM_Inferred"
+      }
+    ],
+    "status": "success"
+  },
+  "icc_bridge_result": {
+    "cross_paths": [
+      {
+        "id": "set_result_edu_ksu_cs_benign_UserDetailsActivity",
+        "channel_type": "SET_RESULT",
+        "confidence": 0.4
+      }
+    ],
+    "status": "success"
+  },
+  "validation_result": {
+    "exploitable": true,
+    "final_verdict": "ContentProvider 'UserDetailsContentProvider' 被导出（exported=true），且未对根路径设置读写权限，仅对 '/user' 路径设置了 readPermission。攻击者可通过访问未受保护的根路径或构造恶意路径遍历请求，绕过路径权限限制，导致敏感信息泄露。此漏洞符合 CWE-926（不充分的导出者权限最小化）和 CWE-919（不充分的控制措施）的特征。尽管SAST未对齐高置信度发现，但组件配置本身存在明确风险。",
+    "severity": "HIGH",
+    "attack_scenario": "恶意应用通过构造特定 Uri 访问该 ContentProvider 的未受保护路径，读取本应受权限保护的用户敏感数据。",
+    "evidence_chain": [
+      "UserDetailsContentProvider exported=true",
+      "根路径无 readPermission 保护",
+      "仅 /user 路径有 readPermission"
+    ],
+    "cwe": "CWE-926",
+    "conclude_reason": "early_finish",
+    "loops_used": 5
+  },
+  "sast_prior_result": {
+    "status": "success",
+    "tools_loaded": [
+      "apkhunt",
+      "ausera",
+      "mobsf",
+      "androbugs",
+      "droidstatx",
+      "jaadas",
+      "marvin",
+      "qark",
+      "speck",
+      "super",
+      "trueseeing"
+    ],
+    "stats": {
+      "total_findings": 1001,
+      "total_fused": 1001,
+      "aligned": 25,
+      "candidate": 2,
+      "unmatched": 974,
+      "provenance_nodes": 1001,
+      "enriched_nodes": 10,
+      "hints_written": 27
+    },
+    "method_hints": [
+      {
+        "sig": "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>",
+        "hint_type": "potential_sink",
+        "score": 0.008100000000000001,
+        "tool": "mobsf"
+      },
+      {
+        "sig": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: int delete(android.net.Uri,java.lang.String,java.lang.String[])>",
+        "hint_type": "potential_sink",
+        "score": 0.008100000000000001,
+        "tool": "mobsf"
+      }
+    ],
+    "component_hints": [
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.7040000000000001,
+        "cwes": [],
+        "hint_text": "SAST(ausera) flagged for SQL injection issue"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.7040000000000001,
+        "cwes": [],
+        "hint_text": "SAST(ausera) flagged for SQL injection issue"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.UserDetailsActivity: void onCreate(android.os.Bundle)>",
+        "node_type": "Method",
+        "fused_score": 0.244,
+        "cwes": [],
+        "hint_text": "SAST(marvin) flagged for Unprotected Exported Activity"
+      },
+      {
+        "target": "MainActivity",
+        "node_type": "Component",
+        "fused_score": 0.24000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Exported activity"
+      },
+      {
+        "target": "UserDetailsActivity",
+        "node_type": "Component",
+        "fused_score": 0.24000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Exported activity"
+      },
+      {
+        "target": "UserDetailsContentProvider",
+        "node_type": "Component",
+        "fused_score": 0.24000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Exported content provider"
+      },
+      {
+        "target": "MainActivity",
+        "node_type": "Component",
+        "fused_score": 0.24000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      },
+      {
+        "target": "UserDetailsActivity",
+        "node_type": "Component",
+        "fused_score": 0.24000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSchool(java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: void setup_app()>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: void setup_app()>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: void setup_app()>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: void setup_app()>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.MainActivity: void setup_app()>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: int delete(android.net.Uri,java.lang.String,java.lang.String[])>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: int delete(android.net.Uri,java.lang.String,java.lang.String[])>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: int delete(android.net.Uri,java.lang.String,java.lang.String[])>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Path Component"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.UserDetailsActivity: void onResume()>",
+        "node_type": "Method",
+        "fused_score": 0.18,
+        "cwes": [],
+        "hint_text": "SAST(trueseeing) flagged for Detected Url"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.provider.UserDetailsContentProvider: int delete(android.net.Uri,java.lang.String,java.lang.String[])>",
+        "node_type": "Method",
+        "fused_score": 0.1768,
+        "cwes": [],
+        "hint_text": "SAST(marvin) flagged for Unprotected Exported Provider"
+      },
+      {
+        "target": "UserDetailsContentProvider",
+        "node_type": "Component",
+        "fused_score": 0.05,
+        "cwes": [],
+        "hint_text": "SAST(mobsf) flagged for <strong>Content Provider</strong> (edu.ksu.cs.benign.provider.UserDetailsContentProvider) is not Protected. <br>[android:exported=true]"
+      },
+      {
+        "target": "UserDetailsActivity",
+        "node_type": "Component",
+        "fused_score": 0.05,
+        "cwes": [],
+        "hint_text": "SAST(mobsf) flagged for <strong>Activity</strong> (edu.ksu.cs.benign.UserDetailsActivity) is not Protected.<br>An intent-filter exists."
+      }
+    ],
+    "fused_findings_summary": [
+      {
+        "id": "ausera_sql_injection_issue_ddd4",
+        "tool": "ausera",
+        "title": "SQL injection issue",
+        "score": 0.704,
+        "depth": "inter_procedural",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>"
+      },
+      {
+        "id": "ausera_sql_injection_issue_ddd4",
+        "tool": "ausera",
+        "title": "SQL injection issue",
+        "score": 0.704,
+        "depth": "inter_procedural",
+        "alignment": "aligned",
+        "node": "<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>"
+      },
+      {
+        "id": "speck_rule_15_0c16",
+        "tool": "speck",
+        "title": "Don't use dangerous custom permissions",
+        "score": 0.677,
+        "depth": "taint_analysis",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_17_b8f8",
+        "tool": "speck",
+        "title": "Avoid SQL injection",
+        "score": 0.677,
+        "depth": "taint_analysis",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_manifest_debug_bc84",
+        "tool": "super",
+        "title": "Manifest Debug",
+        "score": 0.376,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_9_aa9f",
+        "tool": "speck",
+        "title": "Share data securely across apps",
+        "score": 0.331,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_18_18bf",
+        "tool": "speck",
+        "title": "Prefer explicit intents",
+        "score": 0.331,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_app_is_debuggable_2ca7",
+        "tool": "mobsf",
+        "title": "Debug Enabled For App<br>[android:debuggable=true]",
+        "score": 0.298,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "trueseeing_manifest-debuggable_7e2b",
+        "tool": "trueseeing",
+        "title": "App Is Debuggable",
+        "score": 0.298,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_DEBUGGABLE_52b1",
+        "tool": "androbugs",
+        "title": "Android Debug Mode Checking",
+        "score": 0.292,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_PERMISSION_DANGEROUS_465e",
+        "tool": "androbugs",
+        "title": "AndroidManifest Dangerous ProtectionLevel of Permission Checking",
+        "score": 0.292,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_PERMISSION_PROVIDER_EXPLICIT_EXPORTED_095b",
+        "tool": "androbugs",
+        "title": "AndroidManifest ContentProvider Exported Checking",
+        "score": 0.292,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_potential_icc_data_leakage_3a12",
+        "tool": "ausera",
+        "title": "Potential ICC data leakage",
+        "score": 0.288,
+        "depth": "inter_procedural",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_rsa_encryption_issue_1d2d",
+        "tool": "ausera",
+        "title": "RSA encryption issue",
+        "score": 0.288,
+        "depth": "inter_procedural",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_activity_c30d",
+        "tool": "super",
+        "title": "Exported activity",
+        "score": 0.288,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_activity_c30d",
+        "tool": "super",
+        "title": "Exported activity",
+        "score": 0.288,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "droidstatx_debuggable_ca6b",
+        "tool": "droidstatx",
+        "title": "App debuggable enabled",
+        "score": 0.284,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "trueseeing_manifest-cleartext-permitted_9eeb",
+        "tool": "trueseeing",
+        "title": "Cleartext Traffic Is Permitted",
+        "score": 0.28,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_provider_f596",
+        "tool": "super",
+        "title": "Exported provider",
+        "score": 0.274,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_application_signed_with_debug_certificate_6d9c",
+        "tool": "mobsf",
+        "title": "Application signed with debug certificate",
+        "score": 0.274,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "jaadas_application is debuggable_a26f",
+        "tool": "jaadas",
+        "title": "application is debuggable",
+        "score": 0.274,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_screenshot_harvest_106c",
+        "tool": "ausera",
+        "title": "Screenshot harvest",
+        "score": 0.272,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_PERMISSION_EXPORTED_3182",
+        "tool": "androbugs",
+        "title": "AndroidManifest Exported Components Checking",
+        "score": 0.271,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_application_vulnerable_to_janus_vulnerability_7c25",
+        "tool": "mobsf",
+        "title": "Application vulnerable to Janus Vulnerability",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_certificate_algorithm_might_be_vulnerable_to_hash_collision_399b",
+        "tool": "mobsf",
+        "title": "Certificate algorithm might be vulnerable to hash collision",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      }
+    ]
+  },
+  "final_report": "# APK Security Analysis Report\n\n**APK**: InadequatePathPermission-InformationExposure-Lean-benign\n**Generated**: 2026-03-17 20:54:33\n**Final Verdict**: EXPLOITABLE\n\n---\n\n## 1. Manifest Analysis\n\nContentProvider exported with path-level permission protection, but no permission defined for root path access,可能导致路径遍历或未授权访问\n\n- **Root path protected**: False\n- **Attack surface**: N/A\n- **Confidence**: 0.90\n\n---\n\n## 2. Taint Analysis — SuSi Source/Sink Inference\n\n**Sources identified**: ['<edu.ksu.cs.benign.MainActivity: java.lang.String getSSN(java.lang.String)>']\n**Sinks identified**:  []\n**SuSi confidence**: 0.85\n**Needs semantic analysis**: False\n\n---\n\n## 3. Semantic Analysis (if triggered)\n\n_Not triggered._\n\n---\n\n## 4. FlowDroid Layer A — Intra-Component Taint Paths\n\n_No IntraPath data (FlowDroid may have skipped or found no flows)._\n\n\n---\n\n## 5. ICC Bridge Layer B — Cross-Component Paths\n\n- **set_result_edu_ksu_cs_benign_UserDetailsActivity**: entry=`` vector=`` confidence=0.40\n\n\n---\n\n## 5.5 SAST Tool Prior Fusion\n\n**Tools loaded:** apkhunt, ausera, mobsf, androbugs, droidstatx, jaadas, marvin, qark, speck, super, trueseeing\n**Findings fused:** 1001 (aligned=25, candidate=2, unmatched=974)\n**HPG nodes enriched:** 10\n**Hints written to graph:** 27 (method=2, component=25)\n\n\n---\n\n## 6. GraphRAG Path Validation (Text2Cypher)\n\n| Query | Neo4j Answer |\n|-------|-------------|\n| _No queries issued_ | -- |\n\n\n### Verdict\n\nContentProvider 'UserDetailsContentProvider' 被导出（exported=true），且未对根路径设置读写权限，仅对 '/user' 路径设置了 readPermission。攻击者可通过访问未受保护的根路径或构造恶意路径遍历请求，绕过路径权限限制，导致敏感信息泄露。此漏洞符合 CWE-926（不充分的导出者权限最小化）和 CWE-919（不充分的控制措施）的特征。尽管SAST未对齐高置信度发现，但组件配置本身存在明确风险。\n\n**Exploitable**: True\n\n---\n\n## 7. Evidence Chain\n\n```\nManifest Agent  -->  root_path_protected=false (Neo4j)\nTaint Agent     -->  SuSi XML generated (Layer A input)\nFlowDroid       -->  IntraPath: query()->MatrixCursor.addRow() (Neo4j)\nICC Bridge      -->  CrossPath: exported provider, no root permission (Neo4j)\nValidation Agent-->  Text2Cypher confirmed vulnerability (GraphRAG)\n```\n\n---\n\n*Generated by LangGraph + Neo4j GraphRAG pipeline (Qwen3-235)*\n"
+}

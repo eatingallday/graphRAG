@@ -376,6 +376,7 @@ def build_hpg(analysis_dir: str | None = None,
     If smali_map is None, loads from analysis_dir automatically.
     """
     from utils.file_loader import load_apk_artifacts
+    from utils.debug_logger import trace_event
 
     if analysis_dir is None:
         analysis_dir = ANALYSIS_DIR
@@ -384,6 +385,16 @@ def build_hpg(analysis_dir: str | None = None,
         manifest_path = os.path.join(analysis_dir, "apktool", "AndroidManifest.xml")
 
     manifest_data = _parse_manifest(manifest_path)
+    trace_event(
+        "hpg_manifest_parsed",
+        {
+            "manifest_path": manifest_path,
+            "components": len(manifest_data.get("components", [])),
+            "permissions": len(manifest_data.get("permissions", [])),
+            "path_permissions": len(manifest_data.get("path_permissions", [])),
+        },
+        agent="hpg_builder",
+    )
 
     if smali_map is None:
         _, smali_map, _ = load_apk_artifacts(analysis_dir)
@@ -393,5 +404,10 @@ def build_hpg(analysis_dir: str | None = None,
         _write_hpg(driver, manifest_data, smali_map)
     finally:
         driver.close()
+    trace_event(
+        "hpg_build_complete",
+        {"analysis_dir": analysis_dir, "smali_files": len(smali_map)},
+        agent="hpg_builder",
+    )
 
     return manifest_data

@@ -1,0 +1,1023 @@
+{
+  "tool_name": "droidstatx",
+  "tool_version": "",
+  "repo_url": "https://github.com/clviper/droidstatx",
+  "implementation_languages": [
+    "Python 3",
+    "shell utilities (`grep",
+    "sed",
+    "adb",
+    "java`/`apktool`)",
+    "Smali text scanning"
+  ],
+  "last_maintained": "upstream GitHub commit history shows the latest commit on 2021-02-08; the analyzed local checkout is not a Git repo and contains ad-hoc local modifications with filesystem timestamps up to 2025-07-30",
+  "maintenance_status": "stale",
+  "input_formats": [
+    "apk",
+    "smali",
+    "source"
+  ],
+  "intermediate_representations": [
+    "manifest_xml",
+    "smali"
+  ],
+  "requires_decompilation": true,
+  "decompilation_tools": [
+    "apktool"
+  ],
+  "capabilities": [
+    {
+      "capability_id": "droidstatx_exported_component_exposure_activities_receivers_providers_services",
+      "category": "Exported component exposure (activities/receivers/providers/services)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "component_name",
+        "permission_name"
+      ],
+      "severity_values": [
+        "None",
+        "informational"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_fragment_injection_in_exported_preferenceactivity",
+      "category": "Fragment Injection in exported `PreferenceActivity`",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "XMind marker: red if vulnerable on minSdk<19",
+        "yellow if isValidFragment exists",
+        "green otherwise"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_sql_injection_in_exported_contentprovider",
+      "category": "SQL Injection in exported `ContentProvider`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-89"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: yellow"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_path_traversal_in_exported_contentprovider",
+      "category": "Path Traversal in exported `ContentProvider`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-22"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: yellow"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_debuggable_application",
+      "category": "Debuggable application",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_webview_addjavascriptinterface_exposure",
+      "category": "WebView `addJavascriptInterface` exposure",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red if minSdk<=16",
+        "else yellow",
+        "else green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_webview_javascript_enabled",
+      "category": "WebView JavaScript enabled",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: yellow",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_webview_file_access_enabled",
+      "category": "WebView file access enabled",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: yellow",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_webview_universal_access_from_file_urls",
+      "category": "WebView universal access from file URLs",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: yellow",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_vulnerable_custom_trustmanager",
+      "category": "Vulnerable custom `TrustManager`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_webview_ssl_error_bypass_sslerrorhandler_proceed",
+      "category": "WebView SSL error bypass (`SslErrorHandler.proceed`)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_insecure_hostnameverifier_implementation",
+      "category": "Insecure `HostnameVerifier` implementation",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-297"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_allow_all_hostname_verifier_usage",
+      "category": "`ALLOW_ALL_HOSTNAME_VERIFIER` usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-297"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_direct_socket_usage_without_hostname_verification",
+      "category": "Direct socket usage without hostname verification",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-297"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_network_security_config_cleartext_allowed",
+      "category": "Network Security Config: cleartext allowed",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_network_security_config_user_cas_trusted",
+      "category": "Network Security Config: user CAs trusted",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_network_security_config_pinning_configured_missing_expiring_expired",
+      "category": "Network Security Config: pinning configured / missing / expiring / expired",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope"
+      ],
+      "severity_values": [
+        "XMind marker: green",
+        "yellow",
+        "red"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_certificate_pinning_presence_custom_okhttp",
+      "category": "Certificate pinning presence (custom / OkHttp)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: green if \"possible usage\"",
+        "yellow if absent"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_activities_lacking_flag_secure_or_excludefromrecents",
+      "category": "Activities lacking `FLAG_SECURE` or `excludeFromRecents`",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "component",
+        "class"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "XMind marker: yellow",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_aes_in_ecb_mode",
+      "category": "AES in ECB mode",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_des_3des_usage",
+      "category": "DES / 3DES usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: red",
+        "green"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "droidstatx_android_keystore_usage_absence",
+      "category": "Android KeyStore usage / absence",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "class"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "XMind marker: green if present",
+        "yellow if absent"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`detection_method.family`: `MANIFEST_ATTRIBUTE`, `RESOURCE_XML_PARSE`, `SMALI_REGEX`, `SMALI_METHOD_HEURISTIC`, `CROSS_ARTIFACT_HEURISTIC`, `CUSTOM_REGEX`"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "txt"
+  ],
+  "severity_scheme": [],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": true,
+  "supports_positive_controls": true,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Good APK-first ergonomics: accepts an APK or pulls one from a device, then produces both machine-readable-ish text and analyst-friendly XMind output",
+    "Strong at surface enumeration: exported components, intent-filters, secret codes, permissions, file inventory, framework fingerprinting, and network security config extraction",
+    "Useful for Android-specific hardening checks where simple syntactic evidence is meaningful, such as `debuggable`, exported `ContentProvider` heuristics, `SslErrorHandler.proceed`, or `FLAG_SECURE` absence",
+    "Evidence is usually concrete and verifiable: class names, component names, Smali file paths, XML-derived domain settings"
+  ],
+  "overall_limitations": [
+    "No taint analysis, no source-sink reasoning, no inter-procedural flow tracking",
+    "Smali analysis is almost entirely regex-based and often only checks file presence, not reachability or exploitability",
+    "Current checkout defect: `getFileContent()` reads only the first line of a file, which likely breaks or severely weakens all detectors that rely on later instruction scanning and register backtracking",
+    "`checkForExistenceInFolder()` builds the `--exclude-dir` argument incorrectly, so configured folder exclusions are effectively not trustworthy",
+    "`findPropertyEnabledWebViews()` assumes file access is enabled when `setAllowFileAccess(...)` is absent, which is a built-in false-positive bias",
+    "`checkOKHttpCertificatePinning()` has a semantic mismatch: it appends a location when `CertificatePinner.Builder.add(...)` is found but `certificatePinner(...)` is not found in the same file, yet XMind later interprets that list as evidence of pinning usage",
+    "Output granularity is usually class/file level, not method/instruction level, which limits downstream precision",
+    "The tool reports both \"bad evidence\" and \"good hardening present\" in the same channel, so consumers must model signal polarity explicitly",
+    "Taint relevance: Low",
+    "The tool is helpful as a prior over attack surfaces and security-sensitive APIs, but it does not explain whether untrusted data reaches those APIs",
+    "The only \"dataflow-like\" logic is shallow same-file constant backtracking for booleans and cipher modes; that is not taint analysis"
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.515393+00:00",
+  "extraction_source": "codex_report"
+}

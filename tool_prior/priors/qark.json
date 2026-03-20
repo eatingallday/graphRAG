@@ -1,0 +1,1611 @@
+{
+  "tool_name": "qark",
+  "tool_version": "",
+  "repo_url": "https://github.com/linkedin/qark",
+  "implementation_languages": [
+    "Python for the analyzer",
+    "bundled Java/Gradle project for exploit APK generation"
+  ],
+  "last_maintained": "GitHub commit history showed the latest visible commit on 2019-04-05 when checked on 2026-03-13; the local snapshot declares version `4.0.0`",
+  "maintenance_status": "stale",
+  "input_formats": [
+    "apk",
+    "jar",
+    "java_source",
+    "source"
+  ],
+  "intermediate_representations": [
+    "dalvik",
+    "decompiled_java",
+    "java_ast",
+    "manifest_xml"
+  ],
+  "requires_decompilation": true,
+  "decompilation_tools": [
+    "apktool",
+    "cfr",
+    "dex2jar"
+  ],
+  "capabilities": [
+    {
+      "capability_id": "qark_exported_activities_services_receivers_providers_including_protected_broadcast_and_weak_permission_variants",
+      "category": "Exported activities/services/receivers/providers, including protected-broadcast and weak-permission variants",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "file_path",
+        "component_name"
+      ],
+      "severity_values": [
+        "INFO",
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_android_allowbackup_present_in_manifest",
+      "category": "`android:allowBackup` present in manifest",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-530"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_android_debuggable_true",
+      "category": "`android:debuggable=\"true\"`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_custom_permissions_with_signature_signatureorsystem_before_api_21_and_dangerous_custom_permissions",
+      "category": "Custom permissions with `signature` / `signatureOrSystem` before API 21, and `dangerous` custom permissions",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-266",
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING",
+        "INFO"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_android_path_usage_in_manifest",
+      "category": "`android:path=` usage in manifest",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "file",
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_tapjacking_risk_via_minsdkversion_9",
+      "category": "Tapjacking risk via `minSdkVersion < 9`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-1021"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_launchmode_singletask",
+      "category": "`launchMode=\"singleTask\"`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-1021",
+        "CWE-451"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "file",
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_android_allowtaskreparenting_true",
+      "category": "`android:allowTaskReparenting=\"true\"`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-1021",
+        "CWE-451"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "file",
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_potential_api_key_in_manifest",
+      "category": "Potential API key in manifest",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file",
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "INFO"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_dynamic_broadcast_receiver_on_pre_api_14",
+      "category": "Dynamic broadcast receiver on pre-API 14",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-285"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_insecure_outbound_broadcasts_missing_receiverpermission_weak_permission_variants_sticky_broadcasts",
+      "category": "Insecure outbound broadcasts: missing `receiverPermission`, weak-permission variants, sticky broadcasts",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-668",
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING",
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_empty_or_implicit_pendingintent_creation",
+      "category": "Empty or implicit `PendingIntent` creation",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_allow_all_hostname_verifier_usage",
+      "category": "Allow-all hostname verifier usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-297"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_unsafe_certificate_validation_overrides",
+      "category": "Unsafe certificate validation overrides",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_ecb_cipher_mode",
+      "category": "ECB cipher mode",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_rsa_without_padding",
+      "category": "RSA without padding",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-780"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_securerandom_seeding",
+      "category": "`SecureRandom` seeding",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-330"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_packaged_private_keys",
+      "category": "Packaged private keys",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-321"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "VULNERABILITY"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_world_readable_world_writeable_files",
+      "category": "World-readable/world-writeable files",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-276",
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_android_logging_calls",
+      "category": "Android logging calls",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_hardcoded_http_urls",
+      "category": "Hardcoded HTTP URLs",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "INFO"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_potential_api_key_in_source_resources",
+      "category": "Potential API key in source/resources",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-798"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "INFO"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_phone_number_or_imei_access",
+      "category": "Phone number or IMEI access",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-359"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "INFO"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_external_storage_usage",
+      "category": "External storage usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-668",
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_insecure_contentprovider_call_implementation",
+      "category": "Insecure `ContentProvider.call()` implementation",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-862"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_potential_confused_deputy_via_checkcallingorselfpermission_enforcecallingorselfpermission_family",
+      "category": "Potential confused deputy via `checkCallingOrSelfPermission` / `enforceCallingOrSelfPermission` family",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-441"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_task_hijacking_indicators_via_flag_activity_new_task_flag_activity_multiple_task",
+      "category": "Task hijacking indicators via `FLAG_ACTIVITY_NEW_TASK` / `FLAG_ACTIVITY_MULTIPLE_TASK`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-1021",
+        "CWE-451"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "INFO"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_addjavascriptinterface_in_apps_with_minsdk_16",
+      "category": "`addJavascriptInterface` in apps with `minSdk <= 16`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_javascript_enabled_in_webview",
+      "category": "JavaScript enabled in `WebView`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-79"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_loaddatawithbaseurl_usage",
+      "category": "`loadDataWithBaseURL(...)` usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-79",
+        "CWE-829"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_webview_content_access_not_explicitly_disabled",
+      "category": "`WebView` content access not explicitly disabled",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200",
+        "CWE-668"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_webview_file_access_not_explicitly_disabled",
+      "category": "`WebView` file access not explicitly disabled",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-552",
+        "CWE-668"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_webview_universal_access_from_file_urls",
+      "category": "`WebView` universal access from file URLs",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-942"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_webview_dom_storage_enabled",
+      "category": "`WebView` DOM storage enabled",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "qark_remote_webview_debugging_enabled",
+      "category": "Remote `WebView` debugging enabled",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "java_ast_match",
+          "depth": "intra_procedural",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "WARNING"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`default_vulnerable_if_not_disabled`: many WebView checks are not sink matches but default-setting checks that report when a secure setter is absent in local AST scope"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "html",
+    "json",
+    "xml"
+  ],
+  "severity_scheme": [],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": false,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Strong coverage of Android-specific configuration mistakes: exported components, manifest flags, broadcasts, pending intents, WebView settings.",
+    "Works directly on APKs without source by automating `apktool`, `dex2jar`, CFR, Procyon, and Fernflower.",
+    "Fast local analysis model: mostly regex and AST-node matching, no heavyweight whole-program analysis required.",
+    "The exported-component pipeline carries extra exploit metadata and can generate an exploit APK template, which is unusual among open-source Android SAST tools.",
+    "Findings are easy to map into a capability prior because most checks are explicit, rule-like, and stable across app versions."
+  ],
+  "overall_limitations": [
+    "No real taint analysis. There are no source-to-sink traces, no call chains, no path sensitivity, and no interprocedural reasoning.",
+    "Scope is mostly single-file. Cross-file logic is limited to matching exported manifest components to same-name Java files and harvesting literal extras.",
+    "No Kotlin, native code, smali-level rule logic, or Jimple/Soot IR.",
+    "Raw Java source mode misses all manifest-only checks because manifest plugins require `manifest_path`.",
+    "APK mode scans all decompiler outputs (`cfr`, `procyon`, `fernflower`) plus other generated files; this can duplicate or fragment findings across parallel decompiler trees.",
+    "Several checks are intentionally shallow and can over-report:",
+    "`allow_backup.py` flags any presence of `android:allowBackup`, even `false`",
+    "`manifest/api_keys.py` uses the very broad regex `api_key|api|key`",
+    "`setting_secure_random_seed.py` flags both `setSeed` and `generateSeed` without checking whether a fixed seed is used",
+    "`dynamic_broadcast_receiver.py` does not inspect the secure `registerReceiver` overload with a permission argument",
+    "`send_broadcast_receiver_permission.py` infers security largely from method name and argument count, not receiver-side semantics",
+    "`phone_identifier.py` iterates characters of the captured variable name, which can miss ordinary variable-based uses",
+    "Output templates are underdeveloped and sometimes inconsistent with the finding schema.",
+    "Taint relevance:",
+    "Medium.",
+    "QARK is not a taint engine, but its findings are still useful as taint priors because they identify exposed entry points, insecure channels, and risky sinks or configurations (exported components, broadcasts, pending intents, WebView knobs, external storage use, logging, etc.).",
+    "It is much better as a prior over where taint analysis should look than as evidence that a concrete source-to-sink flow exists."
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.521091+00:00",
+  "extraction_source": "codex_report"
+}

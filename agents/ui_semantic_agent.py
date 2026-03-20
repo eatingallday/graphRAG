@@ -211,7 +211,13 @@ def run_ui_semantic_agent(state: AnalysisState) -> dict:
                 f"视图列表（JSON）：\n"
                 + json.dumps(raw_views, ensure_ascii=False, indent=2)
             )
-            result = llm_call(system_prompt, user_prompt, json_mode=True)
+            result = llm_call(
+                system_prompt,
+                user_prompt,
+                json_mode=True,
+                agent_name="ui_semantic_agent",
+                trace_label=f"layout:{layout_name}",
+            )
             llm_views = {v["view_id"]: v for v in result.get("views", [])}
             for v in raw_views:
                 llm_info = llm_views.get(v["view_id"], {})

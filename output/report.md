@@ -1,24 +1,24 @@
 # APK Security Analysis Report
 
-**APK**: ActivityCommunication1
-**Generated**: 2026-03-10 12:51:36
-**Final Verdict**: NOT EXPLOITABLE
+**APK**: analysis
+**Generated**: 2026-03-20 17:02:47
+**Final Verdict**: EXPLOITABLE
 
 ---
 
 ## 1. Manifest Analysis
 
-未发现exported为true的组件或ContentProvider，无明显权限配置漏洞
+ContentProvider 'UserDetailsContentProvider' is exported and enforces read permission only on '/user' path prefix, but root path is not protected, allowing potential path traversal or direct access to unprotected sub-paths.
 
 - **Root path protected**: False
 - **Attack surface**: N/A
-- **Confidence**: 0.80
+- **Confidence**: 0.90
 
 ---
 
 ## 2. Taint Analysis — SuSi Source/Sink Inference
 
-**Sources identified**: ['<de.ecspride.Activity2: void onCreate(Landroid/os/Bundle;)>']
+**Sources identified**: ['<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSchool(java.lang.String)>', '<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSsn(java.lang.String)>']
 **Sinks identified**:  []
 **SuSi confidence**: 0.85
 **Needs semantic analysis**: False
@@ -33,15 +33,21 @@ _Not triggered._
 
 ## 4. FlowDroid Layer A — Intra-Component Taint Paths
 
-- **intra_synthetic_0**: `<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>` → `<android.database.MatrixCursor: void addRow(java.lang.Iterable)>`
-- **intra_synthetic_1**: `<edu.ksu.cs.benign.provider.UserDetailsContentProvider: android.database.Cursor query(android.net.Uri,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String)>` → `<java.io.BufferedReader: java.lang.String readLine()>`
+_No IntraPath data (FlowDroid may have skipped or found no flows)._
 
 
 ---
 
 ## 5. ICC Bridge Layer B — Cross-Component Paths
 
-- **static_field_de_ecspride_Activity1_data1**: entry=`` vector=`` confidence=0.80
+- **set_result_edu_ksu_cs_benign_UserDetailsActivity**: entry=`` vector=`` confidence=0.40
+
+
+---
+
+## 5.5 SAST Tool Prior Fusion
+
+_SAST prior fusion was not run._
 
 
 ---
@@ -55,9 +61,9 @@ _Not triggered._
 
 ### Verdict
 
-虽然存在通过静态字段 data1 从 Activity2 向 Activity1 传递数据的跨组件路径，且置信度较高（0.8），但两个 Activity 组件均未导出（exported=false），外部应用无法直接启动或交互，攻击面受限。同时未发现敏感数据源（source）或危险操作（sink），无证据表明该路径可被恶意利用。因此判定该 APK 不存在可利用的组件间通信漏洞。
+ContentProvider 'UserDetailsContentProvider' 被导出且仅对 '/user' 路径前缀强制执行读权限，但根路径未受保护。攻击者可利用此漏洞通过构造特殊URI直接访问未受保护的子路径，可能导致敏感数据泄露。该问题源于路径权限配置不完整，未覆盖根路径，存在明确的攻击向量。
 
-**Exploitable**: False
+**Exploitable**: True
 
 ---
 

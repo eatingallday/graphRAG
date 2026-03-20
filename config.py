@@ -24,3 +24,20 @@ FLOWDROID_JAR     = os.path.join(BASE_DIR, "soot-infoflow-cmd-jar-with-dependenc
 ANALYSIS_DIR      = os.path.join(BASE_DIR, "analysis")
 OUTPUT_DIR        = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
 PROMPTS_DIR       = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
+GRAPH_DESCRIPTION = os.path.join(os.path.dirname(os.path.abspath(__file__)), "graph-description.md")
+
+_graph_desc_cache: str | None = None
+
+def load_graph_description() -> str:
+    """Load graph-description.md content, cached after first read."""
+    global _graph_desc_cache
+    if _graph_desc_cache is None:
+        with open(GRAPH_DESCRIPTION, encoding="utf-8") as f:
+            _graph_desc_cache = f.read()
+    return _graph_desc_cache
+
+# ─── SAST Tool Prior ────────────────────────────────────────────────────────
+TOOL_PRIORS_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "tool_prior", "priors"
+)
+SAST_REPORTS_DIR = ""

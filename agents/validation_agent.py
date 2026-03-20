@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from neo4j import GraphDatabase
 from state import AnalysisState
-from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, load_graph_description
 from utils.agent_loop import run_agent_loop
 
 VALIDATION_SYSTEM = """你是一名 Android 安全分析专家，负责对 APK 漏洞进行最终裁定。
@@ -25,6 +25,10 @@ VALIDATION_SYSTEM = """你是一名 Android 安全分析专家，负责对 APK �
 - IntraPath：FlowDroid 发现的组件内污点路径
 - CrossPath：跨组件攻击路径
 - PathPermission：路径权限配置
+- SASTFinding：SAST 工具融合发现。属性: tool_name, fused_score, cwe_ids, capability_analysis_depth, alignment_status
+  关系：(SASTFinding)-[:IMPLICATES]->(Component|Method), (Component|Method)-[:EVIDENCED_BY]->(SASTFinding)
+  查询: MATCH (sf:SASTFinding) WHERE sf.fused_score > 0.5 RETURN sf.tool_name, sf.title, sf.fused_score, sf.capability_analysis_depth
+  查询: MATCH (c:Component)-[:EVIDENCED_BY]->(sf:SASTFinding) RETURN c.name, sf.tool_name, sf.fused_score
 
 可用工具（每轮只能调用一个）：
 
@@ -32,10 +36,14 @@ VALIDATION_SYSTEM = """你是一名 Android 安全分析专家，负责对 APK �
    {"tool": "query_neo4j", "args": {"cypher": "MATCH (c:Component {exported:true}) RETURN c.name, c.type"}}
 
    常用查询：
-   - 暴露组件：MATCH (c:Component {exported:true}) RETURN c
+   - 暴露组件：MATCH (c:Component {exported:true}) RETURN c.name, c.type, c.vuln_description
    - source/sink：MATCH (m:Method) WHERE m.taint_role IN ['source','sink'] RETURN m.sig, m.taint_role, m.confidence
-   - 跨组件路径：MATCH (cp:CrossPath) RETURN cp.channel_type, cp.attack_vector, cp.confidence
-   - 污点路径：MATCH (m:Method)-[:HAS_INTRA_PATH]->(ip:IntraPath) RETURN m.sig, ip.source, ip.sink
+   - 跨组件路径：MATCH (cp:CrossPath) RETURN cp.channel_type, cp.attack_vector, cp.confidence, cp.target_component
+   - 污点路径：MATCH (ip:IntraPath) RETURN ip.source, ip.sink, ip.confidence, ip.synthetic
+   - ⚠ 方法所属组件（CONTAINS 边方向为 Component->Method，不可反向）：
+     MATCH (c:Component)-[:CONTAINS]->(m:Method {sig:'<完整sig>'}) RETURN c.name, c.exported, c.type
+   - SAST+组件联合查：MATCH (c:Component)-[:EVIDENCED_BY]->(sf:SASTFinding) WHERE sf.fused_score > 0.5 RETURN c.name, c.exported, sf.title, sf.fused_score
+   - SAST+方法→组件：MATCH (c:Component)-[:CONTAINS]->(m:Method)-[:EVIDENCED_BY]->(sf:SASTFinding) WHERE sf.fused_score > 0.5 RETURN c.name, c.exported, m.sig, sf.title, sf.fused_score
 
 2. finish — 证据充足，输出最终裁定
    {"tool": "finish", "args": {
@@ -67,15 +75,27 @@ def run_validation_agent(state: AnalysisState) -> dict:
 
     tool_executors = {"query_neo4j": query_neo4j}
 
+    sast_result = state.get("sast_prior_result") or {}
+    sast_ctx = ""
+    if sast_result.get("status") == "success":
+        stats = sast_result.get("stats", {})
+        sast_ctx = (
+            f"\nSAST 融合: {stats.get('total_fused', 0)} 发现, "
+            f"{stats.get('aligned', 0)} 对齐, "
+            f"{stats.get('enriched_nodes', 0)} 节点已富化。"
+            "可查询 SASTFinding 节点和 EVIDENCED_BY 边获取证据。\n"
+        )
+
     first_user_msg = (
         f"请对 APK「{state['apk_name']}」进行最终安全裁定。\n"
         "图数据库中已包含所有分析阶段的结果。\n"
-        "请自主查询需要的数据，收集足够证据后调用 finish 给出结论。"
+        + sast_ctx
+        + "请自主查询需要的数据，收集足够证据后调用 finish 给出结论。"
     )
 
     result = run_agent_loop(
         agent_name    = "validation_agent",
-        system_prompt = VALIDATION_SYSTEM,
+        system_prompt = VALIDATION_SYSTEM + "\n\n" + load_graph_description(),
         first_user_msg= first_user_msg,
         tool_executors= tool_executors,
         max_loops     = 5,

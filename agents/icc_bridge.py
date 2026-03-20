@@ -393,7 +393,8 @@ def run_icc_bridge(state: AnalysisState) -> dict:
                 cp_id = f"cross_{row['ipid']}"
                 s.run("""
                     MERGE (cp:CrossPath {id:$cpid})
-                    SET cp.entry_component = $comp,
+                    SET cp.channel_type    = 'CONTENT_PROVIDER_EXPORT',
+                        cp.entry_component = $comp,
                         cp.attack_vector   = $av,
                         cp.intra_path_id   = $ipid,
                         cp.layer           = "B",
@@ -406,6 +407,7 @@ def run_icc_bridge(state: AnalysisState) -> dict:
 
                 cross_paths.append({
                     "id":              cp_id,
+                    "channel_type":    "CONTENT_PROVIDER_EXPORT",
                     "entry_component": row["comp"],
                     "attack_vector":   attack_vector,
                     "intra_path_id":   row["ipid"],

@@ -18,6 +18,7 @@ THIRD_PARTY_PREFIXES = (
     "androidx/",
     "kotlin/",
     "kotlinx/",
+    "org/apache/",
 )
 
 

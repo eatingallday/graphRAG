@@ -5,6 +5,7 @@ Usage:
     python main.py                                              # 使用 config.py 默认路径
     python main.py --apk analysis/ActivityCommunication1       # 相对路径
     python main.py --apk /abs/path --output /abs/output
+    python main.py --apk /abs/path --sast-reports ../reports
 
 Pre-requisites:
     - Neo4j running: docker run -d --name neo4j-ghera -p 7474:7474 -p 7687:7687 -e NEO4J_AUTH=neo4j/password123 neo4j:5
@@ -20,6 +21,12 @@ import argparse
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, ANALYSIS_DIR, OUTPUT_DIR
+from utils.debug_logger import (
+    init_trace_for_run,
+    log_file_output,
+    summarize_state,
+    trace_event,
+)
 
 
 def parse_args():
@@ -28,6 +35,8 @@ def parse_args():
                         help="APK 分析目录（含 apktool/ 和 jadx/ 子目录）")
     parser.add_argument("--output", default=None,
                         help="输出目录（默认: analysis-pipeline/output/）")
+    parser.add_argument("--sast-reports", default=None,
+                        help="Directory containing SAST tool reports")
     return parser.parse_args()
 
 
@@ -53,14 +62,28 @@ def main():
     args = parse_args()
     analysis_dir = os.path.abspath(args.apk)    if args.apk    else ANALYSIS_DIR
     output_dir   = os.path.abspath(args.output) if args.output else OUTPUT_DIR
+    sast_reports_dir = os.path.abspath(args.sast_reports) if args.sast_reports else ""
     apk_name     = os.path.basename(analysis_dir)
 
     os.makedirs(output_dir, exist_ok=True)
+    trace_path = init_trace_for_run(output_dir=output_dir, apk_name=apk_name)
+    print(f"[trace] Writing detailed trace to: {trace_path}")
+    trace_event(
+        "main_start",
+        {
+            "analysis_dir": analysis_dir,
+            "output_dir": output_dir,
+            "sast_reports_dir": sast_reports_dir,
+            "trace_path": trace_path,
+        },
+    )
 
     print("=" * 60)
     print("  LangGraph + Neo4j GraphRAG — Android APK Security Analysis")
     print(f"  Target : {analysis_dir}")
     print(f"  APK    : {apk_name}")
+    if sast_reports_dir:
+        print(f"  SAST   : {sast_reports_dir}")
     print("=" * 60)
 
     # Step 1: Verify Neo4j connectivity
@@ -73,6 +96,14 @@ def main():
     print("\n[main] Loading APK artifacts ...")
     manifest_xml, app_smali, app_java = load_apk_artifacts(analysis_dir)
     print(f"[main] Loaded: {len(app_smali)} smali, {len(app_java)} java files")
+    trace_event(
+        "artifacts_loaded",
+        {
+            "manifest_chars": len(manifest_xml),
+            "smali_files": len(app_smali),
+            "java_files": len(app_java),
+        },
+    )
 
     # Step 3: Build initial HPG in Neo4j
     print("\n[main] Building HPG in Neo4j ...")
@@ -85,6 +116,7 @@ def main():
     initial_state = {
         "apk_name":           apk_name,
         "analysis_dir":       analysis_dir,
+        "sast_reports_dir":   sast_reports_dir,
         "manifest_xml":       manifest_xml,
         "app_smali":          app_smali,
         "app_java":           app_java,
@@ -95,10 +127,13 @@ def main():
         "flowdroid_result":   None,
         "icc_bridge_result":  None,
         "validation_result":  None,
+        "sast_prior_result":  None,
         "final_report":       None,
     }
+    trace_event("initial_state", summarize_state(initial_state))
 
     final_state = app.invoke(initial_state)
+    trace_event("final_state", summarize_state(dict(final_state)))
 
     # Step 5: Print summary
     print("\n" + "=" * 60)
@@ -110,6 +145,11 @@ def main():
     print(f"Verdict     :\n{val.get('final_verdict', 'N/A')}")
     print(f"\nReport : {os.path.join(output_dir, 'report.md')}")
     print(f"Neo4j  : http://localhost:7474")
+    log_file_output(os.path.join(output_dir, "report.md"), label="report_markdown")
+    log_file_output(os.path.join(output_dir, "state_dump.json"), label="state_dump")
+    log_file_output(os.path.join(output_dir, "flowdroid_results.xml"), label="flowdroid_xml")
+    log_file_output(os.path.join(output_dir, "SourcesAndSinks.txt"), label="susi_sources_sinks")
+    trace_event("main_end", {"exploitable": val.get("exploitable", None)})
 
     return final_state
 

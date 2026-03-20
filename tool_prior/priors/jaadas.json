@@ -1,0 +1,1220 @@
+{
+  "tool_name": "jaadas",
+  "tool_version": "",
+  "repo_url": "https://github.com/flankerhqd/JAADAS",
+  "implementation_languages": [
+    "Scala",
+    "Java",
+    "Groovy configuration files"
+  ],
+  "last_maintained": "Upstream GitHub history shows the last visible master commit on 2017-04-12; the repository was later archived on 2021-08-25.",
+  "maintenance_status": "archived",
+  "input_formats": [
+    "apk",
+    "source"
+  ],
+  "intermediate_representations": [
+    "jimple",
+    "manifest_xml"
+  ],
+  "requires_decompilation": false,
+  "decompilation_tools": [],
+  "capabilities": [
+    {
+      "capability_id": "jaadas_ssl_hostname_verifier_bypass_via_allow_all_hostname_verifier",
+      "category": "SSL hostname verifier bypass via `ALLOW_ALL_HOSTNAME_VERIFIER`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "ifds_constant_propagation",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0.3"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_custom_hostnameverifier_verify_implementation",
+      "category": "Custom `HostnameVerifier.verify(...)` implementation",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Numeric score 0.5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_webview_ssl_error_handler_calling_proceed",
+      "category": "WebView SSL error handler calling `proceed()`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "class_hierarchy_check",
+          "depth": "intra_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Numeric score 0.5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_empty_x509trustmanager_checkservertrusted",
+      "category": "Empty `X509TrustManager.checkServerTrusted(...)`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Numeric score 0.5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_insecure_rsa_transformation_cipher_getinstance_rsa",
+      "category": "Insecure RSA transformation (`Cipher.getInstance(\"RSA...\")`)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "ifds_constant_propagation",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0.3"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_world_readable_writable_sharedpreferences_mode",
+      "category": "World-readable/writable `SharedPreferences` mode",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_world_readable_writable_openfileoutput_mode",
+      "category": "World-readable/writable `openFileOutput` mode",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-732"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_webview_addjavascriptinterface_exposure",
+      "category": "WebView `addJavascriptInterface(...)` exposure",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0.3"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_intent_parseuri_usage",
+      "category": "`Intent.parseUri(...)` usage",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0.3"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_webview_file_domain_misconfiguration_setallowfileaccess",
+      "category": "WebView file-domain misconfiguration (`setAllowFileAccess*`)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Numeric score 0.1  bitmask (0.1",
+        "1.6",
+        "25.6",
+        "combinations)"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_webview_password_saving_not_disabled",
+      "category": "WebView password saving not disabled",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "method"
+      ],
+      "granularity": [
+        "class",
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Numeric score 0.1"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_fakeid_reloaded_signature_index_heuristic",
+      "category": "FakeID-reloaded signature-index heuristic",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "constant_arg_trace",
+          "depth": "constant_backtrack",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0.5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_zipentry_usage_possible_zip_slip",
+      "category": "`ZipEntry` usage / possible Zip Slip",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-22"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method"
+      ],
+      "evidence_types": [
+        "method_signature"
+      ],
+      "severity_values": [
+        "Numeric score 1.0"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_implicit_intent_send_unprotected_dynamic_receiver_registration",
+      "category": "Implicit intent send / unprotected dynamic receiver registration",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 10"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_nested_intent_redirection_parcelable_serializable_extra_to_startactivity_startservice",
+      "category": "Nested intent redirection (`Parcelable`/`Serializable` extra to `startActivity`/`startService`)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_exported_component_npe_crash_from_intent_controlled_object_access",
+      "category": "Exported-component NPE crash from intent-controlled object access",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-476"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "forward_intent_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_exported_component_index_out_of_bounds_crash_from_intent_controlled_collection_array_access",
+      "category": "Exported-component index-out-of-bounds crash from intent-controlled collection/array access",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-129"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "forward_intent_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_exported_component_cast_crash_from_intent_controlled_object_cast",
+      "category": "Exported-component cast crash from intent-controlled object cast",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-843"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_manifest_debuggable_flag",
+      "category": "Manifest debuggable flag",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-489"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_manifest_backup_not_disabled",
+      "category": "Manifest backup not disabled",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_targetsdkversion_17_affecting_old_webview_risk",
+      "category": "`targetSdkVersion < 17` affecting old WebView risk",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_exported_preferenceactivity_fragment_injection_on_pre_17_target_sdk",
+      "category": "Exported `PreferenceActivity` fragment injection on pre-17 target SDK",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "class_hierarchy_check",
+          "depth": "intra_procedural",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "component"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "Numeric score 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_dangerous_api_reachability_capability_leak",
+      "category": "Dangerous API reachability / capability leak",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "method",
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_sensitive_intent_to_sink_flow",
+      "category": "Sensitive intent-to-sink flow",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "jimple_pattern",
+          "depth": "inter_procedural",
+          "target_artifact": "jimple",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "statement"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Numeric score 5"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "jaadas_sensitive_data_flow_out_optional_enableflowout",
+      "category": "Sensitive data flow-out (optional `--enableFlowOut`)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "flowdroid_taint",
+          "depth": "taint_analysis",
+          "target_artifact": "flowdroid",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "method"
+      ],
+      "granularity": [
+        "statement"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "Numeric score 0"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "low",
+      "blind_spots": [],
+      "known_quirks": [
+        "`single_cwe` as required: several checks are Android-specific heuristics with no explicit CWE in code",
+        "`heuristic_only` matters because some plugins are barely more than presence checks",
+        "`heuristic_level`:"
+      ],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "json",
+    "txt"
+  ],
+  "severity_scheme": [],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": false,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Strong coverage for Android-specific intent/exported-component issues, especially old-school IPC abuse, nested-intent patterns, and intent-triggered crash conditions.",
+    "Combines cheap heuristics and heavier interprocedural analyses in one pipeline, which is useful for triage.",
+    "Externalized rule files make many checks easy to retune without code changes.",
+    "Real interprocedural taint exists, and findings can include both source and sink plus an optional path.",
+    "The tool directly consumes APKs and uses Soot/FlowDroid Jimple, so it works below source level."
+  ],
+  "overall_limitations": [
+    "Many categories are heuristic and can over-report badly:",
+    "Custom `HostnameVerifier` flags any implementation",
+    "`ZipEntry` flags mere type presence",
+    "WebView password check only understands literal `false`",
+    "WebView file-access check only catches literal `true`",
+    "Default taint sources are narrow for inbound analysis: mostly intent-related APIs, not a broad Android privacy source model.",
+    "Flow-out analysis is also narrow and appears aimed at password-like UI widgets; this is inferred from the code and FlowDroid layout settings, not explicitly encoded in the source/sink file.",
+    "Reachability findings are weakly typed: they only say that a dangerous API is reachable, not whether it is attacker-controlled.",
+    "Output lacks file path, source line, confidence, and module name.",
+    "The score is ad hoc and uneven. The WebView file-access bitmask can produce disproportionately large scores.",
+    "Several promising modules are not actually part of the main `vulnanalysis` command:",
+    "`PendingIntentScanner` exists but is not called",
+    "`DynamicReceiverFinder` is unfinished",
+    "`ProviderURLFinder` is empty",
+    "The project is dated. Default rules focus on Android 4.x/5.x era issues and old APIs such as `setSavePassword`.",
+    "Taint relevance:",
+    "Medium",
+    "Reason: JAADAS does contain genuine interprocedural taint analysis and custom intent-taint logic, but only one part of the tool uses it, and the default source model is fairly narrow. For a Tool Prior schema, taint capability should be recorded as real but specialized, not as a broad general-purpose taint engine."
+  ],
+  "implementation_reliability": "medium",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.517256+00:00",
+  "extraction_source": "codex_report"
+}

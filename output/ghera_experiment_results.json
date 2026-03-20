@@ -1,0 +1,345 @@
+{
+  "results": [
+    {
+      "type": "ICC",
+      "name": "DynamicRegBroadcastReceiver-UnrestrictedAccess-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，包括暴露组件、SAST发现及其与组件和方法的关联关系，均未发现有效漏洞证据。SAST融合结果显示无高置信度对齐发现，且无任何暴露的组件或可疑的污点传播路径。因此判定该APK在此分析范围内无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 52.6,
+      "node_stats": {
+        "smali_files": 4,
+        "java_files": 4,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 9,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "EmptyPendingIntent-PrivEscalation-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现应用存在导出的组件、高风险的跨组件攻击路径（CrossPath）、SAST高置信度对齐发现（fused_score > 0.5）或内容提供者导出导致的权限提升路径。所有关键漏洞证据链均为空，表明该APK无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 55.2,
+      "node_stats": {
+        "smali_files": 5,
+        "java_files": 5,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 9,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 2
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "FragmentInjection-PrivEscalation-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现任何高置信度的SAST对齐发现、暴露组件或污点传播路径。SAST融合结果显示无高风险发现（fused_score > 0.5），且所有组件均未导出（exported=false），无跨组件攻击路径证据。综合判断该APK不存在可利用的安全漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 58.0,
+      "node_stats": {
+        "smali_files": 5,
+        "java_files": 5,
+        "sources": 0,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 2,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "HighPriority-ActivityHijack-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现任何高置信度的暴露组件、污点传播路径或SAST对齐发现。SAST融合结果显示无高分（fused_score > 0.5）且对齐的发现，且无组件或方法被标记为导出或存在漏洞描述。因此，当前证据表明该APK不存在可利用的安全漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 63.1,
+      "node_stats": {
+        "smali_files": 7,
+        "java_files": 5,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 7,
+        "flowdroid_status": "synthetic_fallback",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "ImplicitPendingIntent-IntentHijack-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现应用存在导出的组件、高置信度的SAST对齐发现、或可利用的跨组件攻击路径。应用未暴露可被外部访问的组件，且未检测到敏感数据流或不安全的Intent处理逻辑。因此，当前证据表明该APK不具有可利用的安全漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 44.4,
+      "node_stats": {
+        "smali_files": 3,
+        "java_files": 3,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 4,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "InadequatePathPermission-InformationExposure-Lean-benign",
+      "exploitable": true,
+      "verdict": "ContentProvider 'UserDetailsContentProvider' 被导出（exported=true），且未对根路径设置读写权限，仅对 '/user' 路径设置了 readPermission。攻击者可通过访问未受保护的根路径或构造恶意路径遍历请求，绕过路径权限限制，导致敏感信息泄露。此漏洞符合 CWE-926（不充分的导出者权限最小化）和 CWE-919（不充分的控制措施）的特征。尽管SAST未对齐高置信度发现，但组件配置本身存在明确风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 75.1,
+      "node_stats": {
+        "smali_files": 5,
+        "java_files": 4,
+        "sources": 1,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 25,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "IncorrectHandlingImplicitIntent-UnauthorizedAccess-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现应用存在导出的组件、高置信度的SAST对齐发现、跨组件攻击路径或污点传播链等关键漏洞证据。应用中未识别到暴露的攻击面或可利用的隐式Intent处理缺陷，因此判定当前无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 51.7,
+      "node_stats": {
+        "smali_files": 3,
+        "java_files": 3,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 8,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "NoValidityCheckOnBroadcastMsg-UnintendedInvocation-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现存在高可信度的漏洞证据。尽管存在一条显式意图（EXPLICIT_INTENT）的跨组件通信路径，攻击向量为DeleteFilesIntentService向DeleteStatusActivity传递Intent，置信度为0.65，但该路径未关联任何SAST高分发现、未指向导出组件，也未发现污点传播或权限暴露问题。结合SAST融合结果未对齐到任何组件或方法，且无exported组件存在，判定该APK当前无有效可利用漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 52.2,
+      "node_stats": {
+        "smali_files": 4,
+        "java_files": 5,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 9,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "OrderedBroadcast-DataInjection-Lean-benign",
+      "exploitable": false,
+      "verdict": "尽管组件FormatOutgoingCallReceiver为exported=true的广播接收器，存在被外部调用的风险，但经查询未发现SAST高置信度发现、污点传播路径或跨组件攻击路径（CrossPath）等有效攻击链证据。未检索到方法级SAST对齐发现，且无IntraPath或CrossPath数据流路径支持实际漏洞利用。因此，当前证据不足以认定该APK存在可利用的安全漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 56.9,
+      "node_stats": {
+        "smali_files": 3,
+        "java_files": 3,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 7,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "StickyBroadcast-DataInjection-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现存在高置信度的漏洞证据。无导出组件、无高分SAST发现、无污点传播路径，综合判断该APK无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 45.4,
+      "node_stats": {
+        "smali_files": 1,
+        "java_files": 2,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 3,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "TaskAffinity-ActivityHijack-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现应用存在导出的组件、高置信度的SAST对齐发现、污点传播路径或跨组件攻击路径。应用未暴露可被利用的攻击面，当前证据表明其行为符合良性特征。",
+      "status": "success",
+      "error": "",
+      "duration_s": 72.3,
+      "node_stats": {
+        "smali_files": 7,
+        "java_files": 5,
+        "sources": 2,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 6,
+        "flowdroid_status": "synthetic_fallback",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "TaskAffinity-LauncherActivity-PhishingAttack-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现任何导出的组件（exported=true），且SAST融合分析未对任何组件或方法产生高置信度的对齐发现（fused_score > 0.5）。最高sast_fused_score仅为0.08，远低于阈值。无证据表明存在可利用的安全漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 48.4,
+      "node_stats": {
+        "smali_files": 3,
+        "java_files": 3,
+        "sources": 0,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 3,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "TaskAffinity-PhishingAttack-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现存在高可信度的漏洞证据。无导出组件、无SAST高分对齐发现、无污点传播路径，综合判断该APK无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 60.1,
+      "node_stats": {
+        "smali_files": 7,
+        "java_files": 5,
+        "sources": 1,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 6,
+        "flowdroid_status": "synthetic_fallback",
+        "intra_paths": 0,
+        "cross_paths": 1
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "TaskAffinityAndReparenting-PhishingAndDoSAttack-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现存在高可信度的漏洞证据。无暴露的组件（exported=true），且SAST融合结果中无fused_score大于0.5的对齐发现。未查询到污点传播路径、跨组件攻击路径或敏感方法调用链。综合判断该APK当前无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 63.0,
+      "node_stats": {
+        "smali_files": 6,
+        "java_files": 4,
+        "sources": 0,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 5,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "UnhandledException-DOS-Lean-benign",
+      "exploitable": false,
+      "verdict": "经过多轮查询，未发现任何导出的组件、高置信度的SAST对齐发现、或与漏洞相关的污点传播路径。SAST融合结果中无高分发现，且组件、方法均未表现出可利用的安全缺陷证据。因此判定该APK无显著安全风险。",
+      "status": "success",
+      "error": "",
+      "duration_s": 49.2,
+      "node_stats": {
+        "smali_files": 2,
+        "java_files": 1,
+        "sources": 0,
+        "sinks": 0,
+        "sast_findings": 0,
+        "sast_aligned": 2,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "UnprotectedBroadcastRecv-PrivEscalation-Lean-benign",
+      "exploitable": true,
+      "verdict": "组件 MyReceiver 是一个导出的广播接收器（exported=true），可接收来自外部应用的广播消息，存在潜在的安全风险。尽管未发现明确的跨组件污点传播路径（IntraPath），但 SAST 分析显示其 onReceive 方法存在 'Empty Pending Intent' 问题（fused_score=0.59），可能导致权限提升或意外代码执行。该组件无权限保护，攻击者可利用此通道发送恶意广播，实现拒绝服务或敏感操作劫持。综合判断此漏洞可被利用，风险等级为高。",
+      "status": "success",
+      "error": "",
+      "duration_s": 68.3,
+      "node_stats": {
+        "smali_files": 3,
+        "java_files": 3,
+        "sources": 1,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 13,
+        "flowdroid_status": "synthetic_fallback",
+        "intra_paths": 1,
+        "cross_paths": 0
+      }
+    },
+    {
+      "type": "ICC",
+      "name": "WeakChecksOnDynamicInvocation-DataInjection-Lean-benign",
+      "exploitable": true,
+      "verdict": "ContentProvider 'FIleContentProvider' 被导出且仅对写操作进行了权限保护，但未对根路径进行保护，攻击者可通过路径遍历或直接URI访问读取敏感文件，存在数据泄露风险。尽管SAST未对齐高置信度发现，且未识别到明确的污点源或汇，但基于组件导出配置和路径权限缺失的结构化风险，判定为可利用漏洞。",
+      "status": "success",
+      "error": "",
+      "duration_s": 68.9,
+      "node_stats": {
+        "smali_files": 6,
+        "java_files": 4,
+        "sources": 0,
+        "sinks": 1,
+        "sast_findings": 0,
+        "sast_aligned": 8,
+        "flowdroid_status": "no_results_synthetic",
+        "intra_paths": 0,
+        "cross_paths": 0
+      }
+    }
+  ],
+  "total": 17
+}

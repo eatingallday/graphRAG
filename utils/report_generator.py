@@ -4,6 +4,7 @@ Generate Markdown report + JSON state dump from final AnalysisState.
 import json
 import os
 from datetime import datetime
+from utils.debug_logger import log_file_output, trace_event, summarize_state
 
 
 def generate_report(state: dict, output_dir: str) -> str:
@@ -17,6 +18,7 @@ def generate_report(state: dict, output_dir: str) -> str:
     sem = state.get("semantic_result") or {}
     flo = state.get("flowdroid_result") or {}
     icc = state.get("icc_bridge_result") or {}
+    sast = state.get("sast_prior_result") or {}
 
     exploitable = val.get("exploitable", False)
     verdict     = val.get("final_verdict", "N/A")
@@ -47,6 +49,22 @@ def generate_report(state: dict, output_dir: str) -> str:
         )
     if not cross_list:
         cross_list = "_No CrossPath data._\n"
+
+    # ── SAST Tool Prior section ───────────────────────────────────────────
+    sast_section = "_SAST prior fusion was not run._\n"
+    if sast.get("status") == "success":
+        stats = sast.get("stats", {})
+        sast_section = (
+            f"**Tools loaded:** {', '.join(sast.get('tools_loaded', []))}\n"
+            f"**Findings fused:** {stats.get('total_fused', 0)} "
+            f"(aligned={stats.get('aligned', 0)}, "
+            f"candidate={stats.get('candidate', 0)}, "
+            f"unmatched={stats.get('unmatched', 0)})\n"
+            f"**HPG nodes enriched:** {stats.get('enriched_nodes', 0)}\n"
+            f"**Hints written to graph:** {stats.get('hints_written', 0)} "
+            f"(method={len(sast.get('method_hints', []))}, "
+            f"component={len(sast.get('component_hints', []))})\n"
+        )
 
     verdict_label = "EXPLOITABLE" if exploitable else "NOT EXPLOITABLE"
     cypher_table  = cypher_rows if cypher_rows else "| _No queries issued_ | -- |\n"
@@ -105,6 +123,12 @@ def generate_report(state: dict, output_dir: str) -> str:
 
 ---
 
+## 5.5 SAST Tool Prior Fusion
+
+{sast_section}
+
+---
+
 ## 6. GraphRAG Path Validation (Text2Cypher)
 
 | Query | Neo4j Answer |
@@ -131,6 +155,7 @@ def generate_report(state: dict, output_dir: str) -> str:
     report_path = os.path.join(output_dir, "report.md")
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report)
+    log_file_output(report_path, label="report_markdown", agent="report_generator")
 
     dump_path = os.path.join(output_dir, "state_dump.json")
     # Make state JSON-serializable (drop non-serializable objects)
@@ -148,6 +173,12 @@ def generate_report(state: dict, output_dir: str) -> str:
                 safe_state[k] = str(v)
     with open(dump_path, "w", encoding="utf-8") as f:
         json.dump(safe_state, f, indent=2, ensure_ascii=False)
+    log_file_output(dump_path, label="state_dump", agent="report_generator")
+    trace_event(
+        "report_generated",
+        {"output_dir": output_dir, "state_summary": summarize_state(safe_state)},
+        agent="report_generator",
+    )
 
     print(f"[report_generator] Report written to {report_path}")
     print(f"[report_generator] State dump written to {dump_path}")

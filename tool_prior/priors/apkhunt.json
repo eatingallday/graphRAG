@@ -1,0 +1,3049 @@
+{
+  "tool_name": "apkhunt",
+  "tool_version": "",
+  "repo_url": "https://github.com/Cyber-Buddy/APKHunt",
+  "implementation_languages": [
+    "Go",
+    "with heavy shell-outs to `grep",
+    "jadx",
+    "d2j-dex2jar"
+  ],
+  "last_maintained": "latest code push on 2025-01-17 UTC (GitHub latest commit `386a0d54eac9bdcb0c08573c296aefb84e903ef0`, repo `pushed_at=2025-01-17T12:03:38Z`)",
+  "maintenance_status": "active",
+  "input_formats": [
+    "apk",
+    "apks",
+    "jar",
+    "smali",
+    "source"
+  ],
+  "intermediate_representations": [
+    "dalvik",
+    "decompiled_java",
+    "manifest_xml",
+    "smali"
+  ],
+  "requires_decompilation": true,
+  "decompilation_tools": [
+    "dex2jar",
+    "jadx"
+  ],
+  "capabilities": [
+    {
+      "capability_id": "apkhunt_shared_preferences_misuse",
+      "category": "Shared Preferences misuse",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_sqlite_storage_of_sensitive_data",
+      "category": "SQLite storage of sensitive data",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_firebase_realtime_database_exposure",
+      "category": "Firebase Realtime Database exposure",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_realm_database_exposure_misconfiguration",
+      "category": "Realm database exposure/misconfiguration",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_insecure_internal_storage_modes",
+      "category": "Insecure internal storage modes",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_external_storage_usage_for_sensitive_data",
+      "category": "External storage usage for sensitive data",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_insecure_temporary_file_creation",
+      "category": "Insecure temporary file creation",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-277"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_missing_input_validation_for_locally_stored_data",
+      "category": "Missing input validation for locally stored data",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-922"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_sensitive_data_in_logs",
+      "category": "Sensitive data in logs",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-532"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_sensitive_push_notification_content",
+      "category": "Sensitive push notification content",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-829"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_keyboard_cache_autocomplete_leakage",
+      "category": "Keyboard cache/autocomplete leakage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-524"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_sensitive_data_shown_in_clear_ui_fields",
+      "category": "Sensitive data shown in clear UI fields",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-359"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_android_allowbackup_true",
+      "category": "`android:allowBackup=\"true\"`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-921"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_missing_flag_secure_for_screenshots",
+      "category": "Missing `FLAG_SECURE` for screenshots",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_memory_flush_usage_memory_clearing",
+      "category": "Memory flush usage / memory clearing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-316"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_clipboard_copying_of_sensitive_data",
+      "category": "Clipboard copying of sensitive data",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-316"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_hardcoded_sensitive_information",
+      "category": "Hardcoded sensitive information",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-312"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_hardcoded_keys_tokens_secrets_in_strings_xml",
+      "category": "Hardcoded keys/tokens/secrets in `strings.xml`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-312"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_hardcoded_symmetric_cryptography_material",
+      "category": "Hardcoded symmetric cryptography material",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-321"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_insecure_deprecated_cryptographic_algorithms",
+      "category": "Insecure/deprecated cryptographic algorithms",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_weak_cipher_modes",
+      "category": "Weak cipher modes",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-649"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_static_ivs",
+      "category": "Static IVs",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-1204"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_weak_random_number_generation",
+      "category": "Weak random number generation",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-330"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_insecure_cookie_handling_in_webviews",
+      "category": "Insecure cookie handling in WebViews",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-359"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_biometric_authentication_usage_that_may_be_bypassable",
+      "category": "Biometric authentication usage that may be bypassable",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-287"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_keys_not_invalidated_after_biometric_enrollment",
+      "category": "Keys not invalidated after biometric enrollment",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-287"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_missing_network_security_configuration_file",
+      "category": "Missing Network Security Configuration file",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_possible_mitm_via_cleartext_insecure_transports",
+      "category": "Possible MITM via cleartext/insecure transports",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_weak_ssl_tls_protocol_handling",
+      "category": "Weak SSL/TLS protocol handling",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-326"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_cleartext_traffic_allowed",
+      "category": "Cleartext traffic allowed",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-319"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_custom_server_certificate_verification",
+      "category": "Custom server certificate verification",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_webview_ssl_error_handler_misuse",
+      "category": "WebView SSL error handler misuse",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_hostname_verifier_bypass",
+      "category": "Hostname verifier bypass",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-297"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_hardcoded_certificate_key_keystore_artifacts",
+      "category": "Hardcoded certificate/key/keystore artifacts",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_text",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": "fallback mapping"
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_certificate_pinning_settings_in_xml",
+      "category": "Certificate pinning settings in XML",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_certificate_pinning_implementation_in_code",
+      "category": "Certificate pinning implementation in code",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_custom_trust_anchors",
+      "category": "Custom trust anchors",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_missing_or_present_providerinstaller_usage",
+      "category": "Missing or present `ProviderInstaller` usage",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_permission_declarations_review",
+      "category": "Permission declarations review",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-276"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_deprecated_unsupported_permissions",
+      "category": "Deprecated/unsupported permissions",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-276"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_programmatic_custom_permission_checks",
+      "category": "Programmatic custom permission checks",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-276"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "binary_metadata_inspect",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_exported_components_without_android_permission",
+      "category": "Exported components without `android:permission`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-276"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file",
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_potential_sql_injection_sinks",
+      "category": "Potential SQL injection sinks",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-89"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_potential_xss_in_webviews",
+      "category": "Potential XSS in WebViews",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-79"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_potential_command_execution_os_command_injection",
+      "category": "Potential command execution / OS command injection",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-78"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_fragment_injection_via_preferenceactivity",
+      "category": "Fragment injection via `PreferenceActivity`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-470"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_safe_browsing_setting_review",
+      "category": "Safe Browsing setting review",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-940"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_url_loading_handlers_in_webviews",
+      "category": "URL loading handlers in WebViews",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-939"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_custom_url_schemes_intent_filters",
+      "category": "Custom URL schemes / intent filters",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_implicit_broadcast_intents",
+      "category": "Implicit broadcast intents",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_implicit_activity_intents",
+      "category": "Implicit activity intents",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_javascript_execution_enabled_in_webviews",
+      "category": "JavaScript execution enabled in WebViews",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_remote_local_url_loads_in_webviews",
+      "category": "Remote/local URL loads in WebViews",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-940"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_hardcoded_or_external_links",
+      "category": "Hardcoded or external links",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_dangerous_webview_file_content_access_permissions",
+      "category": "Dangerous WebView file/content access permissions",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_remote_webview_debugging",
+      "category": "Remote WebView debugging",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-215"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_java_objects_exposed_through_addjavascriptinterface",
+      "category": "Java objects exposed through `addJavascriptInterface`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_risky_object_serialization_persistence",
+      "category": "Risky object serialization / persistence",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-502"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_missing_or_present_webview_cleanup",
+      "category": "Missing or present WebView cleanup",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_app_update_mechanism_appupdatemanager",
+      "category": "App update mechanism (`AppUpdateManager`)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-1277"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_third_party_apk_installation_flow",
+      "category": "Third-party APK installation flow",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-940"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_android_debuggable_true",
+      "category": "`android:debuggable=\"true\"`",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-215"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "manifest_entry"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_strictmode_enabled_in_production_code",
+      "category": "`StrictMode` enabled in production code",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-749"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_exception_handling_review",
+      "category": "Exception handling review",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-755"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_obfuscation_present_or_missing",
+      "category": "Obfuscation present or missing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_root_detection_present_or_missing",
+      "category": "Root detection present or missing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-250"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_anti_debugging_present_or_missing",
+      "category": "Anti-debugging present or missing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_file_integrity_checks_present_or_missing",
+      "category": "File integrity checks present or missing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_emulator_detection_present_or_missing",
+      "category": "Emulator detection present or missing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "apkhunt_safetynet_defense_mechanisms_present_or_missing",
+      "category": "SafetyNet/defense mechanisms present or missing",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "code_snippet"
+      ],
+      "severity_values": [
+        "Advisory only"
+      ],
+      "taint_relevance": "low",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "html",
+    "txt"
+  ],
+  "severity_scheme": [],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": false,
+  "supports_positive_controls": false,
+  "taint_relevance": "low",
+  "overall_strengths": [
+    "Very broad MASVS coverage for a lightweight scanner.",
+    "Good at quick inventory-style detection of Android configuration issues and risky API usage.",
+    "Especially strong for:",
+    "manifest/config reviews (`allowBackup`, `debuggable`, exported components, cleartext traffic, network security config reference),",
+    "WebView hardening checks,",
+    "certificate/hostname verifier anti-patterns,",
+    "obvious sink-style patterns (`rawQuery`, `Runtime.getRuntime().exec`, `addJavascriptInterface`, `setWebContentsDebuggingEnabled`),",
+    "hardcoded secret heuristics,",
+    "presence/absence of reverse-engineering defenses.",
+    "Evidence is easy to verify manually because the tool prints the exact file and matching line."
+  ],
+  "overall_limitations": [
+    "No taint analysis, no source-to-sink paths, no sanitization awareness, no path feasibility.",
+    "Heavy reliance on literal substrings and simple regexes means many checks are \"API presence implies possible risk\", not \"verified vulnerability\".",
+    "Strong false-positive risk in checks such as:",
+    "Shared Preferences, SQLite, cookies, biometric APIs, permissions, hardcoded links, `AppUpdateManager`, and `EnableSafeBrowsing`.",
+    "Weak crypto check flags any `MessageDigest.getInstance` / `Mac.getInstance` use without verifying the actual algorithm string.",
+    "Cleartext traffic check flags attribute presence even when the value might be `false`.",
+    "Certificate pinning checks often detect the presence of pinning code/config, not the absence or weakness of it.",
+    "Some recommendations are emitted even with no evidence because of unconditional `>= 0` guards (`FLAG_SECURE`, `AppUpdateManager`).",
+    "Some checks mix \"risk present\", \"mitigation present\", and \"mitigation missing\" in the same overall reporting style, which makes naive downstream weighting noisy.",
+    "No machine-readable output schema. Downstream consumers would need custom parsing.",
+    "No native code, reflection-heavy flow, or non-Java-specific semantic analysis.",
+    "Decompilation quality directly affects findings; heavily obfuscated or reconstruction-poor code can hide patterns or distort them.",
+    "Taint relevance: Low.",
+    "The output can still provide useful sink and configuration priors for a graph-guided system.",
+    "But APKHunt itself does not reason about data propagation, attacker-controlled sources, sanitizers, or cross-method flows, so its findings are weak direct evidence for taint-confirmed vulnerabilities."
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.512328+00:00",
+  "extraction_source": "codex_report"
+}

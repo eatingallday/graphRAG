@@ -1,0 +1,607 @@
+{
+  "apk_name": "HighPriority-ActivityHijack-Lean-benign",
+  "analysis_dir": "/Users/layang/Desktop/codes/claude-codes/Ghera/ICC/HighPriority-ActivityHijack-Lean-benign/analysis",
+  "sast_reports_dir": "/Users/layang/Desktop/codes/claude-codes/Ghera/ICC/HighPriority-ActivityHijack-Lean-benign/reports",
+  "manifest_xml": "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?><manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" package=\"edu.ksu.cs.benign\">\n    <application android:allowBackup=\"false\" android:debuggable=\"true\" android:icon=\"@mipmap/ic_launcher\" android:label=\"@string/app_name\" android:supportsRtl=\"true\" android:theme=\"@style/AppTheme\">\n        <activity android:name=\"edu.ksu.cs.benign.LaunchActivity\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\"/>\n                <category android:name=\"android.intent.category.LAUNCHER\"/>\n            </intent-filter>\n        </activity>\n        <activity android:exported=\"false\" android:name=\"edu.ksu.cs.benign.HomeActivity\"/>\n        <activity android:exported=\"false\" android:name=\"edu.ksu.cs.benign.ImageEditor\">\n            <intent-filter android:priority=\"5\">\n                <action android:name=\"edu.ksu.cs.benign.imageEditor\"/>\n                <category android:name=\"android.intent.category.DEFAULT\"/>\n            </intent-filter>\n        </activity>\n        <activity android:name=\"edu.ksu.cs.benign.CameraActivity\"/>\n    </application>\n</manifest>",
+  "app_smali": {
+    "edu/ksu/cs/benign/HomeActivity": "<smali>",
+    "edu/ksu/cs/benign/HomeActivity$2": "<smali>",
+    "edu/ksu/cs/benign/LaunchActivity": "<smali>",
+    "edu/ksu/cs/benign/HomeActivity$1": "<smali>",
+    "edu/ksu/cs/benign/ImageEditor": "<smali>",
+    "edu/ksu/cs/benign/CameraActivity": "<smali>",
+    "edu/ksu/cs/benign/CameraActivity$1": "<smali>"
+  },
+  "app_java": {
+    "edu/ksu/cs/benign/LaunchActivity": "<java>",
+    "edu/ksu/cs/benign/R": "<java>",
+    "edu/ksu/cs/benign/ImageEditor": "<java>",
+    "edu/ksu/cs/benign/CameraActivity": "<java>",
+    "edu/ksu/cs/benign/HomeActivity": "<java>"
+  },
+  "manifest_result": {
+    "exported_providers": [],
+    "vulnerability": "未发现 exported 为 true 的 ContentProvider 或其他组件，初步判断无权限配置导致的组件暴露风险。",
+    "root_path_protected": false,
+    "confidence": 0.9,
+    "conclude_reason": "early_finish",
+    "loops_used": 3
+  },
+  "taint_result": {
+    "sources": [],
+    "sinks": [
+      "<edu.ksu.cs.benign.HomeActivity$1: void onClick(android.view.View)>"
+    ],
+    "susi_confidence": 0.8,
+    "reasoning": "在 HomeActivity$1.onClick 方法中发现创建并使用 Intent 启动组件的行为，且 SAST 工具已标记该方法可能存在 Activity Hijacking 风险，因此将其标记为 sink。未发现其他明显 source 或 sink。",
+    "conclude_reason": "early_finish",
+    "loops_used": 5,
+    "susi_path": "/Users/layang/Desktop/codes/claude-codes/analysis-pipeline/output/SourcesAndSinks.txt"
+  },
+  "semantic_result": null,
+  "flowdroid_result": {
+    "intra_paths": [],
+    "status": "synthetic_fallback"
+  },
+  "ui_semantic_result": {
+    "total_views": 8,
+    "sensitive_views": [],
+    "status": "success"
+  },
+  "icc_bridge_result": {
+    "cross_paths": [
+      {
+        "id": "start_act_edu_ksu_cs_benign_LaunchActivity_HomeActivity",
+        "channel_type": "EXPLICIT_INTENT",
+        "target": "edu/ksu/cs/benign/HomeActivity",
+        "confidence": 0.65
+      }
+    ],
+    "status": "success"
+  },
+  "validation_result": {
+    "exploitable": false,
+    "final_verdict": "经过多轮查询，未发现任何高置信度的暴露组件、污点传播路径或SAST对齐发现。SAST融合结果显示无高分（fused_score > 0.5）且对齐的发现，且无组件或方法被标记为导出或存在漏洞描述。因此，当前证据表明该APK不存在可利用的安全漏洞。",
+    "severity": "NONE",
+    "attack_scenario": "无",
+    "evidence_chain": [
+      "未查询到导出组件",
+      "未查询到SAST对齐发现",
+      "未发现污点传播路径"
+    ],
+    "cwe": "",
+    "conclude_reason": "early_finish",
+    "loops_used": 5
+  },
+  "sast_prior_result": {
+    "status": "success",
+    "tools_loaded": [
+      "apkhunt",
+      "ausera",
+      "mobsf",
+      "androbugs",
+      "droidstatx",
+      "jaadas",
+      "marvin",
+      "qark",
+      "speck",
+      "super",
+      "trueseeing"
+    ],
+    "stats": {
+      "total_findings": 991,
+      "total_fused": 991,
+      "aligned": 7,
+      "candidate": 0,
+      "unmatched": 984,
+      "provenance_nodes": 991,
+      "enriched_nodes": 5,
+      "hints_written": 7
+    },
+    "method_hints": [],
+    "component_hints": [
+      {
+        "target": "<edu.ksu.cs.benign.HomeActivity$1: void onClick(android.view.View)>",
+        "node_type": "Method",
+        "fused_score": 0.16999999999999998,
+        "cwes": [],
+        "hint_text": "SAST(marvin) flagged for Activity Hijacking"
+      },
+      {
+        "target": "<edu.ksu.cs.benign.HomeActivity$1: void onClick(android.view.View)>",
+        "node_type": "Method",
+        "fused_score": 0.1,
+        "cwes": [],
+        "hint_text": "SAST(jaadas) flagged for implicit intent or receiver"
+      },
+      {
+        "target": "LaunchActivity",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Exported activity"
+      },
+      {
+        "target": "CameraActivity",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      },
+      {
+        "target": "HomeActivity",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      },
+      {
+        "target": "ImageEditor",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      },
+      {
+        "target": "LaunchActivity",
+        "node_type": "Component",
+        "fused_score": 0.08000000000000002,
+        "cwes": [],
+        "hint_text": "SAST(droidstatx) flagged for Activity missing FLAG_SECURE"
+      }
+    ],
+    "fused_findings_summary": [
+      {
+        "id": "super_manifest_debug_bc84",
+        "tool": "super",
+        "title": "Manifest Debug",
+        "score": 0.376,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_18_18bf",
+        "tool": "speck",
+        "title": "Prefer explicit intents",
+        "score": 0.331,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "speck_rule_18_18bf",
+        "tool": "speck",
+        "title": "Prefer explicit intents",
+        "score": 0.331,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_app_is_debuggable_2ca7",
+        "tool": "mobsf",
+        "title": "Debug Enabled For App<br>[android:debuggable=true]",
+        "score": 0.298,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "trueseeing_manifest-debuggable_7e2b",
+        "tool": "trueseeing",
+        "title": "App Is Debuggable",
+        "score": 0.298,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "androbugs_DEBUGGABLE_52b1",
+        "tool": "androbugs",
+        "title": "Android Debug Mode Checking",
+        "score": 0.292,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_rsa_encryption_issue_1d2d",
+        "tool": "ausera",
+        "title": "RSA encryption issue",
+        "score": 0.288,
+        "depth": "inter_procedural",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_activity_c30d",
+        "tool": "super",
+        "title": "Exported activity",
+        "score": 0.288,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "super_exported_activity_c30d",
+        "tool": "super",
+        "title": "Exported activity",
+        "score": 0.288,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "droidstatx_debuggable_ca6b",
+        "tool": "droidstatx",
+        "title": "App debuggable enabled",
+        "score": 0.284,
+        "depth": "manifest_parse",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "trueseeing_manifest-cleartext-permitted_9eeb",
+        "tool": "trueseeing",
+        "title": "Cleartext Traffic Is Permitted",
+        "score": 0.28,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_application_signed_with_debug_certificate_6d9c",
+        "tool": "mobsf",
+        "title": "Application signed with debug certificate",
+        "score": 0.274,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "jaadas_application is debuggable_a26f",
+        "tool": "jaadas",
+        "title": "application is debuggable",
+        "score": 0.274,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "ausera_screenshot_harvest_106c",
+        "tool": "ausera",
+        "title": "Screenshot harvest",
+        "score": 0.272,
+        "depth": "unknown",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_application_vulnerable_to_janus_vulnerability_7c25",
+        "tool": "mobsf",
+        "title": "Application vulnerable to Janus Vulnerability",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "mobsf_certificate_algorithm_might_be_vulnerable_to_hash_collision_399b",
+        "tool": "mobsf",
+        "title": "Certificate algorithm might be vulnerable to hash collision",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_potientially_vulnerable_check_permission_function_called_dd12",
+        "tool": "qark",
+        "title": "Potientially vulnerable check permission function called",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      },
+      {
+        "id": "qark_logging_found_9ba6",
+        "tool": "qark",
+        "title": "Logging found",
+        "score": 0.265,
+        "depth": "no_capability_match",
+        "alignment": "unmatched",
+        "node": null
+      }
+    ]
+  },
+  "final_report": "# APK Security Analysis Report\n\n**APK**: HighPriority-ActivityHijack-Lean-benign\n**Generated**: 2026-03-17 20:52:34\n**Final Verdict**: NOT EXPLOITABLE\n\n---\n\n## 1. Manifest Analysis\n\n未发现 exported 为 true 的 ContentProvider 或其他组件，初步判断无权限配置导致的组件暴露风险。\n\n- **Root path protected**: False\n- **Attack surface**: N/A\n- **Confidence**: 0.90\n\n---\n\n## 2. Taint Analysis — SuSi Source/Sink Inference\n\n**Sources identified**: []\n**Sinks identified**:  ['<edu.ksu.cs.benign.HomeActivity$1: void onClick(android.view.View)>']\n**SuSi confidence**: 0.80\n**Needs semantic analysis**: False\n\n---\n\n## 3. Semantic Analysis (if triggered)\n\n_Not triggered._\n\n---\n\n## 4. FlowDroid Layer A — Intra-Component Taint Paths\n\n_No IntraPath data (FlowDroid may have skipped or found no flows)._\n\n\n---\n\n## 5. ICC Bridge Layer B — Cross-Component Paths\n\n- **start_act_edu_ksu_cs_benign_LaunchActivity_HomeActivity**: entry=`` vector=`` confidence=0.65\n\n\n---\n\n## 5.5 SAST Tool Prior Fusion\n\n**Tools loaded:** apkhunt, ausera, mobsf, androbugs, droidstatx, jaadas, marvin, qark, speck, super, trueseeing\n**Findings fused:** 991 (aligned=7, candidate=0, unmatched=984)\n**HPG nodes enriched:** 5\n**Hints written to graph:** 7 (method=0, component=7)\n\n\n---\n\n## 6. GraphRAG Path Validation (Text2Cypher)\n\n| Query | Neo4j Answer |\n|-------|-------------|\n| _No queries issued_ | -- |\n\n\n### Verdict\n\n经过多轮查询，未发现任何高置信度的暴露组件、污点传播路径或SAST对齐发现。SAST融合结果显示无高分（fused_score > 0.5）且对齐的发现，且无组件或方法被标记为导出或存在漏洞描述。因此，当前证据表明该APK不存在可利用的安全漏洞。\n\n**Exploitable**: False\n\n---\n\n## 7. Evidence Chain\n\n```\nManifest Agent  -->  root_path_protected=false (Neo4j)\nTaint Agent     -->  SuSi XML generated (Layer A input)\nFlowDroid       -->  IntraPath: query()->MatrixCursor.addRow() (Neo4j)\nICC Bridge      -->  CrossPath: exported provider, no root permission (Neo4j)\nValidation Agent-->  Text2Cypher confirmed vulnerability (GraphRAG)\n```\n\n---\n\n*Generated by LangGraph + Neo4j GraphRAG pipeline (Qwen3-235)*\n"
+}

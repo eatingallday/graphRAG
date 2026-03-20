@@ -1,0 +1,743 @@
+{
+  "tool_name": "mobsf",
+  "tool_version": "",
+  "repo_url": "https://github.com/MobSF/Mobile-Security-Framework-MobSF",
+  "implementation_languages": [
+    "Python (Django) with YAML rule packs",
+    "uses external analyzers/libraries such as JADX",
+    "apktool",
+    "androguard",
+    "libsast",
+    "LIEF",
+    "apksigtool."
+  ],
+  "last_maintained": "local snapshot version is `4.4.0` (`pyproject.toml`); upstream GitHub metadata shows the repo was still active in late 2025, and the latest visible release in the GitHub search results was `v4.4.2` on 2025-08-31.",
+  "maintenance_status": "active",
+  "input_formats": [
+    "aab",
+    "aar",
+    "apk",
+    "apks",
+    "jar",
+    "java_source",
+    "smali",
+    "so",
+    "source",
+    "xapk"
+  ],
+  "intermediate_representations": [
+    "decompiled_java",
+    "manifest_xml",
+    "smali"
+  ],
+  "requires_decompilation": true,
+  "decompilation_tools": [
+    "apktool",
+    "jadx"
+  ],
+  "capabilities": [
+    {
+      "capability_id": "mobsf_exported_or_weakly_protected_android_components_activities_services_receivers_providers",
+      "category": "Exported or weakly protected Android components (activities, services, receivers, providers)",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-926",
+        "CWE-927"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "component_name",
+        "permission_name"
+      ],
+      "severity_values": [
+        "high",
+        "warning",
+        "info"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_deep_links_browsable_activities_and_missing_app_links_verification",
+      "category": "Deep links, browsable activities, and missing App Links verification",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "component_name",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "Mostly high"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_application_manifest_risk_flags_usescleartexttraffic_debuggable_allowbackup_testonly_low_minsdk",
+      "category": "Application manifest risk flags (`usesCleartextTraffic`, `debuggable`, `allowBackup`, `testOnly`, low `minSdk`)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "description_only"
+      ],
+      "severity_values": [
+        "high",
+        "warning",
+        "info"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_task_hijacking_and_launch_task_affinity_issues_strandhogg_style_checks",
+      "category": "Task hijacking and launch/task affinity issues (StrandHogg style checks)",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "manifest_component_export",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "manifest"
+      ],
+      "granularity": [
+        "component"
+      ],
+      "evidence_types": [
+        "component_name"
+      ],
+      "severity_values": [
+        "high",
+        "warning"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_content_provider_permission_and_intent_priority_issues_dialer_secret_codes_sms_receiver_ports",
+      "category": "Content provider permission and intent priority issues, dialer secret codes, SMS receiver ports",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "manifest_attribute_check",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "manifest"
+      ],
+      "granularity": [
+        "app",
+        "component"
+      ],
+      "evidence_types": [
+        "file_path"
+      ],
+      "severity_values": [
+        "Mostly warning"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_network_security_config_weaknesses",
+      "category": "Network Security Config weaknesses",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "network_security_config_parse",
+          "depth": "manifest_parse",
+          "target_artifact": "manifest_xml",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "domain_scope",
+        "certificate_info"
+      ],
+      "severity_values": [
+        "high",
+        "warning",
+        "info",
+        "secure"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_tls_certificate_validation_misuse_in_code",
+      "category": "TLS certificate validation misuse in code",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-295"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number",
+        "domain_scope",
+        "score"
+      ],
+      "severity_values": [
+        "high"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_webview_misconfiguration",
+      "category": "WebView misconfiguration",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200",
+        "CWE-749",
+        "CWE-919"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "high",
+        "warning"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_sql_injection_candidate_patterns",
+      "category": "SQL injection candidate patterns",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-89"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "warning"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_unsafe_deserialization",
+      "category": "Unsafe deserialization",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-502"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "high"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_crypto_misuse_and_weak_randomness",
+      "category": "Crypto misuse and weak randomness",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-327",
+        "CWE-329",
+        "CWE-330",
+        "CWE-649",
+        "CWE-780"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number",
+        "score"
+      ],
+      "severity_values": [
+        "Mostly high",
+        "some warning"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_insecure_storage_and_local_data_exposure",
+      "category": "Insecure storage and local data exposure",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-200",
+        "CWE-276",
+        "CWE-312",
+        "CWE-532"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "string_entropy_scan",
+          "depth": "syntax_only",
+          "target_artifact": "mixed",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app",
+        "file"
+      ],
+      "granularity": [
+        "app",
+        "file_line",
+        "resource_entry"
+      ],
+      "evidence_types": [
+        "file_path",
+        "domain_scope"
+      ],
+      "severity_values": [
+        "high",
+        "warning",
+        "info"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_root_privilege_requests_and_anti_tamper_anti_analysis_controls",
+      "category": "Root privilege requests and anti-tamper/anti-analysis controls",
+      "subcategories": [],
+      "cwe_ids": [
+        "CWE-250"
+      ],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "regex_text_scan",
+          "depth": "syntax_only",
+          "target_artifact": "decompiled_java",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        },
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "file"
+      ],
+      "granularity": [
+        "file_line"
+      ],
+      "evidence_types": [
+        "file_path",
+        "line_number"
+      ],
+      "severity_values": [
+        "warning for risky root request",
+        "good for defensive controls"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "high",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_code_signing_packaged_certificates_keystores_and_janus_style_signing_exposure",
+      "category": "Code signing, packaged certificates/keystores, and Janus-style signing exposure",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "certificate_parse",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "app"
+      ],
+      "evidence_types": [
+        "certificate_info"
+      ],
+      "severity_values": [
+        "high",
+        "warning",
+        "info"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    },
+    {
+      "capability_id": "mobsf_native_library_hardening_issues_in_so_files",
+      "category": "Native library hardening issues in `.so` files",
+      "subcategories": [],
+      "cwe_ids": [],
+      "signal_polarity": "vulnerability",
+      "detection_methods": [
+        {
+          "family": "binary_metadata_inspect",
+          "depth": "api_presence",
+          "target_artifact": "apk_binary",
+          "target_apis": [],
+          "uses_sdk_condition": false,
+          "uses_default_inference": false,
+          "notes": ""
+        }
+      ],
+      "analysis_scope": [
+        "app"
+      ],
+      "granularity": [
+        "library"
+      ],
+      "evidence_types": [
+        "file_path",
+        "library_info"
+      ],
+      "severity_values": [
+        "high",
+        "warning",
+        "info"
+      ],
+      "taint_relevance": "medium",
+      "fp_risk": "medium",
+      "blind_spots": [],
+      "known_quirks": [],
+      "native_rule_ids": [],
+      "enabled_by_default": true,
+      "requires_external_input": false,
+      "api_level_conditions": []
+    }
+  ],
+  "output_formats": [
+    "html",
+    "json",
+    "pdf",
+    "txt"
+  ],
+  "severity_scheme": [
+    "high",
+    "info",
+    "secure",
+    "warning"
+  ],
+  "has_confidence_score": false,
+  "has_numeric_risk_score": true,
+  "supports_positive_controls": true,
+  "taint_relevance": "medium",
+  "overall_strengths": [
+    "Strong breadth. MobSF covers app manifest, decompiled source, network security config, certificates, resource strings, and native library hardening in one report.",
+    "Manifest and network-security checks are reasonably reliable because they are parser-backed, not just regex backed.",
+    "Good for Android platform misconfiguration classes: exported components, deep links, App Links, backup/debug flags, task hijacking conditions, provider exposure, and cleartext/trust-anchor mistakes.",
+    "Good for known API misuse patterns: insecure SSL/WebView, weak crypto choices, raw SQL, hardcoded secrets, weak storage primitives.",
+    "Useful enrichment for downstream reasoning: permission mappings, API inventory, URLs/domains/emails, Firebase keys, secret candidates, trackers, and SBOM.",
+    "Positive-control detection is a real advantage for Tool Prior: MobSF can report that a defensive control exists, not only that a weakness exists."
+  ],
+  "overall_limitations": [
+    "No taint analysis, no source-to-sink chains, no call graph reasoning, and no path sensitivity.",
+    "Code rule granularity is mostly file + line hit; it does not report method names, enclosing classes, or call chains.",
+    "Pattern matches over JADX output can be brittle. Decompiler artifacts can create both false negatives and false positives.",
+    "SQL injection, Jackson deserialization, and many WebView findings are only candidate patterns. MobSF does not prove attacker-controlled input reaches the sink.",
+    "Android code scanning is aimed at `.java` and `.kt` text only. For APKs, Smali is generated but not used by the SAST rule engine.",
+    "For zipped Android Studio source, `get_android_src_dir()` chooses either `app/src/main/java` or `app/src/main/kotlin`, not both. Mixed Java+Kotlin source trees can therefore be partially scanned.",
+    "ICC support is shallow: MobSF understands exported components and intent metadata in the manifest, but not runtime intent construction/dispatch paths.",
+    "No explicit confidence metric means downstream consumers must infer trust from detection method and category.",
+    "Many manifest findings have no explicit CWE tag in the repo; mapping them requires inference outside the repository itself.",
+    "Taint relevance: Medium.",
+    "MobSF itself is not a taint engine.",
+    "However, its outputs are useful priors and seed signals for a downstream taint or graph-guided reasoner: exported components, browsable activities, API inventory, permission mappings, URLs, potential secret constants, crypto/network APIs, and domain scopes can all help decide where deeper flow analysis should focus."
+  ],
+  "implementation_reliability": "low",
+  "confidence_weight": 0.5,
+  "cwe_weight_overrides": {},
+  "prior_version": "1.0",
+  "extracted_at": "2026-03-16T09:36:10.508190+00:00",
+  "extraction_source": "codex_report"
+}

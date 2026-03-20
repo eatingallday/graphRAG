@@ -14,6 +14,7 @@
 """
 import json
 from utils.llm_client import llm_call
+from utils.debug_logger import trace_event
 
 
 # ── 内部辅助 ──────────────────────────────────────────────────────────────────
@@ -72,13 +73,39 @@ def run_agent_loop(
           - loops_used      : int
     """
     history: list[dict] = []
+    trace_event(
+        "agent_loop_start",
+        {
+            "max_loops": max_loops,
+            "system_prompt": system_prompt,
+            "first_user_msg": first_user_msg,
+            "tool_names": sorted(tool_executors.keys()),
+        },
+        agent=agent_name,
+    )
 
     for loop_idx in range(max_loops):
         remaining = max_loops - loop_idx
         is_last   = (remaining == 1)
 
         user_msg  = _build_user_msg(first_user_msg, history, remaining, is_last)
-        response  = llm_call(system_prompt, user_msg, json_mode=True)
+        trace_event(
+            "agent_loop_iteration_start",
+            {"loop": loop_idx + 1, "remaining": remaining, "user_msg": user_msg},
+            agent=agent_name,
+        )
+        response  = llm_call(
+            system_prompt,
+            user_msg,
+            json_mode=True,
+            agent_name=agent_name,
+            trace_label=f"loop_{loop_idx + 1}",
+        )
+        trace_event(
+            "agent_loop_iteration_llm_output",
+            {"loop": loop_idx + 1, "response": response},
+            agent=agent_name,
+        )
 
         tool_name = response.get("tool", "")
         args      = response.get("args", {})
@@ -90,6 +117,11 @@ def run_agent_loop(
             args["conclude_reason"] = "early_finish"
             args["loops_used"]      = loop_idx + 1
             print(f"[{agent_name}] 主动完成（第 {loop_idx+1}/{max_loops} 轮）")
+            trace_event(
+                "agent_loop_finish",
+                {"loop": loop_idx + 1, "reason": "early_finish", "args": args},
+                agent=agent_name,
+            )
             return args
 
         # 执行普通工具
@@ -101,6 +133,11 @@ def run_agent_loop(
                 result = str(executor(**args))
             except Exception as e:
                 result = f"[工具执行错误] {tool_name}: {e}"
+        trace_event(
+            "agent_loop_tool_result",
+            {"loop": loop_idx + 1, "tool": tool_name, "args": args, "result": result},
+            agent=agent_name,
+        )
 
         preview = str(result)[:120].replace("\n", " ")
         print(f"[{agent_name}] 第 {loop_idx+1} 轮 → {tool_name}() → {preview}...")
@@ -113,7 +150,18 @@ def run_agent_loop(
         "\n\n必须立即调用 finish，即使信息不完整也要给出判断。"
         "\n输出格式：{\"tool\": \"finish\", \"args\": {...}}"
     )
-    response = llm_call(system_prompt, force_msg, json_mode=True)
+    response = llm_call(
+        system_prompt,
+        force_msg,
+        json_mode=True,
+        agent_name=agent_name,
+        trace_label="forced_finish",
+    )
+    trace_event(
+        "agent_loop_forced_response",
+        {"response": response},
+        agent=agent_name,
+    )
 
     tool_name = response.get("tool", "")
     args      = response.get("args", {})
@@ -123,8 +171,18 @@ def run_agent_loop(
     if tool_name == "finish" or args:
         args["conclude_reason"] = "forced"
         args["loops_used"]      = max_loops
+        trace_event(
+            "agent_loop_finish",
+            {"loop": max_loops, "reason": "forced", "args": args},
+            agent=agent_name,
+        )
         return args
 
     # 终极兜底
     print(f"[{agent_name}] 强制收尾失败，返回空结构")
+    trace_event(
+        "agent_loop_finish",
+        {"loop": max_loops, "reason": "forced_empty"},
+        agent=agent_name,
+    )
     return {"conclude_reason": "forced", "loops_used": max_loops}

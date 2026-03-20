@@ -8,7 +8,7 @@ import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, PROMPTS_DIR
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, PROMPTS_DIR, load_graph_description
 from utils.llm_client import llm_call
 from neo4j import GraphDatabase
 from state import AnalysisState
@@ -38,13 +38,19 @@ def run_semantic_agent(state: AnalysisState) -> dict:
     provider_key   = "edu/ksu/cs/benign/provider/UserDetailsContentProvider"
     provider_smali = state["app_smali"].get(provider_key, "")
 
-    system = _load_prompt("semantic_system.md")
+    system = _load_prompt("semantic_system.md") + "\n\n" + load_graph_description()
     user = (
         f"需要语义分析确认以下不确定点：\n{uncertain}\n\n"
         f"ContentProvider Smali 代码：\n{provider_smali}"
     )
 
-    result = llm_call(system, user, json_mode=True)
+    result = llm_call(
+        system,
+        user,
+        json_mode=True,
+        agent_name="semantic_agent",
+        trace_label="semantic_resolution",
+    )
     print(f"[semantic_agent] Semantic findings: {result.get('semantic_findings', '')[:200]}")
 
     # Update confidence in Neo4j

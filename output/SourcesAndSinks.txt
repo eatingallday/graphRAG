@@ -1,4 +1,5 @@
 %SOURCES
-<de.ecspride.Activity2: void onCreate(Landroid/os/Bundle;)> -> _SOURCE_
+<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSchool(java.lang.String)> -> _SOURCE_
+<edu.ksu.cs.benign.MainActivity: java.util.HashMap getSsn(java.lang.String)> -> _SOURCE_
 
 %SINKS
